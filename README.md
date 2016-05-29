@@ -1,6 +1,6 @@
 # Summary
 
-versions checks software releases versions and tells you
+versions checks software release versions and tells you
 
 # Licence
 
