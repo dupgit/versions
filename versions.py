@@ -48,11 +48,19 @@ def main():
     This is the where the program begins
     """
 
-    program = 'fguillot/kanboard'
-    version = get_latest_github_release(program)
+    prog_list = []
+    prog_list.insert(0, 'InfotelGLPI/manufacturersimports')
+    prog_list.insert(0, 'fguillot/kanboard')
+    prog_list.insert(0, 'curl/curl')
+    prog_list.insert(0, 'akheron/jansson')
+    prog_list.insert(0, 'Deltafire/MilkyTracker')
+    prog_list.insert(0, 'terryyin/lizard')
 
-    if version != '':
-        print('%s %s' % (program, version))
+    for program in prog_list:
+        version = get_latest_github_release(program)
+
+        if version != '':
+            print('%s %s' % (program, version))
 
 
 
