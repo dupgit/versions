@@ -20,3 +20,41 @@
 #  along with this program; if not, write to the Free Software Foundation,
 #  Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 #
+
+import feedparser
+
+
+def get_latest_github_release(program):
+    """
+    Gets the latest release of a program on github. program must be a
+    string of the form user/repository
+    """
+
+    version = ''
+    url = 'https://github.com/' + program + '/releases.atom'
+    feed = feedparser.parse(url)
+
+
+    if len(feed.entries) > 0:
+        version = feed.entries[0].title
+
+    return version
+
+# End of get_latest_github_release function
+
+
+def main():
+    """
+    This is the where the program begins
+    """
+
+    program = 'fguillot/kanboard'
+    version = get_latest_github_release(program)
+
+    if version != '':
+        print('Latest version of %s is %s' % (program, version))
+
+
+
+if __name__=="__main__" :
+    main()
