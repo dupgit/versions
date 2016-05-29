@@ -52,7 +52,7 @@ def main():
     version = get_latest_github_release(program)
 
     if version != '':
-        print('Latest version of %s is %s' % (program, version))
+        print('%s %s' % (program, version))
 
 
 
