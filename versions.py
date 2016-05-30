@@ -32,7 +32,7 @@ def define_command_line_arguments():
     Defines all the arguments for the command line using argparse module
     """
 
-    parser = argparse.ArgumentParser(description='This program checks release and versions of programs through RSS or Atom feeds')
+    parser = argparse.ArgumentParser(description='This program checks release and versions of programs through RSS or Atom feeds', version='versions - 0.0.1')
     parser.add_argument('--file', action='store', dest='filename', help='Configuration file with projects to check', default='versions.yaml')
 
     options = parser.parse_args()
