@@ -22,6 +22,7 @@
 #
 
 import feedparser
+import yaml
 
 
 def get_latest_github_release(program):
@@ -43,27 +44,37 @@ def get_latest_github_release(program):
 # End of get_latest_github_release function
 
 
+def load_yaml_from_config_file(filename):
+    """
+    Loads definitions from the YAML config file
+    """
+
+    config_file = open(filename, 'r')
+
+    description = yaml.safe_load(config_file)
+
+    config_file.close()
+
+    return description
+
+# End of load_yaml_from_config_file function
+
+
+
 def main():
     """
     This is the where the program begins
     """
 
-    prog_list = []
-    prog_list.insert(0, 'InfotelGLPI/manufacturersimports')
-    prog_list.insert(0, 'fguillot/kanboard')
-    prog_list.insert(0, 'curl/curl')
-    prog_list.insert(0, 'akheron/jansson')
-    prog_list.insert(0, 'Deltafire/MilkyTracker')
-    prog_list.insert(0, 'terryyin/lizard')
-    prog_list.insert(0, 'vmware/pyvmomi')
-    prog_list.insert(0, 'tmux/tmux')
-    prog_list.insert(0, 'tmuxinator/tmuxinator')
+    description = load_yaml_from_config_file('versions.yaml')
 
-    for program in prog_list:
-        version = get_latest_github_release(program)
+    github_project_list = description['github.com']
+
+    for project in github_project_list:
+        version = get_latest_github_release(project)
 
         if version != '':
-            print('%s %s' % (program, version))
+            print('%s %s' % (project, version))
 
 
 
