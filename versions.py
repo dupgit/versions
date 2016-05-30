@@ -55,6 +55,9 @@ def main():
     prog_list.insert(0, 'akheron/jansson')
     prog_list.insert(0, 'Deltafire/MilkyTracker')
     prog_list.insert(0, 'terryyin/lizard')
+    prog_list.insert(0, 'vmware/pyvmomi')
+    prog_list.insert(0, 'tmux/tmux')
+    prog_list.insert(0, 'tmuxinator/tmuxinator')
 
     for program in prog_list:
         version = get_latest_github_release(program)
