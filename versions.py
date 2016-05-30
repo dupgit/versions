@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf8 -*-
 #
-#  versions.py : checks software release versions and tells you
+#  versions.py : checks release and versions of programs through RSS
+#                or Atom feeds and tells you
 #
 #  (C) Copyright 2016 Olivier Delhomme
 #  e-mail : olivier.delhomme@free.fr
@@ -23,6 +24,22 @@
 
 import feedparser
 import yaml
+import argparse
+
+
+def define_command_line_arguments():
+    """
+    Defines all the arguments for the command line using argparse module
+    """
+
+    parser = argparse.ArgumentParser(description='This program checks release and versions of programs through RSS or Atom feeds')
+    parser.add_argument('--file', action='store', dest='filename', help='Configuration file with projects to check', default='versions.yaml')
+
+    options = parser.parse_args()
+
+    return options
+
+# End of define_command_line_arguments() function
 
 
 def get_latest_github_release(program):
@@ -41,7 +58,7 @@ def get_latest_github_release(program):
 
     return version
 
-# End of get_latest_github_release function
+# End of get_latest_github_release() function
 
 
 def load_yaml_from_config_file(filename):
@@ -57,7 +74,7 @@ def load_yaml_from_config_file(filename):
 
     return description
 
-# End of load_yaml_from_config_file function
+# End of load_yaml_from_config_file() function
 
 
 
@@ -66,7 +83,9 @@ def main():
     This is the where the program begins
     """
 
-    description = load_yaml_from_config_file('versions.yaml')
+    options = define_command_line_arguments()
+
+    description = load_yaml_from_config_file(options.filename)
 
     github_project_list = description['github.com']
 
@@ -76,6 +95,7 @@ def main():
         if version != '':
             print('%s %s' % (project, version))
 
+# End of main() function
 
 
 if __name__=="__main__" :

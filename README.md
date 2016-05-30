@@ -1,6 +1,7 @@
 # Summary
 
-versions checks software release versions and tells you
+versions checks release and versions of programs through RSS or
+Atom feeds and tells you.
 
 # Licence
 
