@@ -25,6 +25,25 @@
 import feedparser
 import yaml
 import argparse
+import os
+import errno
+
+
+def make_directories(path):
+    """
+    Makes all directories in path if possible. It is not an error if
+    path already exists
+    """
+
+    try:
+        os.makedirs(path)
+
+    except OSError as exc:
+
+        if exc.errno != errno.EEXIST or os.path.isdir(path) != True:
+            raise
+
+# End of make_directories() function
 
 
 def define_command_line_arguments():
@@ -82,6 +101,12 @@ def main():
     """
     This is the where the program begins
     """
+
+    config_dir = os.path.expanduser("~/.config/versions")
+    local_dir = os.path.expanduser("~/.local/versions")
+
+    make_directories(config_dir)
+    make_directories(local_dir)
 
     options = define_command_line_arguments()
 
