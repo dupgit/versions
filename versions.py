@@ -29,6 +29,48 @@ import os
 import errno
 
 
+class Conf:
+    """
+    Basic class to store configuration of the program
+    """
+
+    config_dir = ''
+    local_dir = ''
+    config_filename = ''
+    description = {}
+
+    def __init__(self):
+        """
+        Inits the class
+        """
+        self.config_dir = os.path.expanduser("~/.config/versions")
+        self.local_dir = os.path.expanduser("~/.local/versions")
+        config_filename = '' # At this stage we do not know if a filename has been set on the command line
+        description = {}
+
+        # Make sure that the directories exists
+        make_directories(self.config_dir)
+        make_directories(self.local_dir)
+
+    # End of init() function
+
+
+    def load_yaml_from_config_file(self, filename):
+        """
+        Loads definitions from the YAML config file filename
+        """
+
+        config_file = open(filename, 'r')
+
+        self.description = yaml.safe_load(config_file)
+
+        config_file.close()
+
+    # End of load_yaml_from_config_file() function
+
+# End of Conf class
+
+
 def make_directories(path):
     """
     Makes all directories in path if possible. It is not an error if
@@ -46,12 +88,14 @@ def make_directories(path):
 # End of make_directories() function
 
 
-def define_command_line_arguments():
+def get_command_line_arguments():
     """
-    Defines all the arguments for the command line using argparse module
+    Defines and gets all the arguments for the command line using
+    argparse module
     """
 
     parser = argparse.ArgumentParser(description='This program checks release and versions of programs through RSS or Atom feeds', version='versions - 0.0.1')
+
     parser.add_argument('--file', action='store', dest='filename', help='Configuration file with projects to check', default='versions.yaml')
 
     options = parser.parse_args()
@@ -80,45 +124,32 @@ def get_latest_github_release(program):
 # End of get_latest_github_release() function
 
 
-def load_yaml_from_config_file(filename):
-    """
-    Loads definitions from the YAML config file
-    """
-
-    config_file = open(filename, 'r')
-
-    description = yaml.safe_load(config_file)
-
-    config_file.close()
-
-    return description
-
-# End of load_yaml_from_config_file() function
-
-
-
 def main():
     """
     This is the where the program begins
     """
 
-    config_dir = os.path.expanduser("~/.config/versions")
-    local_dir = os.path.expanduser("~/.local/versions")
+    version_conf = Conf()
 
-    make_directories(config_dir)
-    make_directories(local_dir)
 
-    options = define_command_line_arguments()
+    options = get_command_line_arguments()
 
-    description = load_yaml_from_config_file(options.filename)
+    config_filename = os.path.join(version_conf.config_dir, options.filename)
 
-    github_project_list = description['github.com']
+    if os.path.isfile(config_filename):
 
-    for project in github_project_list:
-        version = get_latest_github_release(project)
+        version_conf.load_yaml_from_config_file(config_filename)
 
-        if version != '':
-            print('%s %s' % (project, version))
+        github_project_list = version_conf.description['github.com']
+
+        for project in github_project_list:
+            version = get_latest_github_release(project)
+
+            if version != '':
+                print('%s %s' % (project, version))
+
+    else:
+        print('Error: file %s does not exist' % config_filename)
 
 # End of main() function
 
