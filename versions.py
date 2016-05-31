@@ -115,7 +115,6 @@ def get_latest_github_release(program):
     url = 'https://github.com/' + program + '/releases.atom'
     feed = feedparser.parse(url)
 
-
     if len(feed.entries) > 0:
         version = feed.entries[0].title
 
@@ -124,23 +123,71 @@ def get_latest_github_release(program):
 # End of get_latest_github_release() function
 
 
+def read_github_cache_file(version_conf):
+    """
+    Reads the github cache file and puts it into a list of tuples
+    (project, version) that is returned
+    """
+
+    # @note cache_list should be cache_dict
+    cache_list = []
+    filename = os.path.join(version_conf.local_dir, 'github.cache')
+
+    if os.path.isfile(filename):
+
+        cache_file = open(filename, 'r')
+
+        for line in cache_file:
+            if line.count(' ') > 1:
+                (project, version) = line.split(' ', 1)
+            else:
+                project = line
+                version = ''
+
+            cache_list.insert(0, (project, version))
+
+        cache_file.close()
+
+    return cache_list
+
+# End of read_github_cache_file() function
+
+
+def write_github_cache_file(version_conf, cache_list):
+    """
+    Writes the cache_list to the github cache file
+    """
+
+    filename = os.path.join(version_conf.local_dir, 'github.cache')
+
+    cache_file = open(filename, 'w')
+
+    for (project, version) in cache_list:
+        cache_file.write('%s %s' % (project, version))
+
+
+    cache_file.close()
+
+# End of write_github_cache_file() function
+
+
 def main():
     """
     This is the where the program begins
     """
 
-    version_conf = Conf()
-
+    versions_conf = Conf()
 
     options = get_command_line_arguments()
 
-    config_filename = os.path.join(version_conf.config_dir, options.filename)
+    config_filename = os.path.join(versions_conf.config_dir, options.filename)
 
     if os.path.isfile(config_filename):
 
-        version_conf.load_yaml_from_config_file(config_filename)
+        versions_conf.load_yaml_from_config_file(config_filename)
 
-        github_project_list = version_conf.description['github.com']
+        github_project_list = versions_conf.description['github.com']
+        cache_list = read_github_cache_file(versions_conf)
 
         for project in github_project_list:
             version = get_latest_github_release(project)
