@@ -123,15 +123,15 @@ def get_latest_github_release(program):
 # End of get_latest_github_release() function
 
 
-def read_github_cache_file(version_conf):
+def read_github_cache_file(versions_conf):
     """
     Reads the github cache file and puts it into a list of tuples
     (project, version) that is returned
     """
 
-    # @note cache_list should be cache_dict
-    cache_list = []
-    filename = os.path.join(version_conf.local_dir, 'github.cache')
+    # This is a dictionary of projects
+    cache_dict = {}
+    filename = os.path.join(versions_conf.local_dir, 'github.cache')
 
     if os.path.isfile(filename):
 
@@ -144,27 +144,26 @@ def read_github_cache_file(version_conf):
                 project = line
                 version = ''
 
-            cache_list.insert(0, (project, version))
+            cache_dict[project] = version
 
         cache_file.close()
 
-    return cache_list
+    return cache_dict
 
 # End of read_github_cache_file() function
 
 
-def write_github_cache_file(version_conf, cache_list):
+def write_github_cache_file(versions_conf, cache_dict):
     """
     Writes the cache_list to the github cache file
     """
 
-    filename = os.path.join(version_conf.local_dir, 'github.cache')
+    filename = os.path.join(versions_conf.local_dir, 'github.cache')
 
     cache_file = open(filename, 'w')
 
-    for (project, version) in cache_list:
-        cache_file.write('%s %s' % (project, version))
-
+    for (project, version) in cache_dict.iteritems():
+        cache_file.write('%s %s\n' % (project, version))
 
     cache_file.close()
 
@@ -187,13 +186,22 @@ def main():
         versions_conf.load_yaml_from_config_file(config_filename)
 
         github_project_list = versions_conf.description['github.com']
-        cache_list = read_github_cache_file(versions_conf)
+        cache_dict = read_github_cache_file(versions_conf)
 
         for project in github_project_list:
             version = get_latest_github_release(project)
 
-            if version != '':
+            try:
+                version_cache = cache_dict(project)
+
+                if version != version_cache:
+                    print('%s %s' % (project, version))
+                    cache_dict[project] = version_cache
+            except:
                 print('%s %s' % (project, version))
+                cache_dict[project] = version
+
+        write_github_cache_file(versions_conf, cache_dict)
 
     else:
         print('Error: file %s does not exist' % config_filename)
