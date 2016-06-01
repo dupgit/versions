@@ -97,11 +97,6 @@ class Conf:
         self.config_filename = os.path.join(self.config_dir, self.options.filename)
 
     # End of get_command_line_arguments() function
-
-# End of define_command_line_arguments() function
-
-
-
 # End of Conf class
 
 
@@ -186,6 +181,7 @@ class Cache:
             print('%s %s' % (project, version))
             self.cache_dict[project] = version
 
+    # End of update_cache_dict() function
 # End of Cache class
 
 
@@ -204,9 +200,6 @@ def make_directories(path):
             raise
 
 # End of make_directories() function
-
-
-
 
 
 def get_latest_github_release(program):
