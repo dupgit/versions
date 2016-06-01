@@ -8,3 +8,4 @@ github.com:
   - vmware/pyvmomi
   - tmux/tmux
   - tmuxinator/tmuxinator
+  - gorhill/uBlock
