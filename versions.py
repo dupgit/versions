@@ -47,6 +47,7 @@ class Conf:
     local_dir = ''
     config_filename = ''
     description = {}
+    options = None
 
     def __init__(self):
         """
@@ -56,10 +57,13 @@ class Conf:
         self.local_dir = os.path.expanduser("~/.local/versions")
         config_filename = '' # At this stage we do not know if a filename has been set on the command line
         description = {}
+        options = None
 
         # Make sure that the directories exists
         make_directories(self.config_dir)
         make_directories(self.local_dir)
+
+        self.get_command_line_arguments()
 
     # End of init() function
 
@@ -76,6 +80,27 @@ class Conf:
         config_file.close()
 
     # End of load_yaml_from_config_file() function
+
+
+    def get_command_line_arguments(self):
+        """
+        Defines and gets all the arguments for the command line using
+        argparse module. This function is called in the __init__ function
+        of this class.
+        """
+
+        parser = argparse.ArgumentParser(description='This program checks release and versions of programs through RSS or Atom feeds', version='versions - 0.0.1')
+
+        parser.add_argument('--file', action='store', dest='filename', help='Configuration file with projects to check', default='versions.yaml')
+
+        self.options = parser.parse_args()
+        self.config_filename = os.path.join(self.config_dir, self.options.filename)
+
+    # End of get_command_line_arguments() function
+
+# End of define_command_line_arguments() function
+
+
 
 # End of Conf class
 
@@ -181,21 +206,7 @@ def make_directories(path):
 # End of make_directories() function
 
 
-def get_command_line_arguments():
-    """
-    Defines and gets all the arguments for the command line using
-    argparse module
-    """
 
-    parser = argparse.ArgumentParser(description='This program checks release and versions of programs through RSS or Atom feeds', version='versions - 0.0.1')
-
-    parser.add_argument('--file', action='store', dest='filename', help='Configuration file with projects to check', default='versions.yaml')
-
-    options = parser.parse_args()
-
-    return options
-
-# End of define_command_line_arguments() function
 
 
 def get_latest_github_release(program):
@@ -216,15 +227,13 @@ def get_latest_github_release(program):
 # End of get_latest_github_release() function
 
 
-def check_versions_for_github_projects(versions_conf):
+def check_versions_for_github_projects(github_project_list, local_dir):
     """
     Checks project's versions on github if any are defined in the yaml
     file under the github.com tag.
     """
 
-    github_project_list = versions_conf.description['github.com']
-
-    github_cache = Cache(versions_conf.local_dir, 'github.cache')
+    github_cache = Cache(local_dir, 'github.cache')
     github_cache.read_cache_file()
 
     for project in github_project_list:
@@ -243,13 +252,11 @@ def main():
     """
 
     versions_conf = Conf()  # Configuration options
-    options = get_command_line_arguments()
-    config_filename = os.path.join(versions_conf.config_dir, options.filename)
 
-    if os.path.isfile(config_filename):
+    if os.path.isfile(versions_conf.config_filename):
 
-        versions_conf.load_yaml_from_config_file(config_filename)
-        check_versions_for_github_projects(versions_conf)
+        versions_conf.load_yaml_from_config_file(versions_conf.config_filename)
+        check_versions_for_github_projects(versions_conf.description['github.com'], versions_conf.local_dir)
 
     else:
         print('Error: file %s does not exist' % config_filename)
