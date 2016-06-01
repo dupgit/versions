@@ -71,6 +71,87 @@ class Conf:
 # End of Conf class
 
 
+class Cache:
+    """
+    This class should help in managing cache
+    """
+
+    cache_filename = ''
+    cache_dict = {}
+
+    def __init__(self, local_dir, filename):
+
+        self.cache_filename = os.path.join(local_dir, filename)
+        self.cache_dict = {}
+
+    # End of __init__() function
+
+
+    def read_cache_file(self):
+        """
+        Reads the cache file and puts it into a dictionnary of project with
+        their associated version
+        """
+
+        if os.path.isfile(self.cache_filename):
+
+            cache_file = open(self.cache_filename, 'r')
+
+            for line in cache_file:
+
+                line = line.strip()
+
+                if line.count(' ') > 0:
+                    (project, version) = line.split(' ', 1)
+
+                elif line != '':
+                    project = line
+                    version = ''
+
+                self.cache_dict[project] = version
+
+            cache_file.close()
+
+        # End of read_cache_file() function
+
+
+    def write_cache_file(self):
+        """
+        Owerwrites dictionnary cache to the cache file
+        """
+
+        cache_file = open(self.cache_filename, 'w')
+        cache_file.truncate(0)
+        cache_file.flush()
+
+        for (project, version) in self.cache_dict.iteritems():
+            cache_file.write('%s %s\n' % (project, version))
+
+        cache_file.close()
+
+    # End of write_cache_file() function
+
+
+    def update_cache_dict(self, project, version):
+        """
+        Updates cache dictionnary if needed
+        """
+
+        try:
+            version_cache = self.cache_dict[project]
+
+            if version != version_cache:
+                print('%s %s' % (project, version_cache))
+                self.cache_dict[project] = version_cache
+
+        except KeyError:
+            print('%s %s' % (project, version))
+            self.cache_dict[project] = version
+
+
+# End of Cache class
+
+
 def make_directories(path):
     """
     Makes all directories in path if possible. It is not an error if
@@ -123,57 +204,25 @@ def get_latest_github_release(program):
 # End of get_latest_github_release() function
 
 
-def read_github_cache_file(versions_conf):
+def check_versions_for_github_projects(versions_conf):
     """
-    Reads the github cache file and puts it into a list of tuples
-    (project, version) that is returned
-    """
-
-    # This is a dictionary of projects
-    cache_dict = {}
-    filename = os.path.join(versions_conf.local_dir, 'github.cache')
-
-    if os.path.isfile(filename):
-
-        cache_file = open(filename, 'r')
-
-        for line in cache_file:
-
-            line = line.strip()
-
-            if line.count(' ') > 0:
-                (project, version) = line.split(' ', 1)
-
-            elif line != '':
-                project = line
-                version = ''
-
-            cache_dict[project] = version
-
-        cache_file.close()
-
-    return cache_dict
-
-# End of read_github_cache_file() function
-
-
-def write_github_cache_file(versions_conf, cache_dict):
-    """
-    Writes the cache_list to the github cache file
+    Checks project's versions on github if any are defined in the yaml
+    file under the github.com tag.
     """
 
-    filename = os.path.join(versions_conf.local_dir, 'github.cache')
+    github_project_list = versions_conf.description['github.com']
 
-    cache_file = open(filename, 'w')
-    cache_file.truncate(0)
-    cache_file.flush()
+    github_cache = Cache(versions_conf.local_dir, 'github.cache')
+    github_cache.read_cache_file()
 
-    for (project, version) in cache_dict.iteritems():
-        cache_file.write('%s %s\n' % (project, version))
+    for project in github_project_list:
 
-    cache_file.close()
+        version = get_latest_github_release(project)
+        github_cache.update_cache_dict(project, version)
 
-# End of write_github_cache_file() function
+    github_cache.write_cache_file()
+
+# End of check_versions_for_github_projects() function
 
 
 def main():
@@ -181,34 +230,14 @@ def main():
     This is the where the program begins
     """
 
-    versions_conf = Conf()
-
+    versions_conf = Conf()  # Configuration options
     options = get_command_line_arguments()
-
     config_filename = os.path.join(versions_conf.config_dir, options.filename)
 
     if os.path.isfile(config_filename):
 
         versions_conf.load_yaml_from_config_file(config_filename)
-
-        github_project_list = versions_conf.description['github.com']
-        cache_dict = read_github_cache_file(versions_conf)
-
-        for project in github_project_list:
-            version = get_latest_github_release(project)
-
-            try:
-                version_cache = cache_dict[project]
-
-                if version != version_cache:
-                    print('%s %s' % (project, version))
-                    cache_dict[project] = version_cache
-
-            except KeyError:
-                print('%s %s' % (project, version))
-                cache_dict[project] = version
-
-        write_github_cache_file(versions_conf, cache_dict)
+        check_versions_for_github_projects(versions_conf)
 
     else:
         print('Error: file %s does not exist' % config_filename)
