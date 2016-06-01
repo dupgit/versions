@@ -28,10 +28,19 @@ import argparse
 import os
 import errno
 
+__author__ = "Olivier Delhomme <olivier.delhomme@free.fr>"
+__date__ = "01.06.2016"
+__version__ = "0.0.1"
+
+"""
+This program checks projects versions throught RSS and Atom feeds and
+should only print those with new realease version
+"""
+
 
 class Conf:
     """
-    Basic class to store configuration of the program
+    Class to store configuration of the program
     """
 
     config_dir = ''
@@ -73,13 +82,17 @@ class Conf:
 
 class Cache:
     """
-    This class should help in managing cache
+    This class should help in managing cache files
     """
 
     cache_filename = ''
-    cache_dict = {}
+    cache_dict = {}  # Dictionnary of projects and their associated version
 
     def __init__(self, local_dir, filename):
+        """
+        Inits the class. 'local_dir' must be a directory where we want to
+        store the cache file named 'filename'
+        """
 
         self.cache_filename = os.path.join(local_dir, filename)
         self.cache_dict = {}
@@ -147,7 +160,6 @@ class Cache:
         except KeyError:
             print('%s %s' % (project, version))
             self.cache_dict[project] = version
-
 
 # End of Cache class
 
