@@ -138,9 +138,13 @@ def read_github_cache_file(versions_conf):
         cache_file = open(filename, 'r')
 
         for line in cache_file:
-            if line.count(' ') > 1:
+
+            line = line.strip()
+
+            if line.count(' ') > 0:
                 (project, version) = line.split(' ', 1)
-            else:
+
+            elif line != '':
                 project = line
                 version = ''
 
@@ -161,6 +165,8 @@ def write_github_cache_file(versions_conf, cache_dict):
     filename = os.path.join(versions_conf.local_dir, 'github.cache')
 
     cache_file = open(filename, 'w')
+    cache_file.truncate(0)
+    cache_file.flush()
 
     for (project, version) in cache_dict.iteritems():
         cache_file.write('%s %s\n' % (project, version))
@@ -192,12 +198,13 @@ def main():
             version = get_latest_github_release(project)
 
             try:
-                version_cache = cache_dict(project)
+                version_cache = cache_dict[project]
 
                 if version != version_cache:
                     print('%s %s' % (project, version))
                     cache_dict[project] = version_cache
-            except:
+
+            except KeyError:
                 print('%s %s' % (project, version))
                 cache_dict[project] = version
 
