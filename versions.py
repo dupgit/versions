@@ -174,8 +174,8 @@ class Cache:
             version_cache = self.cache_dict[project]
 
             if version != version_cache:
-                print('%s %s' % (project, version_cache))
-                self.cache_dict[project] = version_cache
+                print('%s %s' % (project, version))
+                self.cache_dict[project] = version
 
         except KeyError:
             print('%s %s' % (project, version))
