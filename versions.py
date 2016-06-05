@@ -239,6 +239,33 @@ def check_versions_for_github_projects(github_project_list, local_dir):
 # End of check_versions_for_github_projects() function
 
 
+def check_versions_for_freshcode(freshcode_project_list, local_dir):
+    """
+    Checks projects with freshcode web site's RSS
+    """
+
+    freshcode_cache = Cache(local_dir, 'freshcode.cache')
+    freshcode_cache.read_cache_file()
+
+    url = 'http://freshcode.club/projects.rss'
+    feed = feedparser.parse(url)
+
+
+    if len(feed.entries) > 0:
+
+        feed_list = []
+        for f in feed.entries:
+            feed_list.insert(0, f)
+
+        for entry in feed_list:
+            (project, version) = entry.title.strip().split(' ', 1)
+
+            if project in freshcode_project_list:
+                freshcode_cache.update_cache_dict(project, version)
+
+        freshcode_cache.write_cache_file()
+
+
 def main():
     """
     This is the where the program begins
@@ -249,7 +276,12 @@ def main():
     if os.path.isfile(versions_conf.config_filename):
 
         versions_conf.load_yaml_from_config_file(versions_conf.config_filename)
-        check_versions_for_github_projects(versions_conf.description['github.com'], versions_conf.local_dir)
+
+        # Checks projects from github
+        # check_versions_for_github_projects(versions_conf.description['github.com'], versions_conf.local_dir)
+
+        # Checks projects from freshcode.club
+        check_versions_for_freshcode(versions_conf.description['freshcode.club'], versions_conf.local_dir)
 
     else:
         print('Error: file %s does not exist' % config_filename)
