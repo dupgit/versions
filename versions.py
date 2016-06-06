@@ -100,7 +100,7 @@ class Conf:
 # End of Conf class
 
 
-class Cache:
+class FileCache:
     """
     This class should help in managing cache files
     """
@@ -182,7 +182,7 @@ class Cache:
             self.cache_dict[project] = version
 
     # End of update_cache_dict() function
-# End of Cache class
+# End of FileCache class
 
 
 def make_directories(path):
@@ -226,7 +226,7 @@ def check_versions_for_github_projects(github_project_list, local_dir):
     file under the github.com tag.
     """
 
-    github_cache = Cache(local_dir, 'github.cache')
+    github_cache = FileCache(local_dir, 'github.cache')
     github_cache.read_cache_file()
 
     for project in github_project_list:
@@ -244,7 +244,7 @@ def check_versions_for_freshcode(freshcode_project_list, local_dir):
     Checks projects with freshcode web site's RSS
     """
 
-    freshcode_cache = Cache(local_dir, 'freshcode.cache')
+    freshcode_cache = FileCache(local_dir, 'freshcode.cache')
     freshcode_cache.read_cache_file()
 
     url = 'http://freshcode.club/projects.rss'
