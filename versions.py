@@ -185,6 +185,69 @@ class FileCache:
 # End of FileCache class
 
 
+class FeedCache:
+
+    cache_filename = ''
+    year = 2016
+    month = 05
+    day = 01
+    hour = 00
+    minute = 00
+
+    def __init__(self, local_dir, filename):
+        """
+        Inits the class. 'local_dir' must be a directory where we want to
+        store the cache file named 'filename'
+        """
+
+        self.cache_filename = os.path.join(local_dir, filename)
+        self.year = '2016'
+        self.month = '5'
+        self.day = '1'
+        self.hour = '0'
+        self.minute = '0'
+
+
+    def read_cache_feed(self):
+        """
+        Reads the cache file which should only contain one date on the
+        first line
+        """
+
+        if os.path.isfile(self.cache_filename):
+            cache_file = open(self.cache_filename, 'r')
+            (self.year, self.month, self.day, self.hour, self.minute) = cache_file.readline().strip().split(' ', 4)
+            cache_file.close()
+
+
+    def write_cache_feed(self):
+        """
+        Overwrites the cache file with values stored in this class
+        """
+        cache_file = open(self.cache_filename, 'w')
+        cache_file.truncate(0)
+        cache_file.flush()
+
+        cache_file.write('%s %s %s %s %s' % (self.year, self.month, self.day, self.hour, self.minute))
+
+        cache_file.close()
+
+
+    def update_cache_feed(self, date):
+        """
+        Updates the values stored in the class with the date which should
+        be a time.struct_time
+        """
+
+        self.year = date.tm_year
+        self.month = date.tm_mon
+        self.day = date.tm_mday
+        self.hour = date.tm_hour
+        self.minute = date.tm_min
+
+# End of FeedCache class
+
+
 def make_directories(path):
     """
     Makes all directories in path if possible. It is not an error if
@@ -244,17 +307,21 @@ def check_versions_for_freshcode(freshcode_project_list, local_dir):
     Checks projects with freshcode web site's RSS
     """
 
+
     freshcode_cache = FileCache(local_dir, 'freshcode.cache')
     freshcode_cache.read_cache_file()
 
     url = 'http://freshcode.club/projects.rss'
     feed = feedparser.parse(url)
 
+    feed_date = FeedCache(local_dir, 'freshcode.feed')
+    feed_date.read_cache_feed()
 
     if len(feed.entries) > 0:
 
         feed_list = []
         for f in feed.entries:
+
             feed_list.insert(0, f)
 
         for entry in feed_list:
@@ -264,6 +331,8 @@ def check_versions_for_freshcode(freshcode_project_list, local_dir):
                 freshcode_cache.update_cache_dict(project, version)
 
         freshcode_cache.write_cache_file()
+
+    feed_date.write_cache_feed()
 
 
 def main():
