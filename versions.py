@@ -145,7 +145,7 @@ class FileCache:
 
             cache_file.close()
 
-        # End of read_cache_file() function
+    # End of read_cache_file() function
 
 
     def write_cache_file(self):
@@ -365,6 +365,9 @@ def check_versions_for_freshcode(freshcode_project_list, local_dir):
 
         feed_list = []
 
+        # inserting into a list in reverse order to keep the most recent
+        # version in case of multiple release of the same project in the
+        # feeds
         for f in feed.entries:
             if feed_info.is_newer(f.published_parsed):
                 feed_list.insert(0, f)
@@ -380,6 +383,8 @@ def check_versions_for_freshcode(freshcode_project_list, local_dir):
         freshcode_cache.write_cache_file()
 
     feed_info.write_cache_feed()
+
+# End of check_versions_for_freshcode() function
 
 
 def main():
