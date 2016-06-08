@@ -15,3 +15,5 @@ github.com:
   - tmux/tmux
   - tmuxinator/tmuxinator
   - gorhill/uBlock
+  - cachethq/cachet
+  - Gandi/baobab

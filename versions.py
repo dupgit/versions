@@ -201,11 +201,13 @@ class FeedCache:
         """
 
         self.cache_filename = os.path.join(local_dir, filename)
-        self.year = '2016'
-        self.month = '5'
-        self.day = '1'
-        self.hour = '0'
-        self.minute = '0'
+        self.year = 2016
+        self.month = 5
+        self.day = 1
+        self.hour = 0
+        self.minute = 0
+
+    # End of __init__() function
 
 
     def read_cache_feed(self):
@@ -218,6 +220,8 @@ class FeedCache:
             cache_file = open(self.cache_filename, 'r')
             (self.year, self.month, self.day, self.hour, self.minute) = cache_file.readline().strip().split(' ', 4)
             cache_file.close()
+
+    # End of read_cache_feed() function
 
 
     def write_cache_feed(self):
@@ -232,6 +236,8 @@ class FeedCache:
 
         cache_file.close()
 
+    # End of write_cache_feed() function
+
 
     def update_cache_feed(self, date):
         """
@@ -244,6 +250,44 @@ class FeedCache:
         self.day = date.tm_mday
         self.hour = date.tm_hour
         self.minute = date.tm_min
+
+    # End of update_cache_feed() function
+
+
+    def is_newer(self, date):
+        """
+        Tells wether "date" is newer than the one in the cache (returns True
+        or not (returns False)
+        """
+
+        #print("%d %d" % (date.tm_year, self.year))
+
+        if date.tm_year > self.year:
+            return True
+        elif date.tm_year == self.year:
+            if date.tm_mon > self.month:
+                return True
+            elif date.tm_mon == self.month:
+                if date.tm_mday > self.day:
+                    return True
+                elif date.tm_mday == self.day:
+                    if date.tm_hour > self.hour:
+                        return True
+                    elif date.tm_hour == self.hour:
+                        if date.tm_min > self.minute:
+                            return True
+                        else:
+                            return False
+                    else:
+                        return False
+                else:
+                    return False
+            else:
+                return False
+        else:
+            return False
+
+    # End of is_newer() function
 
 # End of FeedCache class
 
@@ -314,15 +358,18 @@ def check_versions_for_freshcode(freshcode_project_list, local_dir):
     url = 'http://freshcode.club/projects.rss'
     feed = feedparser.parse(url)
 
-    feed_date = FeedCache(local_dir, 'freshcode.feed')
-    feed_date.read_cache_feed()
+    feed_info = FeedCache(local_dir, 'freshcode.feed')
+    feed_info.read_cache_feed()
 
     if len(feed.entries) > 0:
 
         feed_list = []
-        for f in feed.entries:
 
-            feed_list.insert(0, f)
+        for f in feed.entries:
+            if feed_info.is_newer(f.published_parsed):
+                feed_list.insert(0, f)
+
+        feed_info.update_cache_feed(feed.entries[0].published_parsed)
 
         for entry in feed_list:
             (project, version) = entry.title.strip().split(' ', 1)
@@ -332,7 +379,7 @@ def check_versions_for_freshcode(freshcode_project_list, local_dir):
 
         freshcode_cache.write_cache_file()
 
-    feed_date.write_cache_feed()
+    feed_info.write_cache_feed()
 
 
 def main():
@@ -347,7 +394,7 @@ def main():
         versions_conf.load_yaml_from_config_file(versions_conf.config_filename)
 
         # Checks projects from github
-        # check_versions_for_github_projects(versions_conf.description['github.com'], versions_conf.local_dir)
+        check_versions_for_github_projects(versions_conf.description['github.com'], versions_conf.local_dir)
 
         # Checks projects from freshcode.club
         check_versions_for_freshcode(versions_conf.description['freshcode.club'], versions_conf.local_dir)
