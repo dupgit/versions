@@ -272,8 +272,6 @@ class FeedCache:
         or not (returns False)
         """
 
-        #print("%d %d" % (date.tm_year, self.year))
-
         if date.tm_year > self.year:
             return True
         elif date.tm_year == self.year:
@@ -300,7 +298,6 @@ class FeedCache:
             return False
 
     # End of is_newer() function
-
 # End of FeedCache class
 
 
