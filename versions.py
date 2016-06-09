@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf8 -*-
 #
-#  versions.py : checks release and versions of programs through RSS
+#  versions.py : checks releases and versions of programs through RSS
 #                or Atom feeds and tells you
 #
 #  (C) Copyright 2016 Olivier Delhomme
@@ -75,7 +75,7 @@ class Conf:
         make_directories(self.config_dir)
         make_directories(self.local_dir)
 
-        self.get_command_line_arguments()
+        self._get_command_line_arguments()
 
     # End of init() function
 
@@ -94,14 +94,14 @@ class Conf:
     # End of load_yaml_from_config_file() function
 
 
-    def get_command_line_arguments(self):
+    def _get_command_line_arguments(self):
         """
         Defines and gets all the arguments for the command line using
         argparse module. This function is called in the __init__ function
         of this class.
         """
 
-        parser = argparse.ArgumentParser(description='This program checks release and versions of programs through RSS or Atom feeds', version='versions - 0.0.1')
+        parser = argparse.ArgumentParser(description='This program checks releases and versions of programs through RSS or Atom feeds', version='versions - 0.0.1')
 
         parser.add_argument('--file', action='store', dest='filename', help='Configuration file with projects to check', default='versions.yaml')
 
@@ -220,7 +220,7 @@ class FeedCache:
         self.day = 1
         self.hour = 0
         self.minute = 0
-        self.date_minutes = self.calculate_minutes(self.year, self.month, self.day, self.hour, self.minute)
+        self.date_minutes = self._calculate_minutes(self.year, self.month, self.day, self.hour, self.minute)
 
     # End of __init__() function
 
@@ -234,7 +234,7 @@ class FeedCache:
         if os.path.isfile(self.cache_filename):
             cache_file = open(self.cache_filename, 'r')
             (self.year, self.month, self.day, self.hour, self.minute) = cache_file.readline().strip().split(' ', 4)
-            self.calculate_minutes(self.year, self.month, self.day, self.hour, self.minute)
+            self._calculate_minutes(self.year, self.month, self.day, self.hour, self.minute)
             cache_file.close()
 
     # End of read_cache_feed() function
@@ -266,12 +266,12 @@ class FeedCache:
         self.day = date.tm_mday
         self.hour = date.tm_hour
         self.minute = date.tm_min
-        self.date_minutes = self.calculate_minutes_from_date(date)
+        self.date_minutes = self._calculate_minutes_from_date(date)
 
     # End of update_cache_feed() function
 
 
-    def calculate_minutes(self, year, mon, day, hour, mins):
+    def _calculate_minutes(self, year, mon, day, hour, mins):
         """
         Calculate a number of minutes with all parameters and returns
         this.
@@ -285,18 +285,18 @@ class FeedCache:
 
         return minutes
 
-    # End of calculate_minutes() function
+    # End of _calculate_minutes() function
 
 
-    def calculate_minutes_from_date(self, date):
+    def _calculate_minutes_from_date(self, date):
         """
         Transforms a date in a number of minutes to ease comparisons
         and returns this number of minutes
         """
 
-        return self.calculate_minutes(date.tm_year, date.tm_mon, date.tm_mday, date.tm_hour, date.tm_min)
+        return self._calculate_minutes(date.tm_year, date.tm_mon, date.tm_mday, date.tm_hour, date.tm_min)
 
-    # End of calculate_minutes() function
+    # End of _calculate_minutes() function
 
 
     def is_newer(self, date):
@@ -305,7 +305,7 @@ class FeedCache:
         or not (returns False)
         """
 
-        minutes = self.calculate_minutes_from_date(date)
+        minutes = self._calculate_minutes_from_date(date)
 
         if minutes > self.date_minutes:
             return True
@@ -319,7 +319,7 @@ class FeedCache:
 def make_directories(path):
     """
     Makes all directories in path if possible. It is not an error if
-    path already exists
+    path already exists.
     """
 
     try:
@@ -336,7 +336,7 @@ def make_directories(path):
 def get_latest_github_release(program):
     """
     Gets the latest release of a program on github. program must be a
-    string of the form user/repository
+    string of the form user/repository.
     """
 
     version = ''
@@ -370,9 +370,53 @@ def check_versions_for_github_projects(github_project_list, local_dir):
 # End of check_versions_for_github_projects() function
 
 
+def make_list_of_newer_feeds(feed, feed_info):
+    """
+    Compares feed entries and keep those that are newer than the latest
+    check we've done and inserting the newer ones in reverse order in
+    a list to be returned
+    """
+
+    feed_list = []
+
+    # inserting into a list in reverse order to keep the most recent
+    # version in case of multiple release of the same project in the
+    # feeds
+    for a_feed in feed.entries:
+        if feed_info.is_newer(a_feed.published_parsed):
+            feed_list.insert(0, a_feed)
+
+    return feed_list
+
+# End of make_list_of_newer_feeds() function
+
+
+def check_and_update_feed(feed_list, project_list, cache):
+    """
+    Checks every feed entry in the list against project list cache and
+    then updates the dictionnary if needed.
+     - feed_list    is a list of feed (from feedparser module)
+     - project_list is the list of project as read from the yaml
+                    configuration file
+     - cache is an initialized instance of FileCache
+    """
+
+    # Checking every feed entry that are newer than the last check
+    # and updates the dictionnary accordingly
+    for entry in feed_list:
+        (project, version) = entry.title.strip().split(' ', 1)
+
+        if project in project_list:
+            cache.update_cache_dict(project, version)
+
+    cache.write_cache_file()
+
+# End of check_and_update_feed()
+
+
 def check_versions_for_freshcode(freshcode_project_list, local_dir):
     """
-    Checks projects with freshcode web site's RSS
+    Checks projects with freshcode's web site's RSS
     """
 
 
@@ -387,24 +431,11 @@ def check_versions_for_freshcode(freshcode_project_list, local_dir):
 
     if len(feed.entries) > 0:
 
-        feed_list = []
+        feed_list = make_list_of_newer_feeds(feed, feed_info)
+        check_and_update_feed(feed_list, freshcode_project_list, freshcode_cache)
 
-        # inserting into a list in reverse order to keep the most recent
-        # version in case of multiple release of the same project in the
-        # feeds
-        for f in feed.entries:
-            if feed_info.is_newer(f.published_parsed):
-                feed_list.insert(0, f)
-
+        # Updating feed_info with the latest parsed feed entry date
         feed_info.update_cache_feed(feed.entries[0].published_parsed)
-
-        for entry in feed_list:
-            (project, version) = entry.title.strip().split(' ', 1)
-
-            if project in freshcode_project_list:
-                freshcode_cache.update_cache_dict(project, version)
-
-        freshcode_cache.write_cache_file()
 
     feed_info.write_cache_feed()
 
