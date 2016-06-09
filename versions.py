@@ -166,9 +166,7 @@ class FileCache:
         Owerwrites dictionnary cache to the cache file
         """
 
-        cache_file = open(self.cache_filename, 'w')
-        cache_file.truncate(0)
-        cache_file.flush()
+        cache_file = open_and_truncate_file(self.cache_filename)
 
         for (project, version) in self.cache_dict.iteritems():
             cache_file.write('%s %s\n' % (project, version))
@@ -245,9 +243,7 @@ class FeedCache:
         """
         Overwrites the cache file with values stored in this class
         """
-        cache_file = open(self.cache_filename, 'w')
-        cache_file.truncate(0)
-        cache_file.flush()
+        cache_file = open_and_truncate_file(self.cache_filename)
 
         cache_file.write('%s %s %s %s %s' % (self.year, self.month, self.day, self.hour, self.minute))
 
@@ -317,6 +313,8 @@ class FeedCache:
 # End of FeedCache class
 
 
+######## Below are some utility functions used by classes above ########
+
 def make_directories(path):
     """
     Makes all directories in path if possible. It is not an error if
@@ -332,6 +330,22 @@ def make_directories(path):
             raise
 
 # End of make_directories() function
+
+
+def open_and_truncate_file(filename):
+    """
+    Opens filename for writing truncating it to a zero length file
+    and returns a python file object.
+    """
+
+    cache_file = open(filename, 'w')
+    cache_file.truncate(0)
+    cache_file.flush()
+
+    return cache_file
+
+# End of open_and_truncate_file() function
+####################### End of utility functions #######################
 
 
 def get_latest_github_release(program):
