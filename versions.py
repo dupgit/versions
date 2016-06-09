@@ -128,11 +128,12 @@ class FileCache:
 
         self.cache_filename = os.path.join(local_dir, filename)
         self.cache_dict = {}
+        self._read_cache_file()
 
     # End of __init__() function
 
 
-    def read_cache_file(self):
+    def _read_cache_file(self):
         """
         Reads the cache file and puts it into a dictionnary of project with
         their associated version
@@ -157,7 +158,7 @@ class FileCache:
 
             cache_file.close()
 
-    # End of read_cache_file() function
+    # End of _read_cache_file() function
 
 
     def write_cache_file(self):
@@ -358,7 +359,6 @@ def check_versions_for_github_projects(github_project_list, local_dir):
     """
 
     github_cache = FileCache(local_dir, 'github.cache')
-    github_cache.read_cache_file()
 
     for project in github_project_list:
 
@@ -419,9 +419,7 @@ def check_versions_for_freshcode(freshcode_project_list, local_dir):
     Checks projects with freshcode's web site's RSS
     """
 
-
     freshcode_cache = FileCache(local_dir, 'freshcode.cache')
-    freshcode_cache.read_cache_file()
 
     url = 'http://freshcode.club/projects.rss'
     feed = feedparser.parse(url)
