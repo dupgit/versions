@@ -133,6 +133,26 @@ class FileCache:
     # End of __init__() function
 
 
+    def _return_project_and_version_from_line(self, line):
+        """
+        Splits the line into a project and a version if possible (the line
+        must contain a whitespace.
+        """
+
+        line = line.strip()
+
+        if line.count(' ') > 0:
+            (project, version) = line.split(' ', 1)
+
+        elif line != '':
+            project = line
+            version = ''
+
+        return (project, version)
+
+    # End of _return_project_and_version_from_line() function
+
+
     def _read_cache_file(self):
         """
         Reads the cache file and puts it into a dictionnary of project with
@@ -145,14 +165,7 @@ class FileCache:
 
             for line in cache_file:
 
-                line = line.strip()
-
-                if line.count(' ') > 0:
-                    (project, version) = line.split(' ', 1)
-
-                elif line != '':
-                    project = line
-                    version = ''
+                (project, version) = self._return_project_and_version_from_line(line)
 
                 self.cache_dict[project] = version
 
@@ -408,7 +421,7 @@ def make_list_of_newer_feeds(feed, feed_info):
 def check_and_update_feed(feed_list, project_list, cache):
     """
     Checks every feed entry in the list against project list cache and
-    then updates the dictionnary if needed.
+    then updates the dictionnary then writes the cache file to the disk.
      - feed_list    is a list of feed (from feedparser module)
      - project_list is the list of project as read from the yaml
                     configuration file
