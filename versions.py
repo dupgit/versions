@@ -202,9 +202,11 @@ class FeedCache:
     cache_filename = ''
     year = 2016
     month = 05
-    day = 01
-    hour = 00
-    minute = 00
+    day = 1
+    hour = 0
+    minute = 0
+    date_minutes = 0
+
 
     def __init__(self, local_dir, filename):
         """
@@ -218,6 +220,7 @@ class FeedCache:
         self.day = 1
         self.hour = 0
         self.minute = 0
+        self.date_minutes = self.calculate_minutes(self.year, self.month, self.day, self.hour, self.minute)
 
     # End of __init__() function
 
@@ -231,6 +234,7 @@ class FeedCache:
         if os.path.isfile(self.cache_filename):
             cache_file = open(self.cache_filename, 'r')
             (self.year, self.month, self.day, self.hour, self.minute) = cache_file.readline().strip().split(' ', 4)
+            self.calculate_minutes(self.year, self.month, self.day, self.hour, self.minute)
             cache_file.close()
 
     # End of read_cache_feed() function
@@ -262,8 +266,37 @@ class FeedCache:
         self.day = date.tm_mday
         self.hour = date.tm_hour
         self.minute = date.tm_min
+        self.date_minutes = self.calculate_minutes_from_date(date)
 
     # End of update_cache_feed() function
+
+
+    def calculate_minutes(self, year, mon, day, hour, mins):
+        """
+        Calculate a number of minutes with all parameters and returns
+        this.
+        """
+
+        minutes = (year * 365 * 24 * 60) + \
+                  (mon * 30 * 24 * 60) + \
+                  (day * 24 * 60) + \
+                  (hour * 60) + \
+                  (mins)
+
+        return minutes
+
+    # End of calculate_minutes() function
+
+
+    def calculate_minutes_from_date(self, date):
+        """
+        Transforms a date in a number of minutes to ease comparisons
+        and returns this number of minutes
+        """
+
+        return self.calculate_minutes(date.tm_year, date.tm_mon, date.tm_mday, date.tm_hour, date.tm_min)
+
+    # End of calculate_minutes() function
 
 
     def is_newer(self, date):
@@ -272,28 +305,10 @@ class FeedCache:
         or not (returns False)
         """
 
-        if date.tm_year > self.year:
+        minutes = self.calculate_minutes_from_date(date)
+
+        if minutes > self.date_minutes:
             return True
-        elif date.tm_year == self.year:
-            if date.tm_mon > self.month:
-                return True
-            elif date.tm_mon == self.month:
-                if date.tm_mday > self.day:
-                    return True
-                elif date.tm_mday == self.day:
-                    if date.tm_hour > self.hour:
-                        return True
-                    elif date.tm_hour == self.hour:
-                        if date.tm_min > self.minute:
-                            return True
-                        else:
-                            return False
-                    else:
-                        return False
-                else:
-                    return False
-            else:
-                return False
         else:
             return False
 
