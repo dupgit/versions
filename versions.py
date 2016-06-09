@@ -28,7 +28,7 @@ import os
 import errno
 
 __author__ = "Olivier Delhomme <olivier.delhomme@free.fr>"
-__date__ = "01.06.2016"
+__date__ = "09.06.2016"
 __version__ = "0.0.1"
 
 """
