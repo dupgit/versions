@@ -227,12 +227,7 @@ class FeedCache:
         """
 
         self.cache_filename = os.path.join(local_dir, filename)
-        self.year = 2016
-        self.month = 5
-        self.day = 1
-        self.hour = 0
-        self.minute = 0
-        self.date_minutes = self._calculate_minutes(self.year, self.month, self.day, self.hour, self.minute)
+        self.read_cache_feed()
 
     # End of __init__() function
 
@@ -246,7 +241,7 @@ class FeedCache:
         if os.path.isfile(self.cache_filename):
             cache_file = open(self.cache_filename, 'r')
             (self.year, self.month, self.day, self.hour, self.minute) = cache_file.readline().strip().split(' ', 4)
-            self._calculate_minutes(self.year, self.month, self.day, self.hour, self.minute)
+            self.date_minutes = self._calculate_minutes(self.year, self.month, self.day, self.hour, self.minute)
             cache_file.close()
 
     # End of read_cache_feed() function
