@@ -2,7 +2,6 @@ freshcode.club:
   - FileZilla
   - sauvegarde
   - git
-  - Natron
 
 github.com:
   - InfotelGLPI/manufacturersimports
@@ -18,3 +17,4 @@ github.com:
   - cachethq/cachet
   - Gandi/baobab
   - dupgit/versions
+  - fedora-infra/anitya
