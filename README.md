@@ -20,3 +20,8 @@ written into ```~/.local/versions directory```. ```*.cache``` are cache
 files containing the project list and their associated version (the latest).
 ```*.feed``` are information feed cache files containing on only one line
 the latest parsed post of the feed.
+
+# Links of interest
+
+* [https://release-monitoring.org/](https://release-monitoring.org/)
+* [https://wiki.debian.org/debian/watch](https://wiki.debian.org/debian/watch)
