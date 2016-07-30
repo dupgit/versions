@@ -28,8 +28,8 @@ import os
 import errno
 
 __author__ = "Olivier Delhomme <olivier.delhomme@free.fr>"
-__date__ = "09.06.2016"
-__version__ = "0.0.1"
+__date__ = "30.07.2016"
+__version__ = "0.0.2"
 
 """
 This program checks projects versions throught RSS and Atom feeds and
@@ -104,6 +104,7 @@ class Conf:
         parser = argparse.ArgumentParser(description='This program checks releases and versions of programs through RSS or Atom feeds', version='versions - 0.0.1')
 
         parser.add_argument('-f', '--file', action='store', dest='filename', help='Configuration file with projects to check', default='versions.yaml')
+        parser.add_argument('-l', '--list-cache', action='store_true', dest='list_cache', help='Lists all projects and their version in cache', default=False)
 
         self.options = parser.parse_args()
         self.config_filename = os.path.join(self.config_dir, self.options.filename)
@@ -206,6 +207,22 @@ class FileCache:
             self.cache_dict[project] = version
 
     # End of update_cache_dict() function
+
+
+    def print_cache_dict(self, sitename):
+        """
+        Pretty prints the cache dictionary as it is recorded in the files.
+        """
+
+        print('%s:' % sitename)
+
+        # Gets project and version tuple sorted by project lowered while sorting
+        for project, version in sorted(self.cache_dict.iteritems(), key=lambda proj: proj[0].lower()):
+            print('\t%s %s' % (project, version))
+
+        print('')
+
+    # End of print_cache_dict() function
 # End of FileCache class
 
 
@@ -462,6 +479,22 @@ def check_versions_for_freshcode(freshcode_project_list, local_dir):
 # End of check_versions_for_freshcode() function
 
 
+def print_versions_from_cache(local_dir):
+    """
+    Prints all projects and their associated data from the cache
+    """
+
+    freshcode_cache = FileCache(local_dir, 'freshcode.cache')
+    github_cache = FileCache(local_dir, 'github.cache')
+
+    freshcode_cache.print_cache_dict('Freshcode')
+    github_cache.print_cache_dict('Github')
+
+
+
+# End of print_versions_from_cache()
+
+
 def main():
     """
     This is the where the program begins
@@ -473,11 +506,17 @@ def main():
 
         versions_conf.load_yaml_from_config_file(versions_conf.config_filename)
 
-        # Checks projects from github
-        check_versions_for_github_projects(versions_conf.description['github.com'], versions_conf.local_dir)
+        if versions_conf.options.list_cache == True:
 
-        # Checks projects from freshcode.club
-        check_versions_for_freshcode(versions_conf.description['freshcode.club'], versions_conf.local_dir)
+            print_versions_from_cache(versions_conf.local_dir)
+
+        else:
+
+            # Checks projects from github
+            check_versions_for_github_projects(versions_conf.description['github.com'], versions_conf.local_dir)
+
+            # Checks projects from freshcode.club
+            check_versions_for_freshcode(versions_conf.description['freshcode.club'], versions_conf.local_dir)
 
     else:
         print('Error: file %s does not exist' % config_filename)
