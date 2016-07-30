@@ -16,7 +16,7 @@ github projects must be listed under a ```github.com:``` section and
 freshcode ones must be listed under a ```freshcode.club:``` section.
 
 Versions uses and produces text files. Those files are cache files
-written into ```~/.local/versions directory```. ```*.cache``` are cache
+written into ```~/.local/versions``` directory. ```*.cache``` are cache
 files containing the project list and their associated version (the latest).
 ```*.feed``` are information feed cache files containing on only one line
 the latest parsed post of the feed.
