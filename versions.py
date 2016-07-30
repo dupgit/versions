@@ -103,7 +103,7 @@ class Conf:
 
         parser = argparse.ArgumentParser(description='This program checks releases and versions of programs through RSS or Atom feeds', version='versions - 0.0.1')
 
-        parser.add_argument('--file', action='store', dest='filename', help='Configuration file with projects to check', default='versions.yaml')
+        parser.add_argument('-f', '--file', action='store', dest='filename', help='Configuration file with projects to check', default='versions.yaml')
 
         self.options = parser.parse_args()
         self.config_filename = os.path.join(self.config_dir, self.options.filename)
