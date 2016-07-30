@@ -484,15 +484,38 @@ def print_versions_from_cache(local_dir):
     Prints all projects and their associated data from the cache
     """
 
-    freshcode_cache = FileCache(local_dir, 'freshcode.cache')
     github_cache = FileCache(local_dir, 'github.cache')
+    freshcode_cache = FileCache(local_dir, 'freshcode.cache')
 
-    freshcode_cache.print_cache_dict('Freshcode')
     github_cache.print_cache_dict('Github')
-
-
+    freshcode_cache.print_cache_dict('Freshcode')
 
 # End of print_versions_from_cache()
+
+
+def print_list_or_check_versions(versions_conf):
+    """
+    Decide to pretty print projects and their associated version that
+    are already in the cache or to check versions of that projects upon
+    selections made at the command line
+    """
+
+    versions_conf.load_yaml_from_config_file(versions_conf.config_filename)
+
+    if versions_conf.options.list_cache == True:
+
+        # Pretty prints all caches.
+        print_versions_from_cache(versions_conf.local_dir)
+
+    else:
+
+        # Checks projects from github
+        check_versions_for_github_projects(versions_conf.description['github.com'], versions_conf.local_dir)
+
+        # Checks projects from freshcode.club
+        check_versions_for_freshcode(versions_conf.description['freshcode.club'], versions_conf.local_dir)
+
+# End of print_list_or_check_versions() function.
 
 
 def main():
@@ -504,19 +527,7 @@ def main():
 
     if os.path.isfile(versions_conf.config_filename):
 
-        versions_conf.load_yaml_from_config_file(versions_conf.config_filename)
-
-        if versions_conf.options.list_cache == True:
-
-            print_versions_from_cache(versions_conf.local_dir)
-
-        else:
-
-            # Checks projects from github
-            check_versions_for_github_projects(versions_conf.description['github.com'], versions_conf.local_dir)
-
-            # Checks projects from freshcode.club
-            check_versions_for_freshcode(versions_conf.description['freshcode.club'], versions_conf.local_dir)
+        print_list_or_check_versions(versions_conf)
 
     else:
         print('Error: file %s does not exist' % config_filename)
