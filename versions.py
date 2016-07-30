@@ -493,7 +493,7 @@ def print_versions_from_cache(local_dir):
 # End of print_versions_from_cache()
 
 
-def print_list_or_check_versions(versions_conf):
+def print_cache_or_check_versions(versions_conf):
     """
     Decide to pretty print projects and their associated version that
     are already in the cache or to check versions of that projects upon
@@ -527,7 +527,7 @@ def main():
 
     if os.path.isfile(versions_conf.config_filename):
 
-        print_list_or_check_versions(versions_conf)
+        print_cache_or_check_versions(versions_conf)
 
     else:
         print('Error: file %s does not exist' % config_filename)
