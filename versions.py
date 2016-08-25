@@ -438,9 +438,7 @@ def check_and_update_feed(feed_list, project_list, cache):
     """
 
     # Lowers the list before searching in it
-    project_list_low = []
-    for project in project_list:
-        project_list_low.insert(0, project.lower())
+    project_list_low = [project.lower() for project in project_list]
 
     # Checking every feed entry that are newer than the last check
     # and updates the dictionnary accordingly
