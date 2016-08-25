@@ -161,13 +161,10 @@ class FileCache:
         """
 
         if os.path.isfile(self.cache_filename):
-
             cache_file = open(self.cache_filename, 'r')
 
             for line in cache_file:
-
                 (project, version) = self._return_project_and_version_from_line(line)
-
                 self.cache_dict[project] = version
 
             cache_file.close()
@@ -331,6 +328,7 @@ class FeedCache:
 
         if minutes > self.date_minutes:
             return True
+
         else:
             return False
 
@@ -400,7 +398,6 @@ def check_versions_for_github_projects(github_project_list, local_dir):
     github_cache = FileCache(local_dir, 'github.cache')
 
     for project in github_project_list:
-
         version = get_latest_github_release(project)
         github_cache.update_cache_dict(project, version)
 
@@ -440,10 +437,10 @@ def check_and_update_feed(feed_list, project_list, cache):
      - cache is an initialized instance of FileCache
     """
 
+    # Lowers the list before searching in it
     project_list_low = []
     for project in project_list:
         project_list_low.insert(0, project.lower())
-
 
     # Checking every feed entry that are newer than the last check
     # and updates the dictionnary accordingly
@@ -472,7 +469,6 @@ def check_versions_for_freshcode(freshcode_project_list, local_dir):
     feed_info.read_cache_feed()
 
     if len(feed.entries) > 0:
-
         feed_list = make_list_of_newer_feeds(feed, feed_info)
         check_and_update_feed(feed_list, freshcode_project_list, freshcode_cache)
 
@@ -508,12 +504,10 @@ def print_cache_or_check_versions(versions_conf):
     versions_conf.load_yaml_from_config_file(versions_conf.config_filename)
 
     if versions_conf.options.list_cache == True:
-
         # Pretty prints all caches.
         print_versions_from_cache(versions_conf.local_dir)
 
     else:
-
         # Checks projects from github
         check_versions_for_github_projects(versions_conf.description['github.com'], versions_conf.local_dir)
 
@@ -531,7 +525,6 @@ def main():
     versions_conf = Conf()  # Configuration options
 
     if os.path.isfile(versions_conf.config_filename):
-
         print_cache_or_check_versions(versions_conf)
 
     else:
