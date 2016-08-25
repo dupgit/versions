@@ -440,12 +440,17 @@ def check_and_update_feed(feed_list, project_list, cache):
      - cache is an initialized instance of FileCache
     """
 
+    project_list_low = []
+    for project in project_list:
+        project_list_low.insert(0, project.lower())
+
+
     # Checking every feed entry that are newer than the last check
     # and updates the dictionnary accordingly
     for entry in feed_list:
         (project, version) = entry.title.strip().split(' ', 1)
 
-        if project in project_list:
+        if project.lower() in project_list_low:
             cache.update_cache_dict(project, version)
 
     cache.write_cache_file()
