@@ -67,9 +67,9 @@ class Conf:
         """
         self.config_dir = os.path.expanduser("~/.config/versions")
         self.local_dir = os.path.expanduser("~/.local/versions")
-        config_filename = '' # At this stage we do not know if a filename has been set on the command line
-        description = {}
-        options = None
+        self.config_filename = ''  # At this stage we do not know if a filename has been set on the command line
+        self.description = {}
+        self.options = None
 
         # Make sure that the directories exists
         make_directories(self.config_dir)
@@ -100,8 +100,9 @@ class Conf:
         argparse module. This function is called in the __init__ function
         of this class.
         """
+        str_version = 'versions.py - %s' % __version__
 
-        parser = argparse.ArgumentParser(description='This program checks releases and versions of programs through RSS or Atom feeds', version='versions - 0.0.1')
+        parser = argparse.ArgumentParser(description='This program checks releases and versions of programs through RSS or Atom feeds', version=str_version)
 
         parser.add_argument('-f', '--file', action='store', dest='filename', help='Configuration file with projects to check', default='versions.yaml')
         parser.add_argument('-l', '--list-cache', action='store_true', dest='list_cache', help='Lists all projects and their version in cache', default=False)
