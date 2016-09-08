@@ -428,6 +428,18 @@ def make_list_of_newer_feeds(feed, feed_info):
 # End of make_list_of_newer_feeds() function
 
 
+def lower_list_of_strings(project_list):
+    """
+    Lowers every string in the list to ease sorting and comparisons
+    """
+
+    project_list_low = [project.lower() for project in project_list]
+
+    return project_list_low
+
+# End of lower_list_of_strings() function
+
+
 def check_and_update_feed(feed_list, project_list, cache):
     """
     Checks every feed entry in the list against project list cache and
@@ -439,7 +451,7 @@ def check_and_update_feed(feed_list, project_list, cache):
     """
 
     # Lowers the list before searching in it
-    project_list_low = [project.lower() for project in project_list]
+    project_list_low = lower_list_of_strings(project_list)
 
     # Checking every feed entry that are newer than the last check
     # and updates the dictionnary accordingly
