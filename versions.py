@@ -400,7 +400,8 @@ def check_versions_for_github_projects(github_project_list, local_dir):
 
     for project in github_project_list:
         version = get_latest_github_release(project)
-        github_cache.update_cache_dict(project, version)
+        if version != '':
+            github_cache.update_cache_dict(project, version)
 
     github_cache.write_cache_file()
 
