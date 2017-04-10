@@ -28,8 +28,8 @@ import os
 import errno
 
 __author__ = "Olivier Delhomme <olivier.delhomme@free.fr>"
-__date__ = "30.07.2016"
-__version__ = "0.0.2"
+__date__ = "10.04.2017"
+__version__ = "0.0.3"
 
 """
 This program checks projects versions throught RSS and Atom feeds and
