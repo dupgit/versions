@@ -21,6 +21,7 @@
 #  along with this program; if not, write to the Free Software Foundation,
 #  Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 #
+import codecs
 import feedparser
 import yaml
 import argparse
@@ -85,7 +86,7 @@ class Conf:
         Loads definitions from the YAML config file filename
         """
 
-        config_file = open(filename, 'r')
+        config_file = codecs.open(filename, 'r', encoding='utf-8')
 
         self.description = yaml.safe_load(config_file)
 
@@ -162,7 +163,7 @@ class FileCache:
         """
 
         if os.path.isfile(self.cache_filename):
-            cache_file = open(self.cache_filename, 'r')
+            cache_file = codecs.open(self.cache_filename, 'r', encoding='utf-8')
 
             for line in cache_file:
                 (project, version) = self._return_project_and_version_from_line(line)
@@ -254,7 +255,7 @@ class FeedCache:
         """
 
         if os.path.isfile(self.cache_filename):
-            cache_file = open(self.cache_filename, 'r')
+            cache_file = codecs.open(self.cache_filename, 'r', encoding='utf-8')
             (self.year, self.month, self.day, self.hour, self.minute) = cache_file.readline().strip().split(' ', 4)
             self.date_minutes = self._calculate_minutes(self.year, self.month, self.day, self.hour, self.minute)
             cache_file.close()
@@ -362,7 +363,7 @@ def open_and_truncate_file(filename):
     and returns a python file object.
     """
 
-    cache_file = open(filename, 'w')
+    cache_file = codecs.open(filename, 'w', encoding='utf-8')
     cache_file.truncate(0)
     cache_file.flush()
 
