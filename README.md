@@ -18,8 +18,22 @@ freshcode ones must be listed under a ```freshcode.club:``` section.
 Versions uses and produces text files. Those files are cache files
 written into ```~/.local/versions``` directory. ```*.cache``` are cache
 files containing the project list and their associated version (the latest).
-```*.feed``` are information feed cache files containing on only one line
+```*.feed``` are information feed cache files containing on each line
 the latest parsed post of the feed.
+
+
+# Usage
+
+```./version.py``` should be enought to bring you the list of updated
+programs since last run. To verify each day one can use the following
+command in a persistant terminal (tmux, screen…):
+
+    watch -n 86400 ./versions.py
+
+
+Option ```--list-cache``` prints the content of the local cache (ie
+latest known versions).
+
 
 # Links of interest
 
