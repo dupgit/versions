@@ -27,6 +27,8 @@ import yaml
 import argparse
 import os
 import errno
+import time
+
 
 __author__ = "Olivier Delhomme <olivier.delhomme@free.fr>"
 __date__ = "16.04.2017"
@@ -49,6 +51,7 @@ containing the project list and their associated version (the latest).
 "*.feed" are information feed cache files containing on only one line
 the latest parsed post of the feed.
 """
+
 
 
 class Conf:
@@ -107,6 +110,7 @@ class Conf:
 
         parser.add_argument('-f', '--file', action='store', dest='filename', help='Configuration file with projects to check', default='versions.yaml')
         parser.add_argument('-l', '--list-cache', action='store_true', dest='list_cache', help='Lists all projects and their version in cache', default=False)
+        parser.add_argument('-d', '--debug', action='store_true', dest='debug', help='Starts in debug mode and prints things that may help', default=False)
 
         self.options = parser.parse_args()
         self.config_filename = os.path.join(self.config_dir, self.options.filename)
@@ -189,13 +193,15 @@ class FileCache:
     # End of write_cache_file() function
 
 
-    def update_cache_dict(self, project, version):
+    def update_cache_dict(self, project, version, debug):
         """
         Updates cache dictionnary if needed
         """
 
         try:
             version_cache = self.cache_dict[project]
+            debug_message = '\t\tIn cache: ' + version_cache
+            print_debug(debug_message, debug)
 
             if version != version_cache:
                 print('%s %s' % (project, version))
@@ -257,7 +263,7 @@ class FeedCache:
         if os.path.isfile(self.cache_filename):
             cache_file = codecs.open(self.cache_filename, 'r', encoding='utf-8')
             (self.year, self.month, self.day, self.hour, self.minute) = cache_file.readline().strip().split(' ', 4)
-            self.date_minutes = self._calculate_minutes(self.year, self.month, self.day, self.hour, self.minute)
+            self.date_minutes = self._calculate_minutes(int(self.year), int(self.month), int(self.day), int(self.hour), int(self.minute))
             cache_file.close()
 
     # End of read_cache_feed() function
@@ -296,6 +302,9 @@ class FeedCache:
         """
         Calculate a number of minutes with all parameters and returns
         this.
+        >>> fc = FeedCache('localdir','filename')
+        >>> fc._calculate_minutes(2016, 5, 1, 0, 0)
+        1059827040
         """
 
         minutes = (year * 365 * 24 * 60) + \
@@ -373,7 +382,7 @@ def open_and_truncate_file(filename):
 ####################### End of utility functions #######################
 
 
-def get_latest_github_release(program):
+def get_latest_github_release(program, debug):
     """
     Gets the latest release of a program on github. program must be a
     string of the form user/repository.
@@ -386,12 +395,15 @@ def get_latest_github_release(program):
     if len(feed.entries) > 0:
         version = feed.entries[0].title
 
+    debug_message = '\tProject ' + program + ': ' + version
+    print_debug(debug_message, debug)
+
     return version
 
 # End of get_latest_github_release() function
 
 
-def check_versions_for_github_projects(github_project_list, local_dir):
+def check_versions_for_github_projects(github_project_list, local_dir, debug):
     """
     Checks project's versions on github if any are defined in the yaml
     file under the github.com tag.
@@ -400,16 +412,16 @@ def check_versions_for_github_projects(github_project_list, local_dir):
     github_cache = FileCache(local_dir, 'github.cache')
 
     for project in github_project_list:
-        version = get_latest_github_release(project)
+        version = get_latest_github_release(project, debug)
         if version != '':
-            github_cache.update_cache_dict(project, version)
+            github_cache.update_cache_dict(project, version, debug)
 
     github_cache.write_cache_file()
 
 # End of check_versions_for_github_projects() function
 
 
-def make_list_of_newer_feeds(feed, feed_info):
+def make_list_of_newer_feeds(feed, feed_info, debug):
     """
     Compares feed entries and keep those that are newer than the latest
     check we've done and inserting the newer ones in reverse order in
@@ -422,6 +434,8 @@ def make_list_of_newer_feeds(feed, feed_info):
     # version in case of multiple release of the same project in the
     # feeds
     for a_feed in feed.entries:
+        debug_message = '\tEntry: %s - %s' % (a_feed.title.strip().split(' ', 1), time.strftime('%x %X', a_feed.published_parsed))
+        print_debug(debug_message, debug)
         if feed_info.is_newer(a_feed.published_parsed):
             feed_list.insert(0, a_feed)
 
@@ -442,7 +456,7 @@ def lower_list_of_strings(project_list):
 # End of lower_list_of_strings() function
 
 
-def check_and_update_feed(feed_list, project_list, cache):
+def check_and_update_feed(feed_list, project_list, cache, debug):
     """
     Checks every feed entry in the list against project list cache and
     then updates the dictionnary then writes the cache file to the disk.
@@ -459,16 +473,18 @@ def check_and_update_feed(feed_list, project_list, cache):
     # and updates the dictionnary accordingly
     for entry in feed_list:
         (project, version) = entry.title.strip().split(' ', 1)
+        debug_message = '\tChecking %s: %s' % (project, version)
+        print_debug(debug_message, debug)
 
         if project.lower() in project_list_low:
-            cache.update_cache_dict(project, version)
+            cache.update_cache_dict(project, version, debug)
 
     cache.write_cache_file()
 
 # End of check_and_update_feed()
 
 
-def check_versions_for_freshcode(freshcode_project_list, local_dir):
+def check_versions_for_freshcode(freshcode_project_list, local_dir, debug):
     """
     Checks projects with freshcode's web site's RSS
     """
@@ -481,19 +497,31 @@ def check_versions_for_freshcode(freshcode_project_list, local_dir):
     feed_info = FeedCache(local_dir, 'freshcode.feed')
     feed_info.read_cache_feed()
 
-    if len(feed.entries) > 0:
-        feed_list = make_list_of_newer_feeds(feed, feed_info)
-        check_and_update_feed(feed_list, freshcode_project_list, freshcode_cache)
+    length = len(feed.entries)
+
+    if length > 0:
+        debug_message = '\tFound %d entries' % length 
+        print_debug(debug_message, debug)
+
+        feed_list = make_list_of_newer_feeds(feed, feed_info, debug)
+        length = len(feed_list)
+        debug_message = '\tFound %d new entries (relative to %s)' % (length, feed_info.date_minutes)
+        print_debug(debug_message, debug)
+
+        check_and_update_feed(feed_list, freshcode_project_list, freshcode_cache, debug)
 
         # Updating feed_info with the latest parsed feed entry date
         feed_info.update_cache_feed(feed.entries[0].published_parsed)
+
+    else:
+        print_debug('No entries found in feed')
 
     feed_info.write_cache_feed()
 
 # End of check_versions_for_freshcode() function
 
 
-def print_versions_from_cache(local_dir):
+def print_versions_from_cache(local_dir, debug):
     """
     Prints all projects and their associated data from the cache
     """
@@ -514,18 +542,22 @@ def print_cache_or_check_versions(versions_conf):
     selections made at the command line
     """
 
+    debug = versions_conf.options.debug
+    print_debug('Loading yaml config file', debug)
     versions_conf.load_yaml_from_config_file(versions_conf.config_filename)
 
     if versions_conf.options.list_cache == True:
         # Pretty prints all caches.
-        print_versions_from_cache(versions_conf.local_dir)
+        print_versions_from_cache(versions_conf.local_dir, debug)
 
     else:
         # Checks projects from github
-        check_versions_for_github_projects(versions_conf.description['github.com'], versions_conf.local_dir)
+        print_debug('Checking github prolects', debug)
+        #check_versions_for_github_projects(versions_conf.description['github.com'], versions_conf.local_dir, debug)
 
         # Checks projects from freshcode.club
-        check_versions_for_freshcode(versions_conf.description['freshcode.club'], versions_conf.local_dir)
+        print_debug('Checking freshcode updates', debug)
+        check_versions_for_freshcode(versions_conf.description['freshcode.club'], versions_conf.local_dir, debug)
 
 # End of print_list_or_check_versions() function.
 
@@ -546,5 +578,18 @@ def main():
 # End of main() function
 
 
+def print_debug(message, debug):
+    """
+    Prints 'message' if debug mode is True
+    """
+
+    if debug:
+        print('%s' % message)
+
+# End of print_debug() function
+
+
 if __name__=="__main__" :
+    import doctest
+    doctest.testmod()
     main()
