@@ -553,7 +553,7 @@ def print_cache_or_check_versions(versions_conf):
     else:
         # Checks projects from github
         print_debug('Checking github prolects', debug)
-        #check_versions_for_github_projects(versions_conf.description['github.com'], versions_conf.local_dir, debug)
+        check_versions_for_github_projects(versions_conf.description['github.com'], versions_conf.local_dir, debug)
 
         # Checks projects from freshcode.club
         print_debug('Checking freshcode updates', debug)
