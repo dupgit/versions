@@ -201,8 +201,7 @@ class FileCache:
 
         try:
             version_cache = self.cache_dict[project]
-            debug_message = '\t\tIn cache: ' + version_cache
-            print_debug(debug_message, debug)
+            print_debug(debug, '\t\tIn cache: {}'.format(version_cache))
 
             if version != version_cache:
                 print('%s %s' % (project, version))
@@ -396,8 +395,7 @@ def get_latest_github_release(program, debug):
     if len(feed.entries) > 0:
         version = feed.entries[0].title
 
-    debug_message = '\tProject ' + program + ': ' + version
-    print_debug(debug_message, debug)
+    print_debug(debug, '\tProject {}: {}'.format(program, version))
 
     return version
 
@@ -435,8 +433,7 @@ def make_list_of_newer_feeds(feed, feed_info, debug):
     # version in case of multiple release of the same project in the
     # feeds
     for a_feed in feed.entries:
-        debug_message = '\tEntry: %s - %s' % (a_feed.title.strip().split(' ', 1), time.strftime('%x %X', a_feed.published_parsed))
-        print_debug(debug_message, debug)
+        print_debug(debug, '\tEntry: {} - {}'.format(a_feed.title.strip().split(' ', 1), time.strftime('%x %X', a_feed.published_parsed)))
         if feed_info.is_newer(a_feed.published_parsed):
             feed_list.insert(0, a_feed)
 
@@ -474,8 +471,7 @@ def check_and_update_feed(feed_list, project_list, cache, debug):
     # and updates the dictionnary accordingly
     for entry in feed_list:
         (project, version) = entry.title.strip().split(' ', 1)
-        debug_message = '\tChecking %s: %s' % (project, version)
-        print_debug(debug_message, debug)
+        print_debug(debug, '\tChecking {}: {}'.format(project, version))
 
         if project.lower() in project_list_low:
             cache.update_cache_dict(project, version, debug)
@@ -501,13 +497,11 @@ def check_versions_for_freshcode(freshcode_project_list, local_dir, debug):
     length = len(feed.entries)
 
     if length > 0:
-        debug_message = '\tFound %d entries' % length 
-        print_debug(debug_message, debug)
+        print_debug(debug, '\tFound {} entries'.format(length))
 
         feed_list = make_list_of_newer_feeds(feed, feed_info, debug)
         length = len(feed_list)
-        debug_message = '\tFound %d new entries (relative to %s)' % (length, feed_info.date_minutes)
-        print_debug(debug_message, debug)
+        print_debug(debug, '\tFound {} new entries (relative to {})'.format(length, feed_info.date_minutes))
 
         check_and_update_feed(feed_list, freshcode_project_list, freshcode_cache, debug)
 
@@ -515,7 +509,7 @@ def check_versions_for_freshcode(freshcode_project_list, local_dir, debug):
         feed_info.update_cache_feed(feed.entries[0].published_parsed)
 
     else:
-        print_debug('No entries found in feed')
+        print_debug(debug, 'No entries found in feed')
 
     feed_info.write_cache_feed()
 
@@ -544,7 +538,7 @@ def print_cache_or_check_versions(versions_conf):
     """
 
     debug = versions_conf.options.debug
-    print_debug('Loading yaml config file', debug)
+    print_debug(debug, 'Loading yaml config file')
     versions_conf.load_yaml_from_config_file(versions_conf.config_filename)
 
     if versions_conf.options.list_cache == True:
@@ -553,11 +547,11 @@ def print_cache_or_check_versions(versions_conf):
 
     else:
         # Checks projects from github
-        print_debug('Checking github prolects', debug)
+        print_debug(debug, 'Checking github prolects')
         check_versions_for_github_projects(versions_conf.description['github.com'], versions_conf.local_dir, debug)
 
         # Checks projects from freshcode.club
-        print_debug('Checking freshcode updates', debug)
+        print_debug(debug, 'Checking freshcode updates')
         check_versions_for_freshcode(versions_conf.description['freshcode.club'], versions_conf.local_dir, debug)
 
 # End of print_list_or_check_versions() function.
@@ -582,13 +576,13 @@ def main():
 # End of main() function
 
 
-def print_debug(message, debug):
+def print_debug(debug, message):
     """
     Prints 'message' if debug mode is True
     """
 
     if debug:
-        print('%s' % message)
+        print(message)
 
 # End of print_debug() function
 
