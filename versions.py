@@ -433,7 +433,8 @@ def make_list_of_newer_feeds(feed, feed_info, debug):
     # version in case of multiple release of the same project in the
     # feeds
     for a_feed in feed.entries:
-        print_debug(debug, '\tEntry: {} - {}'.format(a_feed.title.strip().split(' ', 1), time.strftime('%x %X', a_feed.published_parsed)))
+        (project, version) = a_feed.title.strip().split(' ', 1)
+        print_debug(debug, u'\tFeed entry ({0}): project: {1:16} version: {2}'.format(time.strftime('%x %X', a_feed.published_parsed), project, version))
         if feed_info.is_newer(a_feed.published_parsed):
             feed_list.insert(0, a_feed)
 
@@ -548,7 +549,7 @@ def print_cache_or_check_versions(versions_conf):
     else:
         # Checks projects from github
         print_debug(debug, 'Checking github prolects')
-        check_versions_for_github_projects(versions_conf.description['github.com'], versions_conf.local_dir, debug)
+        #check_versions_for_github_projects(versions_conf.description['github.com'], versions_conf.local_dir, debug)
 
         # Checks projects from freshcode.club
         print_debug(debug, 'Checking freshcode updates')
