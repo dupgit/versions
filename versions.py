@@ -28,6 +28,7 @@ import argparse
 import os
 import errno
 import time
+import doctest
 
 
 __author__ = "Olivier Delhomme <olivier.delhomme@free.fr>"
@@ -569,6 +570,9 @@ def main():
 
     versions_conf = Conf()  # Configuration options
 
+    if versions_conf.options.debug:
+        doctest.testmod(verbose=True)
+
     if os.path.isfile(versions_conf.config_filename):
         print_cache_or_check_versions(versions_conf)
 
@@ -590,6 +594,4 @@ def print_debug(message, debug):
 
 
 if __name__=="__main__" :
-    import doctest
-    doctest.testmod()
     main()
