@@ -34,6 +34,12 @@ command in a persistant terminal (tmux, screen…):
 Option ```--list-cache``` prints the content of the local cache (ie
 latest known versions).
 
+Option `-f FILENAME` or `--file FILENAME` ease usage of different
+YAML configuration files.
+
+Option `-d` or `--debug` runs doctests and prints information about
+what's going on in the program.
+
 
 # Links of interest
 
