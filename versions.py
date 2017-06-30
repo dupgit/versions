@@ -472,7 +472,7 @@ def check_and_update_feed(feed_list, project_list, cache, debug):
     # and updates the dictionnary accordingly
     for entry in feed_list:
         (project, version) = entry.title.strip().split(' ', 1)
-        print_debug(debug, u'\tChecking {}: {}'.format(project, version))
+        print_debug(debug, u'\tChecking {0:16}: {1}'.format(project, version))
 
         if project.lower() in project_list_low:
             cache.update_cache_dict(project, version, debug)
