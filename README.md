@@ -10,28 +10,28 @@ you which changes.
 
 It implements checking for projects in github.com and freshcode.club.
 Projects must be added to a YAML file (named by default
-```~/.config/versions/versions.yaml```). One can use ```--file=FILENAME```
+`~/.config/versions/versions.yaml`). One can use `--file=FILENAME`
 option to specify an alternative YAML file.
-github projects must be listed under a ```github.com:``` section and
-freshcode ones must be listed under a ```freshcode.club:``` section.
+github projects must be listed under a `github.com:` section and
+freshcode ones must be listed under a `freshcode.club:` section.
 
 Versions uses and produces text files. Those files are cache files
-written into ```~/.local/versions``` directory. ```*.cache``` are cache
+written into `~/.local/versions` directory. `*.cache` are cache
 files containing the project list and their associated version (the latest).
-```*.feed``` are information feed cache files containing on each line
+`*.feed` are information feed cache files containing on each line
 the latest parsed post of the feed.
 
 
 # Usage
 
-```./version.py``` should be enought to bring you the list of updated
+`./version.py` should be enought to bring you the list of updated
 programs since last run. To verify each day one can use the following
 command in a persistant terminal (tmux, screen…):
 
     watch -n 86400 ./versions.py
 
 
-Option ```--list-cache``` prints the content of the local cache (ie
+Option `--list-cache` prints the content of the local cache (ie
 latest known versions).
 
 Option `-f FILENAME` or `--file FILENAME` ease usage of different
