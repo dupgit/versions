@@ -109,12 +109,16 @@ class Conf:
 
         parser = argparse.ArgumentParser(description='This program checks releases and versions of programs through RSS or Atom feeds', version=str_version)
 
-        parser.add_argument('-f', '--file', action='store', dest='filename', help='Configuration file with projects to check', default='versions.yaml')
+        parser.add_argument('-f', '--file', action='store', dest='filename', help='Configuration file with projects to check', default='')
         parser.add_argument('-l', '--list-cache', action='store_true', dest='list_cache', help='Lists all projects and their version in cache', default=False)
         parser.add_argument('-d', '--debug', action='store_true', dest='debug', help='Starts in debug mode and prints things that may help', default=False)
 
         self.options = parser.parse_args()
-        self.config_filename = os.path.join(self.config_dir, self.options.filename)
+
+        if self.options.filename != '':
+            self.config_filename = self.options.filename
+        else:
+            self.config_filename = os.path.join(self.config_dir, 'versions.yaml')
 
     # End of get_command_line_arguments() function
 # End of Conf class
