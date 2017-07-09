@@ -571,7 +571,7 @@ def main():
         print_cache_or_check_versions(versions_conf)
 
     else:
-        print('Error: file %s does not exist' % config_filename)
+        print('Error: file %s does not exist' % versions_conf.config_filename)
 
 # End of main() function
 
