@@ -1,0 +1,5 @@
+version.py
+feedparser>=5.2.1
+PyYAML>=3.12
+
+
