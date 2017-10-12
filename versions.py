@@ -591,5 +591,5 @@ def print_debug(debug, message):
 # End of print_debug() function
 
 
-if __name__=="__main__" :
+if __name__ == "__main__":
     main()
