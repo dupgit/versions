@@ -406,20 +406,20 @@ def get_latest_release_by_title(program, debug, feed_url):
 # End of get_latest_github_release() function
 
 
-def check_versions_feeds_by_projects(github_project_list, local_dir, debug, feed_url):
+def check_versions_feeds_by_projects(project_list, local_dir, debug, feed_url, cache_filename):
     """
-    Checks project's versions on github if any are defined in the yaml
-    file under the github.com tag.
+    Checks project's versions on feed_url if any are defined in the yaml
+    file under the specified tag that got the project_list passed as an argument.
     """
 
-    github_cache = FileCache(local_dir, 'github.cache')
+    site_cache = FileCache(local_dir, cache_filename)
 
-    for project in github_project_list:
+    for project in project_list:
         version = get_latest_release_by_title(project, debug, feed_url)
         if version != '':
-            github_cache.update_cache_dict(project, version, debug)
+            site_cache.update_cache_dict(project, version, debug)
 
-    github_cache.write_cache_file()
+    site_cache.write_cache_file()
 
 # End of check_versions_for_github_projects() function
 
@@ -520,15 +520,15 @@ def check_versions_for_freshcode(freshcode_project_list, local_dir, debug):
 # End of check_versions_for_freshcode() function
 
 
-def print_versions_from_cache(local_dir, debug):
+def print_versions_from_cache(local_dir, cache_filename_list, debug):
     """
     Prints all projects and their associated data from the cache
     """
-
-    github_cache = FileCache(local_dir, 'github.cache')
+    for cache_filename in cache_filename_list:
+        site_cache = FileCache(local_dir, cache_filename)
+        site_cache.print_cache_dict(cache_filename)
+    
     freshcode_cache = FileCache(local_dir, 'freshcode.cache')
-
-    github_cache.print_cache_dict('Github')
     freshcode_cache.print_cache_dict('Freshcode')
 
 # End of print_versions_from_cache()
@@ -541,11 +541,11 @@ def check_versions(versions_conf, debug):
 
     # Checks projects from sourceforge
     print_debug(debug, u'Checking sourceforge prolects')
-    check_versions_feeds_by_projects(versions_conf.description['sourceforge.net'], versions_conf.local_dir, debug, 'https://sourceforge.net/projects/{}/rss?path=/')
+    check_versions_feeds_by_projects(versions_conf.description['sourceforge.net'], versions_conf.local_dir, debug, 'https://sourceforge.net/projects/{}/rss?path=/', 'sourceforge.cache')
 
     # Checks projects from github
     print_debug(debug, u'Checking github prolects')
-    check_versions_feeds_by_projects(versions_conf.description['github.com'], versions_conf.local_dir, debug, 'https://github.com/{}/releases.atom')
+    check_versions_feeds_by_projects(versions_conf.description['github.com'], versions_conf.local_dir, debug, 'https://github.com/{}/releases.atom', 'github.cache')
 
     # Checks projects from freshcode.club
     print_debug(debug, u'Checking freshcode updates')
@@ -565,7 +565,7 @@ def print_cache_or_check_versions(versions_conf):
 
     if versions_conf.options.list_cache is True:
         # Pretty prints all caches.
-        print_versions_from_cache(versions_conf.local_dir, debug)
+        print_versions_from_cache(versions_conf.local_dir, ['sourceforge.cache', 'github.cache'], debug)
 
     else:
         # Checks version from online feeds
