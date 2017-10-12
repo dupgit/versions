@@ -386,7 +386,7 @@ def open_and_truncate_file(filename):
 ####################### End of utility functions #######################
 
 
-def get_latest_github_release(program, debug, feed_url):
+def get_latest_release_by_title(program, debug, feed_url):
     """
     Gets the latest release of a program on github. program must be a
     string of the form user/repository.
@@ -406,7 +406,7 @@ def get_latest_github_release(program, debug, feed_url):
 # End of get_latest_github_release() function
 
 
-def check_versions_for_github_projects(github_project_list, local_dir, debug, feed_url):
+def check_versions_feeds_by_projects(github_project_list, local_dir, debug, feed_url):
     """
     Checks project's versions on github if any are defined in the yaml
     file under the github.com tag.
@@ -415,7 +415,7 @@ def check_versions_for_github_projects(github_project_list, local_dir, debug, fe
     github_cache = FileCache(local_dir, 'github.cache')
 
     for project in github_project_list:
-        version = get_latest_github_release(project, debug, feed_url)
+        version = get_latest_release_by_title(project, debug, feed_url)
         if version != '':
             github_cache.update_cache_dict(project, version, debug)
 
@@ -552,11 +552,11 @@ def print_cache_or_check_versions(versions_conf):
     else:
         # Checks projects from sourceforge
         print_debug(debug, u'Checking sourceforge prolects')
-        check_versions_for_github_projects(versions_conf.description['sourceforge.net'], versions_conf.local_dir, debug, 'https://sourceforge.net/projects/{}/rss?path=/')
+        check_versions_feeds_by_projects(versions_conf.description['sourceforge.net'], versions_conf.local_dir, debug, 'https://sourceforge.net/projects/{}/rss?path=/')
 
         # Checks projects from github
         print_debug(debug, u'Checking github prolects')
-        check_versions_for_github_projects(versions_conf.description['github.com'], versions_conf.local_dir, debug, 'https://github.com/{}/releases.atom')
+        check_versions_feeds_by_projects(versions_conf.description['github.com'], versions_conf.local_dir, debug, 'https://github.com/{}/releases.atom')
 
         # Checks projects from freshcode.club
         print_debug(debug, u'Checking freshcode updates')
