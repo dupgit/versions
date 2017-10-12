@@ -54,7 +54,6 @@ the latest parsed post of the feed.
 """
 
 
-
 class Conf:
     """
     Class to store configuration of the program
@@ -353,6 +352,7 @@ class FeedCache:
 
 ######## Below are some utility functions used by classes above ########
 
+
 def make_directories(path):
     """
     Makes all directories in path if possible. It is not an error if
@@ -393,7 +393,7 @@ def get_latest_release_by_title(program, debug, feed_url):
     """
 
     version = ''
-    url = feed_url.format(program)     
+    url = feed_url.format(program)
     feed = feedparser.parse(url)
 
     if len(feed.entries) > 0:
@@ -534,6 +534,24 @@ def print_versions_from_cache(local_dir, debug):
 # End of print_versions_from_cache()
 
 
+def check_versions(versions_conf, debug):
+    """
+    Checks versions by parsing online feeds
+    """
+
+    # Checks projects from sourceforge
+    print_debug(debug, u'Checking sourceforge prolects')
+    check_versions_feeds_by_projects(versions_conf.description['sourceforge.net'], versions_conf.local_dir, debug, 'https://sourceforge.net/projects/{}/rss?path=/')
+
+    # Checks projects from github
+    print_debug(debug, u'Checking github prolects')
+    check_versions_feeds_by_projects(versions_conf.description['github.com'], versions_conf.local_dir, debug, 'https://github.com/{}/releases.atom')
+
+    # Checks projects from freshcode.club
+    print_debug(debug, u'Checking freshcode updates')
+    check_versions_for_freshcode(versions_conf.description['freshcode.club'], versions_conf.local_dir, debug)
+
+
 def print_cache_or_check_versions(versions_conf):
     """
     Decide to pretty print projects and their associated version that
@@ -550,17 +568,7 @@ def print_cache_or_check_versions(versions_conf):
         print_versions_from_cache(versions_conf.local_dir, debug)
 
     else:
-        # Checks projects from sourceforge
-        print_debug(debug, u'Checking sourceforge prolects')
-        check_versions_feeds_by_projects(versions_conf.description['sourceforge.net'], versions_conf.local_dir, debug, 'https://sourceforge.net/projects/{}/rss?path=/')
-
-        # Checks projects from github
-        print_debug(debug, u'Checking github prolects')
-        check_versions_feeds_by_projects(versions_conf.description['github.com'], versions_conf.local_dir, debug, 'https://github.com/{}/releases.atom')
-
-        # Checks projects from freshcode.club
-        print_debug(debug, u'Checking freshcode updates')
-        check_versions_for_freshcode(versions_conf.description['freshcode.club'], versions_conf.local_dir, debug)
+        check_versions(versions_conf, debug)
 
 # End of print_list_or_check_versions() function.
 
