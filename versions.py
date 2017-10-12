@@ -364,7 +364,7 @@ def make_directories(path):
 
     except OSError as exc:
 
-        if exc.errno != errno.EEXIST or os.path.isdir(path) != True:
+        if exc.errno != errno.EEXIST or os.path.isdir(path) is not True:
             raise
 
 # End of make_directories() function
@@ -545,7 +545,7 @@ def print_cache_or_check_versions(versions_conf):
     print_debug(debug, u'Loading yaml config file')
     versions_conf.load_yaml_from_config_file(versions_conf.config_filename)
 
-    if versions_conf.options.list_cache == True:
+    if versions_conf.options.list_cache is True:
         # Pretty prints all caches.
         print_versions_from_cache(versions_conf.local_dir, debug)
 
