@@ -568,6 +568,7 @@ def print_cache_or_check_versions(versions_conf):
         print_versions_from_cache(versions_conf.local_dir, debug)
 
     else:
+        # Checks version from online feeds
         check_versions(versions_conf, debug)
 
 # End of print_list_or_check_versions() function.
