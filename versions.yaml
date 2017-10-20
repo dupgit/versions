@@ -3,11 +3,13 @@ freshcode.club:
   - sauvegarde
   - git
 
-sourceforge.net:
+sourceforge:
+  url: "https://sourceforge.net/projects/{}/rss?path=/"
   projects:
     - advtor
   
-github.com:
+github:
+  url: "https://github.com/{}/releases.atom"
   projects:
     - InfotelGLPI/manufacturersimports
     - fguillot/kanboard
