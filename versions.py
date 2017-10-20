@@ -32,8 +32,8 @@ import doctest
 
 
 __author__ = "Olivier Delhomme <olivier.delhomme@free.fr>"
-__date__ = "12.10.2017"
-__version__ = "0.0.5"
+__date__ = "20.10.2017"
+__version__ = "1.0.0"
 
 """
 This program checks projects versions throught RSS and Atom feeds and
