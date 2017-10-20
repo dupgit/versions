@@ -534,22 +534,46 @@ def print_versions_from_cache(local_dir, cache_filename_list, debug):
 # End of print_versions_from_cache()
 
 
+def extract_project_list_from_site_def(versions_conf, site_name):
+    """
+    Extracts a project list from a site by project definition
+    """
+    if site_name in versions_conf.description:
+        site_definition = versions_conf.description[site_name]
+
+        if 'projects' in site_definition:
+            project_list = site_definition['projects']
+        else:
+            project_list = []
+
+    else:
+        project_list = []
+
+    return project_list
+
+# End of extract_project_list_from_site_def() function
+
+
 def check_versions(versions_conf, debug):
     """
     Checks versions by parsing online feeds
     """
 
     # Checks projects from sourceforge
-    print_debug(debug, u'Checking sourceforge prolects')
-    check_versions_feeds_by_projects(versions_conf.description['sourceforge.net'], versions_conf.local_dir, debug, 'https://sourceforge.net/projects/{}/rss?path=/', 'sourceforge.cache')
+    print_debug(debug, u'Checking sourceforge projects')
+    project_list = extract_project_list_from_site_def(versions_conf, 'sourceforge.net')
+    check_versions_feeds_by_projects(project_list, versions_conf.local_dir, debug, 'https://sourceforge.net/projects/{}/rss?path=/', 'sourceforge.cache')
 
     # Checks projects from github
     print_debug(debug, u'Checking github prolects')
-    check_versions_feeds_by_projects(versions_conf.description['github.com'], versions_conf.local_dir, debug, 'https://github.com/{}/releases.atom', 'github.cache')
+    project_list = extract_project_list_from_site_def(versions_conf, 'github.com')
+    check_versions_feeds_by_projects(project_list, versions_conf.local_dir, debug, 'https://github.com/{}/releases.atom', 'github.cache')
 
     # Checks projects from freshcode.club
     print_debug(debug, u'Checking freshcode updates')
     check_versions_for_freshcode(versions_conf.description['freshcode.club'], versions_conf.local_dir, debug)
+
+# End of check_versions() function
 
 
 def print_cache_or_check_versions(versions_conf):

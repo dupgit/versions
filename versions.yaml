@@ -4,20 +4,22 @@ freshcode.club:
   - git
 
 sourceforge.net:
-  - advtor
+  projects:
+    - advtor
   
 github.com:
-  - InfotelGLPI/manufacturersimports
-  - fguillot/kanboard
-  - curl/curl
-  - akheron/jansson
-  - Deltafire/MilkyTracker
-  - terryyin/lizard
-  - vmware/pyvmomi
-  - tmux/tmux
-  - tmuxinator/tmuxinator
-  - gorhill/uBlock
-  - cachethq/cachet
-  - Gandi/baobab
-  - dupgit/versions
-  - fedora-infra/anitya
+  projects:
+    - InfotelGLPI/manufacturersimports
+    - fguillot/kanboard
+    - curl/curl
+    - akheron/jansson
+    - Deltafire/MilkyTracker
+    - terryyin/lizard
+    - vmware/pyvmomi
+    - tmux/tmux
+    - tmuxinator/tmuxinator
+    - gorhill/uBlock
+    - cachethq/cachet
+    - Gandi/baobab
+    - dupgit/versions
+    - fedora-infra/anitya
