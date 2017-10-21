@@ -166,6 +166,53 @@ class Conf:
         return project_url
 
     # End of extract_project_url() function
+
+
+    def is_site_of_type(self, site_name, type):
+        """
+        Returns True if site_name is of type 'type'
+        """
+
+        site_definition = self.extract_site_definition(site_name)
+        if 'type' in site_definition:
+            return (site_definition['type'] == type)
+        else:
+            return False
+
+    # End of is_site_of_type() function
+
+
+    def extract_site_list(self, type):
+        """
+        Extracts all sites from a specific type (byproject or list)
+        """
+
+        all_site_list = list(self.description.keys())
+        site_list = []
+        for site_name in all_site_list:
+            if self.is_site_of_type(site_name, type):
+                site_list.insert(0, site_name)
+       
+        return site_list
+
+    # End of extract_site_list() function
+
+
+    def get_site_cache_liste_name(self):
+        """
+        Formats list of cache filenames for all sites
+        """
+
+        all_site_list = list(self.description.keys())
+        cache_list = []
+        for site_name in all_site_list:
+            site_cache = u'{}.cache'.format(site_name)
+            cache_list.insert(0, site_cache)
+
+        return cache_list
+
+    # End of get_site_cache_liste_name() function
+
 # End of Conf class
 
 
@@ -574,9 +621,6 @@ def print_versions_from_cache(local_dir, cache_filename_list, debug):
         site_cache = FileCache(local_dir, cache_filename)
         site_cache.print_cache_dict(cache_filename)
     
-    freshcode_cache = FileCache(local_dir, 'freshcode.cache')
-    freshcode_cache.print_cache_dict('Freshcode')
-
 # End of print_versions_from_cache()
 
 
@@ -588,9 +632,9 @@ def check_versions(versions_conf, debug):
     """
 
     # Checks projects from by project sites such as github and sourceforge
-    site_list = ['sourceforge', 'github']
+    byproject_site_list = versions_conf.extract_site_list('byproject')
 
-    for site_name in site_list:
+    for site_name in byproject_site_list:
 
         print_debug(debug, u'Checking {} projects'.format(site_name))
         project_list = versions_conf.extract_project_list_from_site_def(site_name)
@@ -618,7 +662,8 @@ def print_cache_or_check_versions(versions_conf):
 
     if versions_conf.options.list_cache is True:
         # Pretty prints all caches.
-        print_versions_from_cache(versions_conf.local_dir, ['sourceforge.cache', 'github.cache'], debug)
+        cache_list = versions_conf.get_site_cache_liste_name()
+        print_versions_from_cache(versions_conf.local_dir, cache_list, debug)
 
     else:
         # Checks version from online feeds

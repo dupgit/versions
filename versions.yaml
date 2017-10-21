@@ -5,11 +5,13 @@ freshcode.club:
 
 sourceforge:
   url: "https://sourceforge.net/projects/{}/rss?path=/"
+  type: byproject
   projects:
     - advtor
   
 github:
   url: "https://github.com/{}/releases.atom"
+  type: byproject
   projects:
     - InfotelGLPI/manufacturersimports
     - fguillot/kanboard
