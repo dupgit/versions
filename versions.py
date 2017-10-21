@@ -579,17 +579,16 @@ def check_and_update_feed(feed_list, project_list, cache, debug):
 # End of check_and_update_feed()
 
 
-def check_versions_for_freshcode(freshcode_project_list, local_dir, debug):
+def check_versions_for_list_sites(freshcode_project_list, url, cache_filename, feed_filename, local_dir, debug):
     """
-    Checks projects with freshcode's web site's RSS
+    Checks projects of list type sites such as freshcode's web site's RSS
     """
 
-    freshcode_cache = FileCache(local_dir, 'freshcode.cache')
+    freshcode_cache = FileCache(local_dir, cache_filename)
 
-    url = 'http://freshcode.club/projects.rss'
     feed = feedparser.parse(url)
 
-    feed_info = FeedCache(local_dir, 'freshcode.feed')
+    feed_info = FeedCache(local_dir, feed_filename)
     feed_info.read_cache_feed()
 
     length = len(feed.entries)
@@ -610,7 +609,7 @@ def check_versions_for_freshcode(freshcode_project_list, local_dir, debug):
 
     feed_info.write_cache_feed()
 
-# End of check_versions_for_freshcode() function
+# End of check_versions_for_list_sites() function
 
 
 def print_versions_from_cache(local_dir, cache_filename_list, debug):
@@ -620,10 +619,23 @@ def print_versions_from_cache(local_dir, cache_filename_list, debug):
     for cache_filename in cache_filename_list:
         site_cache = FileCache(local_dir, cache_filename)
         site_cache.print_cache_dict(cache_filename)
-    
+
 # End of print_versions_from_cache()
 
 
+def get_infos_for_site(versions_conf, site_name):
+    """
+    Returns informations about a site as a tuple
+    (list of projects, url to check, filename of the cache)
+    """
+
+    project_list = versions_conf.extract_project_list_from_site_def(site_name)
+    project_url = versions_conf.extract_project_url(site_name)
+    cache_filename = u'{}.cache'.format(site_name)
+
+    return (project_list, project_url, cache_filename)
+
+# End of get_infos_for_site() function
 
 
 def check_versions(versions_conf, debug):
@@ -637,14 +649,16 @@ def check_versions(versions_conf, debug):
     for site_name in byproject_site_list:
 
         print_debug(debug, u'Checking {} projects'.format(site_name))
-        project_list = versions_conf.extract_project_list_from_site_def(site_name)
-        project_url = versions_conf.extract_project_url(site_name)
-        site_cache = u'{}.cache'.format(site_name)
-        check_versions_feeds_by_projects(project_list, versions_conf.local_dir, debug, project_url, site_cache)
+        (project_list, project_url, cache_filename) = get_infos_for_site(versions_conf, site_name)
+        check_versions_feeds_by_projects(project_list, versions_conf.local_dir, debug, project_url, cache_filename)
 
-    # Checks projects from freshcode.club
-    print_debug(debug, u'Checking freshcode updates')
-    check_versions_for_freshcode(versions_conf.description['freshcode.club'], versions_conf.local_dir, debug)
+    # Checks projects from 'list' tupe sites such as freshcode.club
+    list_site_list = versions_conf.extract_site_list('list')
+    for site_name in list_site_list:
+        print_debug(debug, u'Checking {} updates'.format(site_name))
+        (project_list, project_url, cache_filename) = get_infos_for_site(versions_conf, site_name)
+        feed_filename = u'{}.feed'.format(site_name)
+        check_versions_for_list_sites(project_list, project_url, cache_filename, feed_filename, versions_conf.local_dir, debug)
 
 # End of check_versions() function
 

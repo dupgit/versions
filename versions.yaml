@@ -1,7 +1,10 @@
-freshcode.club:
-  - FileZilla
-  - sauvegarde
-  - git
+freshcode:
+  url: "http://freshcode.club/projects.rss"
+  type: list
+  projects:
+    - FileZilla
+    - sauvegarde
+    - git
 
 sourceforge:
   url: "https://sourceforge.net/projects/{}/rss?path=/"
