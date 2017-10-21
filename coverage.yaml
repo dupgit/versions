@@ -1,5 +1,4 @@
 freshcode.club:
-  - FileZilla
   - sauvegarde
   - git
 
@@ -12,16 +11,22 @@ github:
   url: "https://github.com/{}/releases.atom"
   projects:
     - InfotelGLPI/manufacturersimports
-    - fguillot/kanboard
-    - curl/curl
     - akheron/jansson
-    - Deltafire/MilkyTracker
     - terryyin/lizard
     - vmware/pyvmomi
     - tmux/tmux
     - tmuxinator/tmuxinator
     - gorhill/uBlock
-    - cachethq/cachet
-    - Gandi/baobab
     - dupgit/versions
-    - fedora-infra/anitya
+    - vim/vim
+    - notauser/notaproject
+
+github2:
+  url: "https://github.com/{}/wrongurl.atom"
+  projects:
+    - dupgit/versions
+
+github3:
+    url: "https://github.com/{}/releases.atom"
+    projets:
+      - dupgit/versions
