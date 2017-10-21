@@ -120,6 +120,52 @@ class Conf:
             self.config_filename = os.path.join(self.config_dir, 'versions.yaml')
 
     # End of get_command_line_arguments() function
+
+    def extract_site_definition(self, site_name):
+        """
+        extracts whole site definition
+        """
+
+        if site_name in self.description:
+            return self.description[site_name]
+        else:
+            return dict()
+
+    # End of extract_site_definition()
+
+
+    def extract_project_list_from_site_def(self, site_name):
+        """
+        Extracts a project list from a site by project definition
+        """
+
+        site_definition = self.extract_site_definition(site_name)
+
+        if 'projects' in site_definition:
+            project_list = site_definition['projects']
+        else:
+            project_list = []
+
+        return project_list
+
+    # End of extract_project_list_from_site_def() function
+
+
+    def extract_project_url(self, site_name):
+        """
+        Extracts the url definition where to check project version.
+        """
+
+        site_definition = self.extract_site_definition(site_name)
+
+        if 'url' in site_definition:
+            project_url = site_definition['url']
+        else:
+            project_url = ''
+
+        return project_url
+
+    # End of extract_project_url() function
 # End of Conf class
 
 
@@ -534,51 +580,6 @@ def print_versions_from_cache(local_dir, cache_filename_list, debug):
 # End of print_versions_from_cache()
 
 
-def extract_site_definition(versions_conf, site_name):
-    """
-    extracts whole site definition
-    """
-
-    if site_name in versions_conf.description:
-        return versions_conf.description[site_name]
-    else:
-        return dict()
-
-# End of extract_site_definition()
-
-
-def extract_project_list_from_site_def(versions_conf, site_name):
-    """
-    Extracts a project list from a site by project definition
-    """
-
-    site_definition = extract_site_definition(versions_conf, site_name)
-
-    if 'projects' in site_definition:
-        project_list = site_definition['projects']
-    else:
-        project_list = []
-
-    return project_list
-
-# End of extract_project_list_from_site_def() function
-
-
-def extract_project_url(versions_conf, site_name):
-    """
-    Extracts the url definition where to check project version.
-    """
-
-    site_definition = extract_site_definition(versions_conf, site_name)
-
-    if 'url' in site_definition:
-        project_url = site_definition['url']
-    else:
-        project_url = ''
-
-    return project_url
-
-# End of extract_project_url() function
 
 
 def check_versions(versions_conf, debug):
@@ -592,8 +593,8 @@ def check_versions(versions_conf, debug):
     for site_name in site_list:
 
         print_debug(debug, u'Checking {} projects'.format(site_name))
-        project_list = extract_project_list_from_site_def(versions_conf, site_name)
-        project_url = extract_project_url(versions_conf, site_name)
+        project_list = versions_conf.extract_project_list_from_site_def(site_name)
+        project_url = versions_conf.extract_project_url(site_name)
         site_cache = u'{}.cache'.format(site_name)
         check_versions_feeds_by_projects(project_list, versions_conf.local_dir, debug, project_url, site_cache)
 
