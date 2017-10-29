@@ -6,14 +6,17 @@
 
 Versions is an open source (GPL v3) software that checks releases and
 versions of your favorite programs through RSS or Atom feeds and tells
-you which changes.
+you which one has been released since last check.
 
-It implements checking for projects in github.com and freshcode.club.
+It can check projects from :
+    * github.com,
+    * sourceforge,
+    * freshcode.club
+
 Projects must be added to a YAML file (named by default
 `~/.config/versions/versions.yaml`). One can use `--file=FILENAME`
-option to specify an alternative YAML file.
-github projects must be listed under a `github.com:` section and
-freshcode ones must be listed under a `freshcode.club:` section.
+option to specify an alternative YAML file. The structure of this
+YAML file is explained below.
 
 Versions uses and produces text files. Those files are cache files
 written into `~/.local/versions` directory. `*.cache` are cache
@@ -22,16 +25,43 @@ files containing the project list and their associated version (the latest).
 the latest parsed post of the feed.
 
 
+# YAML file structure
+
+sitename:
+  url: "https://the.url/to/theglobalfeed"
+  type: list
+  projects:
+    - list
+    - of
+    - projects
+
+othersitename:
+  url: "https://by.projects.site/{}.atom"
+  type: byproject
+  projects:
+    - list
+    - of
+    - projects
+
+There is two types of sites : 
+    
+    * 'list': The site has one feed with all projects in it such as
+      freshcode.club
+    * 'byproject": The site gives access to one feed per project.
+      brackets '{}' represents the name of the project as found in
+      the 'project' list.
+     
+
 # Usage
 
-`./version.py` should be enought to bring you the list of updated
+`./version.py` should be enough to bring you the list of updated
 programs since last run. To verify each day one can use the following
 command in a persistant terminal (tmux, screen…):
 
     watch -n 86400 ./versions.py
 
 
-Option `--list-cache` prints the content of the local cache (ie
+Option `-l` or `--list-cache` prints the content of the local cache (ie
 latest known versions).
 
 Option `-f FILENAME` or `--file FILENAME` ease usage of different
