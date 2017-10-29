@@ -27,6 +27,7 @@ the latest parsed post of the feed.
 
 # YAML file structure
 
+```
 sitename:
   url: "https://the.url/to/theglobalfeed"
   type: list
@@ -42,6 +43,7 @@ othersitename:
     - list
     - of
     - projects
+```
 
 There is two types of sites : 
     
