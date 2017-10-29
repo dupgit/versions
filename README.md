@@ -9,9 +9,9 @@ versions of your favorite programs through RSS or Atom feeds and tells
 you which one has been released since last check.
 
 It can check projects from :
-    * github.com,
-    * sourceforge,
-    * freshcode.club
+* github.com,
+* sourceforge,
+* freshcode.club
 
 Projects must be added to a YAML file (named by default
 `~/.config/versions/versions.yaml`). One can use `--file=FILENAME`
@@ -47,11 +47,11 @@ othersitename:
 
 There is two types of sites : 
     
-    * 'list': The site has one feed with all projects in it such as
-      freshcode.club
-    * 'byproject": The site gives access to one feed per project.
-      brackets '{}' represents the name of the project as found in
-      the 'project' list.
+* 'list': The site has one feed with all projects in it such as
+   freshcode.club
+* 'byproject": The site gives access to one feed per project.
+   brackets '{}' represents the name of the project as found in
+   the 'project' list.
      
 
 # Usage
