@@ -517,6 +517,23 @@ def check_versions_feeds_by_projects(project_list, local_dir, debug, feed_url, c
 # End of check_versions_for_github_projects() function
 
 
+def cut_title_in_project_version(title):
+    """
+    Cuts the title into a tuple (project, version) where possible
+    """
+
+    try:
+        (project, version) = title.strip().split(' ', 1)
+
+    except ValueError as val:
+        project = title.strip()
+        version = ''
+
+    return (project, version)
+
+# End of cut_title_in_project_version() function
+
+
 def make_list_of_newer_feeds(feed, feed_info, debug):
     """
     Compares feed entries and keep those that are newer than the latest
@@ -530,8 +547,10 @@ def make_list_of_newer_feeds(feed, feed_info, debug):
     # version in case of multiple release of the same project in the
     # feeds
     for a_feed in feed.entries:
-        (project, version) = a_feed.title.strip().split(' ', 1)
+
+        (project, version) = cut_title_in_project_version(a_feed.title)
         print_debug(debug, u'\tFeed entry ({0}): project: {1:16} version: {2}'.format(time.strftime('%x %X', a_feed.published_parsed), project, version))
+
         if feed_info.is_newer(a_feed.published_parsed):
             feed_list.insert(0, a_feed)
 
@@ -568,7 +587,8 @@ def check_and_update_feed(feed_list, project_list, cache, debug):
     # Checking every feed entry that are newer than the last check
     # and updates the dictionnary accordingly
     for entry in feed_list:
-        (project, version) = entry.title.strip().split(' ', 1)
+
+        (project, version) = cut_title_in_project_version(entry.title)
         print_debug(debug, u'\tChecking {0:16}: {1}'.format(project, version))
 
         if project.lower() in project_list_low:
