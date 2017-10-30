@@ -12,6 +12,7 @@ It can check projects from :
 * github.com,
 * sourceforge,
 * freshcode.club
+* pypi.python.org
 
 Projects must be added to a YAML file (named by default
 `~/.config/versions/versions.yaml`). One can use `--file=FILENAME`

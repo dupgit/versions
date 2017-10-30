@@ -6,6 +6,13 @@ freshcode:
     - sauvegarde
     - git
 
+pypi:
+  url: "https://pypi.python.org/pypi?%3Aaction=rss"
+  type: list
+  projects:
+    - PyYAML
+    - feedparser
+
 sourceforge:
   url: "https://sourceforge.net/projects/{}/rss?path=/"
   type: byproject
