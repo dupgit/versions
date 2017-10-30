@@ -492,6 +492,10 @@ def get_latest_release_by_title(program, debug, feed_url):
     if len(feed.entries) > 0:
         version = feed.entries[0].title
 
+    if 'regex' in program and 'name' in program:
+        regex = program['regex']
+        name = program['name']
+
     print_debug(debug, u'\tProject {}: {}'.format(program, version))
 
     return version

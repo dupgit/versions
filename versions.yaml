@@ -23,7 +23,8 @@ github:
   url: "https://github.com/{}/releases.atom"
   type: byproject
   projects:
-    - InfotelGLPI/manufacturersimports
+    - name: InfotelGLPI/manufacturersimports
+      regex: "GLPI 9.2 : Version 2.0.0 disponible / available"
     - fguillot/kanboard
     - curl/curl
     - akheron/jansson
