@@ -9,10 +9,11 @@ versions of your favorite programs through RSS or Atom feeds and tells
 you which one has been released since last check.
 
 It can check projects from :
-* github.com,
-* sourceforge,
+* github.com
+* sourceforge
 * freshcode.club
 * pypi.python.org
+* savanah.gnu.org
 
 Projects must be added to a YAML file (named by default
 `~/.config/versions/versions.yaml`). One can use `--file=FILENAME`

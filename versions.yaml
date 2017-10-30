@@ -37,3 +37,9 @@ github:
     - Gandi/baobab
     - dupgit/versions
     - fedora-infra/anitya
+
+savanah:
+  url: "http://savannah.gnu.org/news/atom.php?group={}"
+  type: byproject
+  projects:
+    - wget
