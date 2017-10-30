@@ -37,3 +37,10 @@ github3:
     type: byproject
     projets:
       - dupgit/versions
+
+github4:
+    url: "https://github.com/{}/releases.atom"
+    type: notatype
+    projects:
+      - dupgit/versions
+
