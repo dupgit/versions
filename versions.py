@@ -33,7 +33,7 @@ import re
 
 __author__ = "Olivier Delhomme <olivier.delhomme@free.fr>"
 __date__ = "30.10.2017"
-__version__ = "1.1.1"
+__version__ = "1.2.0"
 
 """
 This program checks projects versions throught RSS and Atom feeds and
