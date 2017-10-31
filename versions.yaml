@@ -33,7 +33,8 @@ github:
     - terryyin/lizard
     - vmware/pyvmomi
     - tmux/tmux
-    - tmuxinator/tmuxinator
+    - name: tmuxinator/tmuxinator
+      regex: 'v([\d.]+):.*'
     - gorhill/uBlock
     - cachethq/cachet
     - Gandi/baobab
