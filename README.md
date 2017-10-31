@@ -43,7 +43,8 @@ othersitename:
   type: byproject
   projects:
     - list
-    - of
+    - name: of
+      regex: '([\d.]+)'
     - projects
 ```
 
