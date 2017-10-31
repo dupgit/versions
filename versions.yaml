@@ -24,7 +24,7 @@ github:
   type: byproject
   projects:
     - name: InfotelGLPI/manufacturersimports
-      regex: "GLPI 9.2 : Version 2.0.0 disponible / available"
+      regex: '\w+ [\d.]+ : \w+ ([\d.]+).*'
     - fguillot/kanboard
     - curl/curl
     - akheron/jansson

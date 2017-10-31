@@ -29,7 +29,7 @@ import os
 import errno
 import time
 import doctest
-
+import re
 
 __author__ = "Olivier Delhomme <olivier.delhomme@free.fr>"
 __date__ = "30.10.2017"
@@ -486,19 +486,28 @@ def get_latest_release_by_title(program, debug, feed_url):
     """
 
     version = ''
-    url = feed_url.format(program)
+    regex = ''
+    project = program
+
+    if 'regex' in program and 'name' in program:
+        regex = program['regex']
+        project = program['name']
+
+    url = feed_url.format(project)
     feed = feedparser.parse(url)
 
     if len(feed.entries) > 0:
         version = feed.entries[0].title
 
     if 'regex' in program and 'name' in program:
-        regex = program['regex']
-        name = program['name']
+        res = re.match(regex, version)
+        if res:
+            version = res.group(1)
+        print_debug(debug, u'\tname: {}\n\tversion: {}\n\tregex: {} : {}'.format(project, version, regex, res))
 
-    print_debug(debug, u'\tProject {}: {}'.format(program, version))
+    print_debug(debug, u'\tProject {}: {}'.format(project, version))
 
-    return version
+    return project, version
 
 # End of get_latest_github_release() function
 
@@ -512,7 +521,7 @@ def check_versions_feeds_by_projects(project_list, local_dir, debug, feed_url, c
     site_cache = FileCache(local_dir, cache_filename)
 
     for project in project_list:
-        version = get_latest_release_by_title(project, debug, feed_url)
+        (project, version) = get_latest_release_by_title(project, debug, feed_url)
         if version != '':
             site_cache.update_cache_dict(project, version, debug)
 
