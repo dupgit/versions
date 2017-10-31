@@ -17,7 +17,8 @@ sourceforge:
   url: "https://sourceforge.net/projects/{}/rss?path=/"
   type: byproject
   projects:
-    - advtor
+    - name: advtor
+      regex: '/\w+-([\d.]+)/.*'
   
 github:
   url: "https://github.com/{}/releases.atom"
