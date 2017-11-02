@@ -38,7 +38,8 @@ github:
     - gorhill/uBlock
     - cachethq/cachet
     - Gandi/baobab
-    - dupgit/versions
+    - name: dupgit/versions
+      regex: 'v([\d.]+)\s*:.*'
     - fedora-infra/anitya
 
 savanah:
