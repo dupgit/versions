@@ -197,9 +197,9 @@ class Conf:
     # End of extract_site_list() function
 
 
-    def get_site_cache_liste_name(self):
+    def make_site_cache_list_name(self):
         """
-        Formats list of cache filenames for all sites
+        Formats list of cache filenames for all sites.
         """
 
         all_site_list = list(self.description.keys())
@@ -210,7 +210,7 @@ class Conf:
 
         return cache_list
 
-    # End of get_site_cache_liste_name() function
+    # End of make_site_cache_list_name() function
 
 # End of Conf class
 
@@ -722,7 +722,7 @@ def print_cache_or_check_versions(versions_conf):
 
     if versions_conf.options.list_cache is True:
         # Pretty prints all caches.
-        cache_list = versions_conf.get_site_cache_liste_name()
+        cache_list = versions_conf.make_site_cache_list_name()
         print_versions_from_cache(versions_conf.local_dir, cache_list, debug)
 
     else:
