@@ -4,7 +4,7 @@
 #  versions.py : checks releases and versions of programs through RSS
 #                or Atom feeds and tells you
 #
-#  (C) Copyright 2016 Olivier Delhomme
+#  (C) Copyright 2016 - 2017 Olivier Delhomme
 #  e-mail : olivier.delhomme@free.fr
 #
 #  This program is free software; you can redistribute it and/or modify
@@ -478,35 +478,51 @@ def open_and_truncate_file(filename):
 ####################### End of utility functions #######################
 
 
-def get_latest_release_by_title(program, debug, feed_url):
+def get_values_from_project(project):
+    """
+    Gets the values of 'regex' and 'name' keys if found and
+    returns a tuple (valued, name, regex)
+    """
+
+    regex = ''
+    name = project
+    valued = False
+
+    if 'regex' in project and 'name' in project:
+        regex = project['regex']
+        name = project['name']
+        valued = True
+
+    return (valued, name, regex)
+
+# End of get_values_from_project() function
+
+
+def get_latest_release_by_title(project, debug, feed_url):
     """
     Gets the latest release of a program on github. program must be a
     string of the form user/repository.
     """
 
     version = ''
-    regex = ''
-    project = program
 
-    if 'regex' in program and 'name' in program:
-        regex = program['regex']
-        project = program['name']
+    (valued, name, regex) = get_values_from_project(project)
 
-    url = feed_url.format(project)
+    url = feed_url.format(name)
     feed = feedparser.parse(url)
 
     if len(feed.entries) > 0:
         version = feed.entries[0].title
 
-    if 'regex' in program and 'name' in program:
+    if valued:
         res = re.match(regex, version)
         if res:
             version = res.group(1)
-        print_debug(debug, u'\tname: {}\n\tversion: {}\n\tregex: {} : {}'.format(project, version, regex, res))
+        print_debug(debug, u'\tname: {}\n\tversion: {}\n\tregex: {} : {}'.format(name, version, regex, res))
 
-    print_debug(debug, u'\tProject {}: {}'.format(project, version))
+    print_debug(debug, u'\tProject {}: {}'.format(name, version))
 
-    return project, version
+    return (name, version)
 
 # End of get_latest_github_release() function
 
@@ -599,10 +615,8 @@ def check_and_update_feed(feed_list, project_list, cache, debug):
     # Checking every feed entry that are newer than the last check
     # and updates the dictionnary accordingly
     for entry in feed_list:
-
         (project, version) = cut_title_in_project_version(entry.title)
         print_debug(debug, u'\tChecking {0:16}: {1}'.format(project, version))
-
         if project.lower() in project_list_low:
             cache.update_cache_dict(project, version, debug)
 
