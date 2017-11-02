@@ -55,7 +55,7 @@ the latest parsed post of the feed.
 
 class Conf:
     """
-    Class to store configuration of the program
+    Class to store configuration of the program and check version.
     """
 
     config_dir = ''
@@ -211,6 +211,69 @@ class Conf:
         return cache_list
 
     # End of make_site_cache_list_name() function
+
+
+    def print_cache_or_check_versions(self):
+        """
+        Decide to pretty print projects and their associated version that
+        are already in the cache or to check versions of that projects upon
+        selections made at the command line
+        """
+
+        print_debug(self.options.debug, u'Loading yaml config file')
+        self.load_yaml_from_config_file(self.config_filename)
+
+        if self.options.list_cache is True:
+            # Pretty prints all caches.
+            cache_list = self.make_site_cache_list_name()
+            print_versions_from_cache(self.local_dir, cache_list, self.options.debug)
+
+        else:
+            # Checks version from online feeds
+            self.check_versions()
+
+    # End of print_list_or_check_versions() function.
+
+
+    def check_versions(self):
+        """
+        Checks versions by parsing online feeds
+        """
+
+        # Checks projects from by project sites such as github and sourceforge
+        byproject_site_list = self.extract_site_list('byproject')
+
+        for site_name in byproject_site_list:
+
+            print_debug(self.options.debug, u'Checking {} projects'.format(site_name))
+            (project_list, project_url, cache_filename) = self.get_infos_for_site(site_name)
+            check_versions_feeds_by_projects(project_list, self.local_dir, self.options.debug, project_url, cache_filename)
+
+        # Checks projects from 'list' tupe sites such as freshcode.club
+        list_site_list = self.extract_site_list('list')
+        for site_name in list_site_list:
+            print_debug(self.options.debug, u'Checking {} updates'.format(site_name))
+            (project_list, project_url, cache_filename) = self.get_infos_for_site(site_name)
+            feed_filename = u'{}.feed'.format(site_name)
+            check_versions_for_list_sites(project_list, project_url, cache_filename, feed_filename, self.local_dir, self.options.debug)
+
+    # End of check_versions() function
+    
+    
+    def get_infos_for_site(self, site_name):
+        """
+        Returns informations about a site as a tuple
+        (list of projects, url to check, filename of the cache)
+        """
+
+        project_list = self.extract_project_list_from_site_def(site_name)
+        project_url = self.extract_project_url(site_name)
+        cache_filename = u'{}.cache'.format(site_name)
+
+        return (project_list, project_url, cache_filename)
+
+    # End of get_infos_for_site() function
+
 
 # End of Conf class
 
@@ -669,69 +732,6 @@ def print_versions_from_cache(local_dir, cache_filename_list, debug):
 # End of print_versions_from_cache()
 
 
-def get_infos_for_site(versions_conf, site_name):
-    """
-    Returns informations about a site as a tuple
-    (list of projects, url to check, filename of the cache)
-    """
-
-    project_list = versions_conf.extract_project_list_from_site_def(site_name)
-    project_url = versions_conf.extract_project_url(site_name)
-    cache_filename = u'{}.cache'.format(site_name)
-
-    return (project_list, project_url, cache_filename)
-
-# End of get_infos_for_site() function
-
-
-def check_versions(versions_conf, debug):
-    """
-    Checks versions by parsing online feeds
-    """
-
-    # Checks projects from by project sites such as github and sourceforge
-    byproject_site_list = versions_conf.extract_site_list('byproject')
-
-    for site_name in byproject_site_list:
-
-        print_debug(debug, u'Checking {} projects'.format(site_name))
-        (project_list, project_url, cache_filename) = get_infos_for_site(versions_conf, site_name)
-        check_versions_feeds_by_projects(project_list, versions_conf.local_dir, debug, project_url, cache_filename)
-
-    # Checks projects from 'list' tupe sites such as freshcode.club
-    list_site_list = versions_conf.extract_site_list('list')
-    for site_name in list_site_list:
-        print_debug(debug, u'Checking {} updates'.format(site_name))
-        (project_list, project_url, cache_filename) = get_infos_for_site(versions_conf, site_name)
-        feed_filename = u'{}.feed'.format(site_name)
-        check_versions_for_list_sites(project_list, project_url, cache_filename, feed_filename, versions_conf.local_dir, debug)
-
-# End of check_versions() function
-
-
-def print_cache_or_check_versions(versions_conf):
-    """
-    Decide to pretty print projects and their associated version that
-    are already in the cache or to check versions of that projects upon
-    selections made at the command line
-    """
-
-    debug = versions_conf.options.debug
-    print_debug(debug, u'Loading yaml config file')
-    versions_conf.load_yaml_from_config_file(versions_conf.config_filename)
-
-    if versions_conf.options.list_cache is True:
-        # Pretty prints all caches.
-        cache_list = versions_conf.make_site_cache_list_name()
-        print_versions_from_cache(versions_conf.local_dir, cache_list, debug)
-
-    else:
-        # Checks version from online feeds
-        check_versions(versions_conf, debug)
-
-# End of print_list_or_check_versions() function.
-
-
 def main():
     """
     This is the where the program begins
@@ -743,7 +743,7 @@ def main():
         doctest.testmod(verbose=True)
 
     if os.path.isfile(versions_conf.config_filename):
-        print_cache_or_check_versions(versions_conf)
+        versions_conf.print_cache_or_check_versions()
 
     else:
         print('Error: file %s does not exist' % versions_conf.config_filename)
