@@ -13,6 +13,14 @@ pypi:
     - PyYAML
     - feedparser
 
+freebsd:
+  url: "http://www.freshports.org/backend/rss2.0.php"
+  type: list
+  projects:
+    - www/nginx
+    - games/tty-solitaire
+
+
 sourceforge:
   url: "https://sourceforge.net/projects/{}/rss?path=/"
   type: byproject
