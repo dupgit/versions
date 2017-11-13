@@ -6,6 +6,12 @@ freshcode:
     - sauvegarde
     - git
 
+fossies:
+  url: "https://fossies.org/fresh.vv.rss"
+  type: list
+  projects:
+    - duplicity
+
 pypi:
   url: "https://pypi.python.org/pypi?%3Aaction=rss"
   type: list

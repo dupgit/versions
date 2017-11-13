@@ -15,6 +15,7 @@ It can check projects from :
 * pypi.python.org
 * savanah.gnu.org
 * www.freshports.org (FreeBSD packages)
+* fossies.org
 
 Projects must be added to a YAML file (named by default
 `~/.config/versions/versions.yaml`). One can use `--file=FILENAME`
