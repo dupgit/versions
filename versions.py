@@ -36,7 +36,7 @@ __date__ = "03.11.2017"
 __version__ = "1.2.1"
 
 """
-This program checks projects versions throught RSS and Atom feeds and
+This program checks projects versions through RSS and Atom feeds and
 should only print those with new release version.
 
 It implements checking for projects in github.com and freshcode.club.
