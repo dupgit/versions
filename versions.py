@@ -90,7 +90,15 @@ class Conf:
 
         config_file = codecs.open(filename, 'r', encoding='utf-8')
 
-        self.description = yaml.safe_load(config_file)
+        try:
+            self.description = yaml.safe_load(config_file)
+        except yaml.YAMLError, err:
+            if hasattr(err, 'problem_mark'):
+                mark = err.problem_mark
+                print("Error in configuration file {} at position: {}:{}".format(filename, mark.line+1, mark.column+1))
+            else:
+                print("Error in configuration file {}".format(filename))
+
 
         config_file.close()
 
