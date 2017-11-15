@@ -1,14 +1,16 @@
 freshcode:
   url: "http://freshcode.club/projects.rss"
   type: list
+  regex: '([\w\s-]+)\s([\d.]+).*'
   projects:
     - FileZilla
     - sauvegarde
     - git
 
 fossies:
-  url: "https://fossies.org/fresh.vv.rss"
+  url: "https://fossies.org/fresh.rss"
   type: list
+  regex: '([\w\s-]+)\s-\s([\d.]+).*'
   projects:
     - duplicity
 
@@ -22,6 +24,7 @@ pypi:
 freebsd:
   url: "http://www.freshports.org/backend/rss2.0.php"
   type: list
+  regex: '([\/\w\s-]+)\s-\s([\d.]+).*'
   projects:
     - www/nginx
     - games/tty-solitaire

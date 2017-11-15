@@ -144,9 +144,27 @@ class Conf:
     # End of extract_site_definition()
 
 
-    def extract_project_list_from_site_def(self, site_name):
+    def extract_regex_from_site(self, site_name):
         """
-        Extracts a project list from a site by project definition
+        Extracts a regex from a site as defined in the YAML file.
+        Returns the regex if it exists or None otherwise.
+        """
+
+        site_definition = self.extract_site_definition(site_name)
+
+        if 'regex' in site_definition:
+            regex = site_definition['regex']
+        else:
+            regex = None
+
+        return regex
+
+    # End of extract_regex_from_site() function
+
+
+    def extract_project_list_from_site(self, site_name):
+        """
+        Extracts a project list from a site as defined in the YAML file.
         """
 
         site_definition = self.extract_site_definition(site_name)
@@ -158,7 +176,7 @@ class Conf:
 
         return project_list
 
-    # End of extract_project_list_from_site_def() function
+    # End of extract_project_list_from_site() function
 
 
     def extract_project_url(self, site_name):
@@ -265,8 +283,9 @@ class Conf:
         for site_name in list_site_list:
             print_debug(self.options.debug, u'Checking {} updates'.format(site_name))
             (project_list, project_url, cache_filename) = self.get_infos_for_site(site_name)
+            regex = self.extract_regex_from_site(site_name)
             feed_filename = u'{}.feed'.format(site_name)
-            check_versions_for_list_sites(project_list, project_url, cache_filename, feed_filename, self.local_dir, self.options.debug)
+            check_versions_for_list_sites(project_list, project_url, cache_filename, feed_filename, self.local_dir, self.options.debug, regex)
 
     # End of check_versions() function
     
@@ -277,7 +296,7 @@ class Conf:
         (list of projects, url to check, filename of the cache)
         """
 
-        project_list = self.extract_project_list_from_site_def(site_name)
+        project_list = self.extract_project_list_from_site(site_name)
         project_url = self.extract_project_url(site_name)
         cache_filename = u'{}.cache'.format(site_name)
 
@@ -598,7 +617,7 @@ def get_latest_release_by_title(project, debug, feed_url):
 
     return (name, version)
 
-# End of get_latest_github_release() function
+# End of get_latest_release_by_title() function
 
 
 def check_versions_feeds_by_projects(project_list, local_dir, debug, feed_url, cache_filename):
@@ -616,27 +635,40 @@ def check_versions_feeds_by_projects(project_list, local_dir, debug, feed_url, c
 
     site_cache.write_cache_file()
 
-# End of check_versions_for_github_projects() function
+# End of check_versions_feeds_by_projects() function
 
 
-def cut_title_in_project_version(title):
+def cut_title_in_project_version(title, regex):
     """
     Cuts the title into a tuple (project, version) where possible
     """
+    default = False
 
-    try:
-        (project, version) = title.strip().split(' ', 1)
+    if regex is not None:
+        res = re.match(regex, title)
+        if res:
+            project = res.group(1)
+            version = res.group(2)
+        else:
+            default = True
+    else:
+        default = True
 
-    except ValueError as val:
-        project = title.strip()
-        version = ''
+
+    if default:
+        try:
+            (project, version) = title.strip().split(' ', 1)
+
+        except ValueError as val:
+            project = title.strip()
+            version = ''
 
     return (project, version)
 
 # End of cut_title_in_project_version() function
 
 
-def make_list_of_newer_feeds(feed, feed_info, debug):
+def make_list_of_newer_feeds(feed, feed_info, debug, regex):
     """
     Compares feed entries and keep those that are newer than the latest
     check we've done and inserting the newer ones in reverse order in
@@ -650,7 +682,7 @@ def make_list_of_newer_feeds(feed, feed_info, debug):
     # feeds
     for a_feed in feed.entries:
 
-        (project, version) = cut_title_in_project_version(a_feed.title)
+        (project, version) = cut_title_in_project_version(a_feed.title, regex)
         print_debug(debug, u'\tFeed entry ({0}): project: {1:16} version: {2}'.format(time.strftime('%x %X', a_feed.published_parsed), project, version))
 
         if feed_info.is_newer(a_feed.published_parsed):
@@ -673,7 +705,7 @@ def lower_list_of_strings(project_list):
 # End of lower_list_of_strings() function
 
 
-def check_and_update_feed(feed_list, project_list, cache, debug):
+def check_and_update_feed(feed_list, project_list, cache, debug, regex):
     """
     Checks every feed entry in the list against project list cache and
     then updates the dictionnary then writes the cache file to the disk.
@@ -689,7 +721,7 @@ def check_and_update_feed(feed_list, project_list, cache, debug):
     # Checking every feed entry that are newer than the last check
     # and updates the dictionnary accordingly
     for entry in feed_list:
-        (project, version) = cut_title_in_project_version(entry.title)
+        (project, version) = cut_title_in_project_version(entry.title, regex)
         print_debug(debug, u'\tChecking {0:16}: {1}'.format(project, version))
         if project.lower() in project_list_low:
             cache.update_cache_dict(project, version, debug)
@@ -699,7 +731,7 @@ def check_and_update_feed(feed_list, project_list, cache, debug):
 # End of check_and_update_feed()
 
 
-def check_versions_for_list_sites(freshcode_project_list, url, cache_filename, feed_filename, local_dir, debug):
+def check_versions_for_list_sites(freshcode_project_list, url, cache_filename, feed_filename, local_dir, debug, regex):
     """
     Checks projects of list type sites such as freshcode's web site's RSS
     """
@@ -716,10 +748,10 @@ def check_versions_for_list_sites(freshcode_project_list, url, cache_filename, f
     if length > 0:
         print_debug(debug, u'\tFound {} entries'.format(length))
 
-        feed_list = make_list_of_newer_feeds(feed, feed_info, debug)
+        feed_list = make_list_of_newer_feeds(feed, feed_info, debug, regex)
         print_debug(debug, u'\tFound {} new entries (relative to {})'.format(len(feed_list), feed_info.date_minutes))
 
-        check_and_update_feed(feed_list, freshcode_project_list, freshcode_cache, debug)
+        check_and_update_feed(feed_list, freshcode_project_list, freshcode_cache, debug, regex)
 
         # Updating feed_info with the latest parsed feed entry date
         feed_info.update_cache_feed(feed.entries[0].published_parsed)
