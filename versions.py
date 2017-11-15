@@ -86,6 +86,9 @@ class Conf:
     def load_yaml_from_config_file(self, filename):
         """
         Loads definitions from the YAML config file filename
+        >>> conf = Conf()
+        >>> conf.load_yaml_from_config_file('./bad_formatted.yaml')
+        Error in configuration file ./bad_formatted.yaml at position: 8:1
         """
 
         config_file = codecs.open(filename, 'r', encoding='utf-8')
