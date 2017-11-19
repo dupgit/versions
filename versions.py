@@ -602,9 +602,9 @@ def get_latest_release_by_title(project, debug, feed_url):
     (valued, name, regex) = get_values_from_project(project)
 
     url = feed_url.format(name)
-    feed = feedparser.parse(url)
+    feed = get_feed_entries_from_url(url)
 
-    if len(feed.entries) > 0:
+    if feed is not None and len(feed.entries) > 0:
         version = feed.entries[0].title
 
     if valued:
@@ -728,36 +728,55 @@ def check_and_update_feed(feed_list, project_list, cache, debug, regex):
 
     cache.write_cache_file()
 
-# End of check_and_update_feed()
+# End of check_and_update_feed() function
 
 
-def check_versions_for_list_sites(freshcode_project_list, url, cache_filename, feed_filename, local_dir, debug, regex):
+def get_feed_entries_from_url(url):
+    """
+    Gets feed entries from an url that should be an
+    RSS or Atom feed. 
+    >>> get_feed_entries_from_url("http://delhomme.org/notfound.html")
+    Error 404 while fetching "http://delhomme.org/notfound.html".
+    >>> feed = get_feed_entries_from_url("http://blog.delhomme.org/index.php?feed/atom")
+    >>> feed.status
+    200
+    """
+
+    feed = feedparser.parse(url)
+    err = feed.status / 100
+
+    if err > 2:
+        print(u'Error {} while fetching "{}".'.format(feed.status, url))
+        feed = None
+
+    return feed
+
+# End of get_feed_entries_from_url() function
+
+
+def check_versions_for_list_sites(feed_project_list, url, cache_filename, feed_filename, local_dir, debug, regex):
     """
     Checks projects of list type sites such as freshcode's web site's RSS
     """
 
     freshcode_cache = FileCache(local_dir, cache_filename)
 
-    feed = feedparser.parse(url)
-
     feed_info = FeedCache(local_dir, feed_filename)
     feed_info.read_cache_feed()
 
-    length = len(feed.entries)
+    feed = get_feed_entries_from_url(url)
 
-    if length > 0:
+    if feed is not None:
+        length = len(feed.entries)
         print_debug(debug, u'\tFound {} entries'.format(length))
 
         feed_list = make_list_of_newer_feeds(feed, feed_info, debug, regex)
         print_debug(debug, u'\tFound {} new entries (relative to {})'.format(len(feed_list), feed_info.date_minutes))
 
-        check_and_update_feed(feed_list, freshcode_project_list, freshcode_cache, debug, regex)
+        check_and_update_feed(feed_list, feed_project_list, freshcode_cache, debug, regex)
 
         # Updating feed_info with the latest parsed feed entry date
         feed_info.update_cache_feed(feed.entries[0].published_parsed)
-
-    else:
-        print_debug(debug, u'No entries found in feed')
 
     feed_info.write_cache_feed()
 
