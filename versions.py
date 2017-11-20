@@ -171,6 +171,9 @@ class Conf:
 
         if 'projects' in site_definition:
             project_list = site_definition['projects']
+            if project_list is None:
+                print(u'Warning: no project for site "{}".'.format(site_name))
+                project_list = []
         else:
             project_list = []
 
