@@ -98,9 +98,9 @@ class Conf:
         except yaml.YAMLError, err:
             if hasattr(err, 'problem_mark'):
                 mark = err.problem_mark
-                print("Error in configuration file {} at position: {}:{}".format(filename, mark.line+1, mark.column+1))
+                print(u'Error in configuration file {} at position: {}:{}'.format(filename, mark.line+1, mark.column+1))
             else:
-                print("Error in configuration file {}".format(filename))
+                print(u'Error in configuration file {}'.format(filename))
 
 
         config_file.close()
@@ -395,11 +395,11 @@ class FileCache:
             print_debug(debug, u'\t\tIn cache: {}'.format(version_cache))
 
             if version != version_cache:
-                print('%s %s' % (project, version))
+                print(u'{} {}'.format(project, version))
                 self.cache_dict[project] = version
 
         except KeyError:
-            print('%s %s' % (project, version))
+            print(u'{} {}'.format(project, version))
             self.cache_dict[project] = version
 
     # End of update_cache_dict() function
@@ -410,11 +410,11 @@ class FileCache:
         Pretty prints the cache dictionary as it is recorded in the files.
         """
 
-        print('%s:' % sitename)
+        print(u'{}:'.format(sitename))
 
         # Gets project and version tuple sorted by project lowered while sorting
         for project, version in sorted(self.cache_dict.iteritems(), key=lambda proj: proj[0].lower()):
-            print('\t%s %s' % (project, version))
+            print(u'\t{} {}'.format(project, version))
 
         print('')
 
@@ -811,7 +811,7 @@ def main():
         versions_conf.print_cache_or_check_versions()
 
     else:
-        print('Error: file %s does not exist' % versions_conf.config_filename)
+        print(u'Error: file {} does not exist'.format(versions_conf.config_filename))
 
 # End of main() function
 
