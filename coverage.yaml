@@ -49,3 +49,8 @@ github4:
     projects:
       - dupgit/versions
 
+empty_projects:
+  url: "http://freshcode.club/projects.rss"
+  type: list
+  projects:
+
