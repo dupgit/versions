@@ -43,10 +43,11 @@ github:
   projects:
     - name: InfotelGLPI/manufacturersimports
       regex: '\w+ [\d.]+ : \w+ ([\d.]+).*'
-    - fguillot/kanboard
+    - name: kanboard/kanboard
+      regex: 'Version\s([\d.]+)'
     - curl/curl
     - akheron/jansson
-    - Deltafire/MilkyTracker
+    - milkytracker/MilkyTracker
     - terryyin/lizard
     - vmware/pyvmomi
     - tmux/tmux
@@ -57,7 +58,7 @@ github:
     - Gandi/baobab
     - name: dupgit/versions
       regex: 'v([\d.]+)\s*:.*'
-    - fedora-infra/anitya
+    - release-monitoring/anitya
 
 savanah:
   url: "http://savannah.gnu.org/news/atom.php?group={}"
