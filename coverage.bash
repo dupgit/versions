@@ -11,3 +11,4 @@ export COV=$1
 ${COV} run ./versions.py -d -f coverage.yaml
 ${COV} run -a ./versions.py -d -f doesnotexist.yaml
 ${COV} run -a ./versions.py -l -f coverage.yaml
+${COV} run -a ./versions.py -f bad_formatted.yaml
