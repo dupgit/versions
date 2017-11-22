@@ -734,10 +734,32 @@ def check_and_update_feed(feed_list, project_list, cache, debug, regex):
 # End of check_and_update_feed() function
 
 
+def manage_non_http_errors(feed, url):
+    """
+    Tries to manage non http errors and gives
+    a message to the user.
+    """
+
+    if feed.bozo:
+        if feed.bozo_exception:
+            exc = feed.bozo_exception
+            if hasattr(exc, 'reason'):
+                message = exc.reason
+            else:
+                message = 'unaddressed'
+
+            print(u'Error {} while fetching "{}".'.format(message, url))
+
+        else:
+            print(u'Error while fetching url "{}".'.format(url))
+
+# End of manage_non_http_errors() function
+
+
 def get_feed_entries_from_url(url):
     """
     Gets feed entries from an url that should be an
-    RSS or Atom feed. 
+    RSS or Atom feed.
     >>> get_feed_entries_from_url("http://delhomme.org/notfound.html")
     Error 404 while fetching "http://delhomme.org/notfound.html".
     >>> feed = get_feed_entries_from_url("http://blog.delhomme.org/index.php?feed/atom")
@@ -746,10 +768,15 @@ def get_feed_entries_from_url(url):
     """
 
     feed = feedparser.parse(url)
-    err = feed.status / 100
 
-    if err > 2:
-        print(u'Error {} while fetching "{}".'.format(feed.status, url))
+    if 'status' in feed:
+        err = feed.status / 100
+        if err > 2:
+            print(u'Error {} while fetching "{}".'.format(feed.status, url))
+            feed = None
+
+    else:
+        manage_non_http_errors(feed, url)
         feed = None
 
     return feed
