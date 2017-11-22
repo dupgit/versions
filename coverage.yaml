@@ -11,6 +11,12 @@ freshcode_wrong_url:
   projects:
     - sauvegarde
 
+non_existing_host.org:
+  url: "https://non_existing_host.org/{}/releases.atom"
+  type: list
+  projects:
+    - notaproject
+
 sourceforge:
   url: "https://sourceforge.net/projects/{}/rss?path=/"
   type: byproject
