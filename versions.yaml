@@ -1,7 +1,7 @@
 freshcode:
   url: "http://freshcode.club/projects.rss"
   type: list
-  regex: '([\w\s-]+)\s([\d.]+).*'
+  regex: '([\w\s-]+)\s([\d\.]+).*'
   projects:
     - FileZilla
     - sauvegarde
@@ -10,7 +10,7 @@ freshcode:
 fossies:
   url: "https://fossies.org/fresh.rss"
   type: list
-  regex: '([\w\s-]+)\s-\s([\d.]+).*'
+  regex: '([\w\s-]+)\s-\s([\d\.]+).*'
   projects:
     - duplicity
 
@@ -24,7 +24,7 @@ pypi:
 freebsd:
   url: "http://www.freshports.org/backend/rss2.0.php"
   type: list
-  regex: '([\/\w\s-]+)\s-\s([\d.]+).*'
+  regex: '([\/\w\s-]+)\s-\s([\d\.]+).*'
   projects:
     - www/nginx
     - games/tty-solitaire
@@ -35,16 +35,16 @@ sourceforge:
   type: byproject
   projects:
     - name: advtor
-      regex: '/\w+-([\d.]+)/.*'
+      regex: '/\w+-([\d\.]+)/.*'
   
 github:
   url: "https://github.com/{}/releases.atom"
   type: byproject
   projects:
     - name: InfotelGLPI/manufacturersimports
-      regex: '\w+ [\d.]+ : \w+ ([\d.]+).*'
+      regex: '\w+ [\d\.]+ : \w+ ([\d\.]+).*'
     - name: kanboard/kanboard
-      regex: 'Version\s([\d.]+)'
+      regex: 'Version\s([\d\.]+)'
     - curl/curl
     - akheron/jansson
     - milkytracker/MilkyTracker
@@ -52,12 +52,13 @@ github:
     - vmware/pyvmomi
     - tmux/tmux
     - name: tmuxinator/tmuxinator
-      regex: 'v([\d.]+):.*'
-    - gorhill/uBlock
+      regex: 'v([\d\.]+):.*'
+    - name: gorhill/uBlock
+      regex: '([\d\.\-rRcC]+)'
     - cachethq/cachet
     - Gandi/baobab
     - name: dupgit/versions
-      regex: 'v([\d.]+)\s*:.*'
+      regex: 'v([\d\.]+)\s*:.*'
     - release-monitoring/anitya
 
 savanah:
