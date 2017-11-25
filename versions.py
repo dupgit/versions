@@ -641,30 +641,68 @@ def check_versions_feeds_by_projects(project_list, local_dir, debug, feed_url, c
 # End of check_versions_feeds_by_projects() function
 
 
+def cut_title_with_default_method(title):
+    """
+    Cuts title with a default method and a fallback
+    >>> cut_title_with_default_method('versions 1.3.2')
+    ('versions', '1.3.2')
+    >>> cut_title_with_default_method('no_version_project')
+    ('no_version_project', '')
+    """
+
+    try:
+        (project, version) = title.strip().split(' ', 1)
+
+    except ValueError:
+        project = title.strip()
+        version = ''
+
+    return (project, version)
+
+# End of cut_title_with_default_method() function
+
+
+def cut_title_with_regex_method(title, regex):
+    """
+    Cuts title using a regex. If it does not success
+    fallback to default.
+    >>> cut_title_with_regex_method('versions 1.3.2', '([\w]+)\s([\d\.]+)')
+    ('versions', '1.3.2', False)
+    >>> cut_title_with_regex_method('versions 1.3.2', '([\w]+)notgood\s([\d\.]+)')
+    ('', '', True)
+    """
+
+    default = False
+    project = ''
+    version = ''
+
+    res = re.match(regex, title)
+    if res:
+        project = res.group(1)
+        version = res.group(2)
+    else:
+        default = True
+
+    return (project, version, default)
+
+# End of cut_title_with_regex_method() function
+
+
 def cut_title_in_project_version(title, regex):
     """
-    Cuts the title into a tuple (project, version) where possible
+    Cuts the title into a tuple (project, version) where possible with a regex
+    or if there is no regex or the regex did not match cuts the title with a
+    default method
     """
     default = False
 
     if regex is not None:
-        res = re.match(regex, title)
-        if res:
-            project = res.group(1)
-            version = res.group(2)
-        else:
-            default = True
+        (project, version, default) = cut_title_with_regex_method(title)
     else:
         default = True
 
-
     if default:
-        try:
-            (project, version) = title.strip().split(' ', 1)
-
-        except ValueError as val:
-            project = title.strip()
-            version = ''
+        (project, version) = cut_title_with_default_method(title)
 
     return (project, version)
 
