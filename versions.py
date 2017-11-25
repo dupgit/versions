@@ -734,6 +734,24 @@ def check_and_update_feed(feed_list, project_list, cache, debug, regex):
 # End of check_and_update_feed() function
 
 
+def manage_http_status(feed, url):
+    """
+    Manages http status code present in feed and prints
+    an error in case of a 3xx, 4xx or 5xx and stops 
+    doing anything for the feed by returning None.
+    """
+
+    err = feed.status / 100
+
+    if err > 2:
+        print(u'Error {} while fetching "{}".'.format(feed.status, url))
+        feed = None
+
+    return feed
+
+# End of manage_http_status() function
+
+
 def manage_non_http_errors(feed, url):
     """
     Tries to manage non http errors and gives
@@ -770,12 +788,9 @@ def get_feed_entries_from_url(url):
     feed = feedparser.parse(url)
 
     if 'status' in feed:
-        err = feed.status / 100
-        if err > 2:
-            print(u'Error {} while fetching "{}".'.format(feed.status, url))
-            feed = None
-
+        feed = manage_http_status(feed, url)
     else:
+        # An error happened such that the feed does not contain an HTTP response
         manage_non_http_errors(feed, url)
         feed = None
 
