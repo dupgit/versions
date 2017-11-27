@@ -17,11 +17,22 @@ non_existing_host.org:
   projects:
     - notaproject
 
+
+freshcode:
+  url: "http://freshcode.club/projects.rss"
+  type: notatype
+  projects:
+    - sauvegarde
+    - git
+
+
+
 sourceforge:
   url: "https://sourceforge.net/projects/{}/rss?path=/"
   type: byproject
   projects:
     - advtor
+
 github:
   url: "https://github.com/{}/releases.atom"
   type: byproject

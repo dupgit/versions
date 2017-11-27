@@ -13,3 +13,4 @@ ${COV} run -a ./versions.py -d -f doesnotexist.yaml
 ${COV} run -a ./versions.py -l -f coverage.yaml
 ${COV} run -a ./versions.py -f bad_formatted.yaml
 ${COV} run -a ./versions.py -f versions.yaml
+${COV} run -a ./versions.py

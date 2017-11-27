@@ -223,7 +223,7 @@ class Conf:
         for site_name in all_site_list:
             if self.is_site_of_type(site_name, type):
                 site_list.insert(0, site_name)
-       
+
         return site_list
 
     # End of extract_site_list() function
@@ -269,14 +269,13 @@ class Conf:
 
     def check_versions(self):
         """
-        Checks versions by parsing online feeds
+        Checks versions by parsing online feeds.
         """
 
         # Checks projects from by project sites such as github and sourceforge
         byproject_site_list = self.extract_site_list('byproject')
 
         for site_name in byproject_site_list:
-
             print_debug(self.options.debug, u'Checking {} projects'.format(site_name))
             (project_list, project_url, cache_filename) = self.get_infos_for_site(site_name)
             check_versions_feeds_by_projects(project_list, self.local_dir, self.options.debug, project_url, cache_filename)
