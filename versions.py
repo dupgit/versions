@@ -596,8 +596,9 @@ def get_values_from_project(project):
 
 def get_latest_release_by_title(project, debug, feed_url):
     """
-    Gets the latest release of a program on github. program must be a
-    string of the form user/repository.
+    Gets the latest release of a program on a site of type 'byproject'.
+    project must be a string that represents the project (user/repository in
+    github for instance).
     """
 
     version = ''
@@ -839,7 +840,7 @@ def get_feed_entries_from_url(url):
 
 def check_versions_for_list_sites(feed_project_list, url, cache_filename, feed_filename, local_dir, debug, regex):
     """
-    Checks projects of list type sites such as freshcode's web site's RSS
+    Checks projects of 'list' type sites such as freshcode's web site's RSS
     """
 
     freshcode_cache = FileCache(local_dir, cache_filename)
@@ -850,9 +851,7 @@ def check_versions_for_list_sites(feed_project_list, url, cache_filename, feed_f
     feed = get_feed_entries_from_url(url)
 
     if feed is not None:
-        length = len(feed.entries)
-        print_debug(debug, u'\tFound {} entries'.format(length))
-
+        print_debug(debug, u'\tFound {} entries'.format(len(feed.entries)))
         feed_list = make_list_of_newer_feeds(feed, feed_info, debug, regex)
         print_debug(debug, u'\tFound {} new entries (relative to {})'.format(len(feed_list), feed_info.date_minutes))
 
