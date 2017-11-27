@@ -698,7 +698,7 @@ def cut_title_in_project_version(title, regex):
     default = False
 
     if regex is not None:
-        (project, version, default) = cut_title_with_regex_method(title)
+        (project, version, default) = cut_title_with_regex_method(title, regex)
     else:
         default = True
 
