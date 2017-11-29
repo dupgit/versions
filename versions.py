@@ -95,7 +95,7 @@ class Conf:
 
         try:
             self.description = yaml.safe_load(config_file)
-        except yaml.YAMLError, err:
+        except yaml.YAMLError as err:
             if hasattr(err, 'problem_mark'):
                 mark = err.problem_mark
                 print(u'Error in configuration file {} at position: {}:{}'.format(filename, mark.line+1, mark.column+1))
@@ -116,8 +116,9 @@ class Conf:
         """
         str_version = 'versions.py - %s' % __version__
 
-        parser = argparse.ArgumentParser(description='This program checks releases and versions of programs through RSS or Atom feeds', version=str_version)
+        parser = argparse.ArgumentParser(description='This program checks releases and versions of programs through RSS or Atom feeds')
 
+        parser.add_argument('-v', '--version', action='version', version=str_version)
         parser.add_argument('-f', '--file', action='store', dest='filename', help='Configuration file with projects to check', default='')
         parser.add_argument('-l', '--list-cache', action='store_true', dest='list_cache', help='Lists all projects and their version in cache', default=False)
         parser.add_argument('-d', '--debug', action='store_true', dest='debug', help='Starts in debug mode and prints things that may help', default=False)
@@ -290,8 +291,8 @@ class Conf:
             check_versions_for_list_sites(project_list, project_url, cache_filename, feed_filename, self.local_dir, self.options.debug, regex)
 
     # End of check_versions() function
-    
-    
+
+
     def get_infos_for_site(self, site_name):
         """
         Returns informations about a site as a tuple
@@ -376,7 +377,7 @@ class FileCache:
 
         cache_file = open_and_truncate_file(self.cache_filename)
 
-        for (project, version) in self.cache_dict.iteritems():
+        for (project, version) in self.cache_dict.items():
             cache_file.write('%s %s\n' % (project, version))
 
         cache_file.close()
@@ -412,7 +413,7 @@ class FileCache:
         print(u'{}:'.format(sitename))
 
         # Gets project and version tuple sorted by project lowered while sorting
-        for project, version in sorted(self.cache_dict.iteritems(), key=lambda proj: proj[0].lower()):
+        for project, version in sorted(self.cache_dict.items(), key=lambda proj: proj[0].lower()):
             print(u'\t{} {}'.format(project, version))
 
         print('')
@@ -425,7 +426,7 @@ class FeedCache:
 
     cache_filename = ''
     year = 2016
-    month = 05
+    month = 5
     day = 1
     hour = 0
     minute = 0
@@ -775,7 +776,7 @@ def check_and_update_feed(feed_list, project_list, cache, debug, regex):
 def manage_http_status(feed, url):
     """
     Manages http status code present in feed and prints
-    an error in case of a 3xx, 4xx or 5xx and stops 
+    an error in case of a 3xx, 4xx or 5xx and stops
     doing anything for the feed by returning None.
     """
 
