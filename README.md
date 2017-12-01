@@ -10,12 +10,13 @@ you which one has been released since last check.
 
 It can check projects from :
 * github.com
-* sourceforge
+* sourceforge.net
 * freshcode.club
 * pypi.python.org
 * savanah.gnu.org
 * www.freshports.org (FreeBSD packages)
 * fossies.org
+* repo.continuum.io
 
 Projects must be added to a YAML file (named by default
 `~/.config/versions/versions.yaml`). One can use `--file=FILENAME`

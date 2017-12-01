@@ -1,3 +1,11 @@
+continuum.io:
+  url: "https://repo.continuum.io/pkgs/rss.xml"
+  type: list
+  regex: 'add ([\w\s-]+)\s([\d\.]+).*'
+  projects:
+    - pytorch
+    - holoviews
+
 freshcode:
   url: "http://freshcode.club/projects.rss"
   type: list
@@ -22,7 +30,7 @@ pypi:
     - feedparser
 
 freebsd:
-  url: "http://www.freshports.org/backend/rss2.0.php"
+  url: "https://www.freshports.org/backend/rss2.0.php"
   type: list
   regex: '([\/\w\s-]+)\s-\s([\d\.]+).*'
   projects:
