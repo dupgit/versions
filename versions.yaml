@@ -1,10 +1,11 @@
 continuum.io:
   url: "https://repo.continuum.io/pkgs/rss.xml"
   type: list
-  regex: 'add ([\w\s-]+)\s([\d\.]+).*'
+  regex: '[ad\s]*([\w\s-]+)\s([\d\.]+).*'
   projects:
     - pytorch
     - holoviews
+    - pyopenssl
 
 freshcode:
   url: "http://freshcode.club/projects.rss"
