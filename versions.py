@@ -132,6 +132,7 @@ class Conf:
 
     # End of get_command_line_arguments() function
 
+
     def extract_site_definition(self, site_name):
         """
         extracts whole site definition
@@ -724,8 +725,7 @@ def make_list_of_newer_feeds(feed, feed_info, debug, regex):
     # feeds
     for a_feed in feed.entries:
 
-        (project, version) = cut_title_in_project_version(a_feed.title, regex)
-        print_debug(debug, u'\tFeed entry ({0}): project: {1:16} version: {2}'.format(time.strftime('%x %X', a_feed.published_parsed), project, version))
+        print_debug(debug, u'\tFeed entry ({0}): Feed title: "{1:16}"'.format(time.strftime('%x %X', a_feed.published_parsed), a_feed.title))
 
         if feed_info.is_newer(a_feed.published_parsed):
             feed_list.insert(0, a_feed)
