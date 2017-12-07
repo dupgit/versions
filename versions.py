@@ -164,6 +164,25 @@ class Conf:
     # End of extract_regex_from_site() function
 
 
+    def extract_multiproject_from_site(self, site_name):
+        """
+        Extracts from a site its separator list for its multiple 
+        projects in one title. It returns None if multiproject 
+        is not defined and the list of separators instead
+        """
+
+        site_definition = self.extract_site_definition(site_name)
+
+        if 'multiproject' in site_definition:
+            multiproject = site_definition['multiproject']
+        else:
+            multiproject = None
+
+        return multiproject
+
+    # End of extract…multiproject_from_site() function
+
+
     def extract_project_list_from_site(self, site_name):
         """
         Extracts a project list from a site as defined in the YAML file.
@@ -288,8 +307,9 @@ class Conf:
             print_debug(self.options.debug, u'Checking {} updates'.format(site_name))
             (project_list, project_url, cache_filename) = self.get_infos_for_site(site_name)
             regex = self.extract_regex_from_site(site_name)
+            multiproject = self.extract_multiproject_from_site(site_name)
             feed_filename = u'{}.feed'.format(site_name)
-            check_versions_for_list_sites(project_list, project_url, cache_filename, feed_filename, self.local_dir, self.options.debug, regex)
+            check_versions_for_list_sites(project_list, project_url, cache_filename, feed_filename, self.local_dir, self.options.debug, regex, multiproject)
 
     # End of check_versions() function
 
@@ -747,7 +767,25 @@ def lower_list_of_strings(project_list):
 # End of lower_list_of_strings() function
 
 
-def check_and_update_feed(feed_list, project_list, cache, debug, regex):
+def split_multiproject_title_into_list(title, multiproject):
+    """
+    Splits title into a list of projects according to multiproject being
+    a list of separators
+    """
+
+    if multiproject is not None:
+        titles = re.split(multiproject, title)
+    else:
+        titles = [title]
+
+    return titles
+
+# End of split_multiproject_title_into_list() function
+
+
+
+
+def check_and_update_feed(feed_list, project_list, cache, debug, regex, multiproject):
     """
     Checks every feed entry in the list against project list cache and
     then updates the dictionnary then writes the cache file to the disk.
@@ -763,10 +801,14 @@ def check_and_update_feed(feed_list, project_list, cache, debug, regex):
     # Checking every feed entry that are newer than the last check
     # and updates the dictionnary accordingly
     for entry in feed_list:
-        (project, version) = cut_title_in_project_version(entry.title, regex)
-        print_debug(debug, u'\tChecking {0:16}: {1}'.format(project, version))
-        if project.lower() in project_list_low:
-            cache.update_cache_dict(project, version, debug)
+
+        titles = split_multiproject_title_into_list(entry.title, multiproject)
+
+        for title in titles:
+            (project, version) = cut_title_in_project_version(title, regex)
+            print_debug(debug, u'\tChecking {0:16}: {1}'.format(project, version))
+            if project.lower() in project_list_low:
+                cache.update_cache_dict(project, version, debug)
 
     cache.write_cache_file()
 
@@ -838,7 +880,7 @@ def get_feed_entries_from_url(url):
 # End of get_feed_entries_from_url() function
 
 
-def check_versions_for_list_sites(feed_project_list, url, cache_filename, feed_filename, local_dir, debug, regex):
+def check_versions_for_list_sites(feed_project_list, url, cache_filename, feed_filename, local_dir, debug, regex, multiproject):
     """
     Checks projects of 'list' type sites such as freshcode's web site's RSS
     """
@@ -855,7 +897,7 @@ def check_versions_for_list_sites(feed_project_list, url, cache_filename, feed_f
         feed_list = make_list_of_newer_feeds(feed, feed_info, debug, regex)
         print_debug(debug, u'\tFound {} new entries (relative to {})'.format(len(feed_list), feed_info.date_minutes))
 
-        check_and_update_feed(feed_list, feed_project_list, freshcode_cache, debug, regex)
+        check_and_update_feed(feed_list, feed_project_list, freshcode_cache, debug, regex, multiproject)
 
         # Updating feed_info with the latest parsed feed entry date
         feed_info.update_cache_feed(feed.entries[0].published_parsed)

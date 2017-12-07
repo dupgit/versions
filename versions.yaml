@@ -2,6 +2,7 @@ continuum.io:
   url: "https://repo.continuum.io/pkgs/rss.xml"
   type: list
   regex: '[ad\s]*([\.\w\s-]+)\s([\d\.-]+\w*).*'
+  multiproject: ',|;'
   projects:
     - pytorch
     - holoviews
