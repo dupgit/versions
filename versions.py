@@ -152,35 +152,42 @@ class Conf:
         Returns the regex if it exists or None otherwise.
         """
 
-        site_definition = self.extract_site_definition(site_name)
-
-        if 'regex' in site_definition:
-            regex = site_definition['regex']
-        else:
-            regex = None
-
-        return regex
+        return self.extract_variable_from_site(site_name, 'regex', None)
 
     # End of extract_regex_from_site() function
 
 
     def extract_multiproject_from_site(self, site_name):
         """
-        Extracts from a site its separator list for its multiple 
-        projects in one title. It returns None if multiproject 
+        Extracts from a site its separator list for its multiple
+        projects in one title. It returns None if multiproject
         is not defined and the list of separators instead
+        """
+
+        return self.extract_variable_from_site(site_name, 'multiproject', None)
+
+    # End of extract…multiproject_from_site() function
+
+
+    def extract_variable_from_site(self, site_name, variable, default_return):
+        """
+        Extracts variable from site site_name if it exists and return
+        default_return otherwise
         """
 
         site_definition = self.extract_site_definition(site_name)
 
-        if 'multiproject' in site_definition:
-            multiproject = site_definition['multiproject']
+        if variable in site_definition:
+            value = site_definition[variable]
+            if value is None:
+                print(u'Warning: no variable "{}" for site "{}".'.format(variable, site_name))
+                value = default_return
         else:
-            multiproject = None
+            value = default_return
 
-        return multiproject
+        return value
 
-    # End of extract…multiproject_from_site() function
+    # End of extract_variable_from_site() function
 
 
     def extract_project_list_from_site(self, site_name):
@@ -188,17 +195,7 @@ class Conf:
         Extracts a project list from a site as defined in the YAML file.
         """
 
-        site_definition = self.extract_site_definition(site_name)
-
-        if 'projects' in site_definition:
-            project_list = site_definition['projects']
-            if project_list is None:
-                print(u'Warning: no project for site "{}".'.format(site_name))
-                project_list = []
-        else:
-            project_list = []
-
-        return project_list
+        return self.extract_variable_from_site(site_name, 'projects', [])
 
     # End of extract_project_list_from_site() function
 
@@ -208,14 +205,7 @@ class Conf:
         Extracts the url definition where to check project version.
         """
 
-        site_definition = self.extract_site_definition(site_name)
-
-        if 'url' in site_definition:
-            project_url = site_definition['url']
-        else:
-            project_url = ''
-
-        return project_url
+        return self.extract_variable_from_site(site_name, 'url', '')
 
     # End of extract_project_url() function
 
