@@ -1,0 +1,30 @@
+checks:
+    python:
+        duplicate_code: true
+        code_rating: true
+        classes_valid_slots: true
+
+filter:
+    excluded_paths:
+        - '*/test/*'
+build:
+    dependencies:
+        before:
+            - pip install feedparser
+            - pip install PyYAML
+            - pip install coverage
+    tests:
+        override:
+            -
+                command: 'bash ./coverage.bash coverage'
+                coverage:
+                    file: '.coverage'
+                    format: 'py-cc'
+    nodes:
+        tests: true
+        analysis:
+            tests:
+                override:
+                    -
+                        command: pylint-run
+                        use_website_config: true
