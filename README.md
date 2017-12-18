@@ -83,4 +83,4 @@ what's going on in the program.
 
 * [https://release-monitoring.org/](https://release-monitoring.org/)
 * [https://wiki.debian.org/debian/watch](https://wiki.debian.org/debian/watch)
-* [http://semver.org/](http://semver.org/http://semver.org/)
+* [http://semver.org/](http://semver.org/)
