@@ -27,4 +27,3 @@ build:
                 override:
                     -
                         command: pylint-run
-                        use_website_config: true
