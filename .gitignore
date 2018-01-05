@@ -2,3 +2,6 @@
 htmlcov
 slides
 pylint.rc
+dist
+build
+versions.egg-info
