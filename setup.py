@@ -39,7 +39,7 @@ setup(
     # For a discussion on single-sourcing the version across setup.py and the
     # project code, see
     # https://packaging.python.org/en/latest/single_source_version.html
-    version='1.4.4',  # Required
+    version='1.4.5',  # Required
 
     # This is a one-line description or tagline of what your project does. This
     # corresponds to the "Summary" metadata field:
@@ -90,7 +90,7 @@ setup(
         'Topic :: Software Development :: Version Control',
 
         # Pick your license as you wish
-        'License :: OSI Approved :: GPLv2',
+        'License :: OSI Approved :: GNU General Public License v2 or later (GPLv2+)',
 
         # Specify the Python versions you support here. In particular, ensure
         # that you indicate whether you support Python 2, Python 3 or both.
