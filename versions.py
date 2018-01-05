@@ -4,7 +4,7 @@
 #  versions.py : checks releases and versions of programs through RSS
 #                or Atom feeds and tells you
 #
-#  (C) Copyright 2016 - 2017 Olivier Delhomme
+#  (C) Copyright 2016 - 2018 Olivier Delhomme
 #  e-mail : olivier.delhomme@free.fr
 #
 #  This program is free software; you can redistribute it and/or modify
@@ -32,8 +32,8 @@ import doctest
 import re
 
 __author__ = "Olivier Delhomme <olivier.delhomme@free.fr>"
-__date__ = "11.12.2017"
-__version__ = "1.4.1"
+__date__ = "01.05.2018"
+__version__ = "1.4.2"
 
 """
 This program checks projects versions through RSS and Atom feeds and
