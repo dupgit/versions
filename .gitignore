@@ -4,4 +4,4 @@ slides
 pylint.rc
 dist
 build
-versions.egg-info
+program_versions.egg-info
