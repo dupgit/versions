@@ -116,7 +116,7 @@ setup(
     # called `my_module.py` to exist:
     #
     py_modules=["versions"],
-    #
+    
     # packages=find_packages(exclude=['contrib', 'docs', 'tests']),  # Required
 
     # This field lists other packages that your project depends on to run.
@@ -163,9 +163,9 @@ setup(
     #
     # For example, the following would provide a command called `sample` which
     # executes the function `main` from this package when invoked:
-    #entry_points={  # Optional
-    #    'console_scripts': [
-    #        'sample=sample:main',
-    #    ],
-    #},
+    entry_points={  # Optional
+        'console_scripts': [
+            'versions=versions:main',
+        ],
+    },
 )
