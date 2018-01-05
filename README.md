@@ -58,7 +58,13 @@ There is two types of sites :
 * 'byproject": The site gives access to one feed per project.
    brackets '{}' represents the name of the project as found in
    the 'project' list.
-     
+
+
+# Installation
+
+In pypi the project is named program_versions but is still invoked
+by the command `versions`.
+
 
 # Usage
 
