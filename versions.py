@@ -22,14 +22,14 @@
 #  Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 #
 import codecs
-import feedparser
-import yaml
 import argparse
 import os
+import re
 import errno
 import time
 import doctest
-import re
+import feedparser
+import yaml
 
 __author__ = "Olivier Delhomme <olivier.delhomme@free.fr>"
 __date__ = "01.05.2018"
@@ -101,7 +101,6 @@ class Conf:
                 print(u'Error in configuration file {} at position: {}:{}'.format(filename, mark.line+1, mark.column+1))
             else:
                 print(u'Error in configuration file {}'.format(filename))
-
 
         config_file.close()
 
@@ -210,21 +209,21 @@ class Conf:
     # End of extract_project_url() function
 
 
-    def is_site_of_type(self, site_name, type):
+    def is_site_of_type(self, site_name, site_type):
         """
-        Returns True if site_name is of type 'type'
+        Returns True if site_name is of type 'site_type'
         """
 
         site_definition = self.extract_site_definition(site_name)
         if 'type' in site_definition:
-            return (site_definition['type'] == type)
+            return (site_definition['type'] == site_type)
         else:
             return False
 
     # End of is_site_of_type() function
 
 
-    def extract_site_list(self, type):
+    def extract_site_list(self, site_type):
         """
         Extracts all sites from a specific type (byproject or list)
         """
@@ -232,7 +231,7 @@ class Conf:
         all_site_list = list(self.description.keys())
         site_list = []
         for site_name in all_site_list:
-            if self.is_site_of_type(site_name, type):
+            if self.is_site_of_type(site_name, site_type):
                 site_list.insert(0, site_name)
 
         return site_list
@@ -269,7 +268,7 @@ class Conf:
         if self.options.list_cache is True:
             # Pretty prints all caches.
             cache_list = self.make_site_cache_list_name()
-            print_versions_from_cache(self.local_dir, cache_list, self.options.debug)
+            print_versions_from_cache(self.local_dir, cache_list)
 
         else:
             # Checks version from online feeds
@@ -721,7 +720,7 @@ def cut_title_in_project_version(title, regex):
 # End of cut_title_in_project_version() function
 
 
-def make_list_of_newer_feeds(feed, feed_info, debug, regex):
+def make_list_of_newer_feeds(feed, feed_info, debug):
     """
     Compares feed entries and keep those that are newer than the latest
     check we've done and inserting the newer ones in reverse order in
@@ -884,7 +883,7 @@ def check_versions_for_list_sites(feed_project_list, url, cache_filename, feed_f
 
     if feed is not None:
         print_debug(debug, u'\tFound {} entries'.format(len(feed.entries)))
-        feed_list = make_list_of_newer_feeds(feed, feed_info, debug, regex)
+        feed_list = make_list_of_newer_feeds(feed, feed_info, debug)
         print_debug(debug, u'\tFound {} new entries (relative to {})'.format(len(feed_list), feed_info.date_minutes))
 
         check_and_update_feed(feed_list, feed_project_list, freshcode_cache, debug, regex, multiproject)
@@ -897,7 +896,7 @@ def check_versions_for_list_sites(feed_project_list, url, cache_filename, feed_f
 # End of check_versions_for_list_sites() function
 
 
-def print_versions_from_cache(local_dir, cache_filename_list, debug):
+def print_versions_from_cache(local_dir, cache_filename_list):
     """
     Prints all projects and their associated data from the cache
     """
