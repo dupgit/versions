@@ -32,8 +32,8 @@ import feedparser
 import yaml
 
 __author__ = "Olivier Delhomme <olivier.delhomme@free.fr>"
-__date__ = "01.05.2018"
-__version__ = "1.4.6"
+__date__ = "03.21.2018"
+__version__ = "1.5.0-rc1"
 
 """
 This program checks projects versions through RSS and Atom feeds and
