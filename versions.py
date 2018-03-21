@@ -288,7 +288,8 @@ class Conf:
         for site_name in byproject_site_list:
             print_debug(self.options.debug, u'Checking {} projects'.format(site_name))
             (project_list, project_url, cache_filename) = self.get_infos_for_site(site_name)
-            check_versions_feeds_by_projects(project_list, self.local_dir, self.options.debug, project_url, cache_filename)
+            feed_filename = u'{}.feed'.format(site_name)
+            check_versions_feeds_by_projects(project_list, self.local_dir, self.options.debug, project_url, cache_filename, feed_filename)
 
         # Checks projects from 'list' tupe sites such as freshcode.club
         list_site_list = self.extract_site_list('list')
@@ -397,7 +398,7 @@ class FileCache:
 
     def update_cache_dict(self, project, version, debug):
         """
-        Updates cache dictionnary if needed
+        Updates cache dictionnary if needed. We always keep the latest version.
         """
 
         try:
@@ -405,11 +406,11 @@ class FileCache:
             print_debug(debug, u'\t\tIn cache: {}'.format(version_cache))
 
             if version != version_cache:
-                print(u'{} {}'.format(project, version))
+                print_project_version(project, version)
                 self.cache_dict[project] = version
 
         except KeyError:
-            print(u'{} {}'.format(project, version))
+            print_project_version(project, version)
             self.cache_dict[project] = version
 
     # End of update_cache_dict() function
@@ -587,10 +588,11 @@ def open_and_truncate_file(filename):
 def get_values_from_project(project):
     """
     Gets the values of 'regex' and 'name' keys if found and
-    returns a tuple (valued, name, regex)
+    returns a tuple (valued, name, regex, entry)
     """
 
     regex = ''
+    entry = ''
     name = project
     valued = False
 
@@ -599,42 +601,104 @@ def get_values_from_project(project):
         name = project['name']
         valued = True
 
-    return (valued, name, regex)
+    if 'entry' in project:
+        entry = project['entry']
+
+    return (valued, name, regex, entry)
 
 # End of get_values_from_project() function
 
 
-def get_latest_release_by_title(project, debug, feed_url):
+def format_project_feed_filename(feed_filename, name):
     """
-    Gets the latest release of a program on a site of type 'byproject'.
+    Returns a valid filename formatted based on feed_filename (the site name)
+    and name the name of the project
+    """
+
+    (root, ext) = os.path.splitext(feed_filename)
+    norm_name = name.replace('/', '_')
+
+    filename = "{}_{}{}".format(root, norm_name, ext)
+
+    return filename
+
+
+def get_releases_filtering_feed(debug, local_dir, filename, feed, entry):
+    """
+    Filters the feed and returns a list of releases with one
+    or more elements
+    """
+
+    feed_list = []
+
+    if entry == 'last checked':
+        feed_info = FeedCache(local_dir, filename)
+        feed_info.read_cache_feed()
+        feed_list = make_list_of_newer_feeds(feed, feed_info, debug)
+
+        # Updating feed_info with the latest parsed feed entry date
+        if feed.entries[0]:
+            published_date = get_entry_published_date(feed.entries[0])
+            feed_info.update_cache_feed(published_date)
+        else:
+            print(u'Warning: empty feed in {}'.format(feed))
+
+        feed_info.write_cache_feed()
+
+        feed_list.reverse()
+
+    else:
+        feed_list.insert(0, feed.entries[0])
+
+    return feed_list
+
+
+def get_latest_release_by_title(project, debug, feed_url, local_dir, feed_filename):
+    """
+    Gets the latest release or the releases between the last checked time of
+    a program on a site of type 'byproject'.
     project must be a string that represents the project (user/repository in
     github for instance).
     """
 
-    version = ''
+    feed_list = []
 
-    (valued, name, regex) = get_values_from_project(project)
+    (valued, name, regex, entry) = get_values_from_project(project)
+    filename = format_project_feed_filename(feed_filename, name)
 
     url = feed_url.format(name)
     feed = get_feed_entries_from_url(url)
 
     if feed is not None and len(feed.entries) > 0:
-        version = feed.entries[0].title
+        feed_list = get_releases_filtering_feed(debug, local_dir, filename, feed, entry)
 
-    if valued:
-        res = re.match(regex, version)
-        if res:
-            version = res.group(1)
-        print_debug(debug, u'\tname: {}\n\tversion: {}\n\tregex: {} : {}'.format(name, version, regex, res))
+        if valued:
+            # Here we match the whole list against the regex and replace the
+            # title's entry of the result of that match upon success.
+            for entry in feed_list:
+                res = re.match(regex, entry.title)
+                if res:
+                    entry.title = res.group(1)
+                print_debug(debug, u'\tname: {}\n\tversion: {}\n\tregex: {} : {}'.format(name, entry.title, regex, res))
 
-    print_debug(debug, u'\tProject {}: {}'.format(name, version))
+        print_debug(debug, u'\tProject {}: {}'.format(name, entry.title))
 
-    return (name, version)
+    return (name, feed_list)
 
 # End of get_latest_release_by_title() function
 
 
-def check_versions_feeds_by_projects(project_list, local_dir, debug, feed_url, cache_filename):
+def print_project_version(project, version):
+    """
+    Prints to the standard output project name and it's version.
+    """
+
+    print(u'{} {}'.format(project, version))
+
+# End of print_project_version() function
+
+
+def check_versions_feeds_by_projects(project_list, local_dir, debug, feed_url, cache_filename, feed_filename):
     """
     Checks project's versions on feed_url if any are defined in the yaml
     file under the specified tag that got the project_list passed as an argument.
@@ -643,9 +707,16 @@ def check_versions_feeds_by_projects(project_list, local_dir, debug, feed_url, c
     site_cache = FileCache(local_dir, cache_filename)
 
     for project in project_list:
-        (project, version) = get_latest_release_by_title(project, debug, feed_url)
-        if version != '':
-            site_cache.update_cache_dict(project, version, debug)
+        (name, feed_list) = get_latest_release_by_title(project, debug, feed_url, local_dir, feed_filename)
+
+        if len(feed_list) >= 1:
+            # Updating the cache with the latest version. Pass the list ?
+            version = feed_list[0].title
+            site_cache.update_cache_dict(name, version, debug)
+            del feed_list[0]
+
+        for entry in feed_list:
+            print_project_version(name, entry.title)
 
     site_cache.write_cache_file()
 
@@ -720,6 +791,23 @@ def cut_title_in_project_version(title, regex):
 # End of cut_title_in_project_version() function
 
 
+
+def get_entry_published_date(entry):
+    """
+    Returns the published date of an entry.
+    Selects the right field to do so
+    """
+
+    if 'published_parsed' in entry:
+        published_date = entry.published_parsed
+    elif 'updated_parsed' in entry:
+        published_date = entry.updated_parsed
+
+    return published_date
+
+# End of get_entry_published_date() function
+
+
 def make_list_of_newer_feeds(feed, feed_info, debug):
     """
     Compares feed entries and keep those that are newer than the latest
@@ -734,10 +822,15 @@ def make_list_of_newer_feeds(feed, feed_info, debug):
     # feeds
     for a_feed in feed.entries:
 
-        print_debug(debug, u'\tFeed entry ({0}): Feed title: "{1:16}"'.format(time.strftime('%x %X', a_feed.published_parsed), a_feed.title))
+        if a_feed:
+            published_date = get_entry_published_date(a_feed)
 
-        if feed_info.is_newer(a_feed.published_parsed):
-            feed_list.insert(0, a_feed)
+            print_debug(debug, u'\tFeed entry ({0}): Feed title: "{1:16}"'.format(time.strftime('%x %X', published_date), a_feed.title))
+
+            if feed_info.is_newer(published_date):
+                feed_list.insert(0, a_feed)
+        else:
+            print(u'Warning: empty feed in {}'.format(feed))
 
     return feed_list
 

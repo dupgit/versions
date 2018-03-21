@@ -48,16 +48,23 @@ othersitename:
     - list
     - name: of
       regex: '([\d.]+)'
+      entry: last checked
     - projects
 ```
 
 There is two types of sites : 
     
 * 'list': The site has one feed with all projects in it such as
-   freshcode.club
+   freshcode.club or fossies.org
 * 'byproject": The site gives access to one feed per project.
    brackets '{}' represents the name of the project as found in
-   the 'project' list.
+   the 'project' list. Those projects can be listed directly or
+   can take options. In the later case you have to name the
+   project and then you can specify either a regex or an entry
+   type option: regex is used to determine version number and
+   entry is used to determine if versions has to print the latest
+   entry (default behavior) or all entries from the "last checked"
+   time.
 
 
 # Installation

@@ -51,10 +51,15 @@ github:
   url: "https://github.com/{}/releases.atom"
   type: byproject
   projects:
+    - name: angular/angular
+      regex: '([\d\.-rRcCbetaBETA]+)'
+      entry: last checked
     - name: InfotelGLPI/manufacturersimports
       regex: '\w+ [\d\.]+ : \w+ ([\d\.]+).*'
+      entry: latest
     - name: kanboard/kanboard
       regex: 'Version\s([\d\.]+)'
+      entry: latest
     - curl/curl
     - akheron/jansson
     - milkytracker/MilkyTracker
