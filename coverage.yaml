@@ -25,8 +25,6 @@ freshcode:
     - sauvegarde
     - git
 
-
-
 sourceforge:
   url: "https://sourceforge.net/projects/{}/rss?path=/"
   type: byproject
@@ -37,8 +35,14 @@ github:
   url: "https://github.com/{}/releases.atom"
   type: byproject
   projects:
-    - InfotelGLPI/manufacturersimports
-    - akheron/jansson
+    - name: angular/angular
+      regex: '([\d\.\-rRcCbetaBETA]+)'
+      entry: last checked
+    - name: InfotelGLPI/manufacturersimports
+      regex: '\w+ [\d\.]+ : \w+ ([\d\.]+).*'
+      entry: last checked
+    - name: akheron/jansson
+      entry: last checked
     - terryyin/lizard
     - vmware/pyvmomi
     - tmux/tmux
