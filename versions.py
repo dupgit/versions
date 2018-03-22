@@ -596,13 +596,16 @@ def get_values_from_project(project):
     name = project
     valued = False
 
+    if 'name' in project:
+        name = project['name']
+
     if 'regex' in project and 'name' in project:
         regex = project['regex']
-        name = project['name']
         valued = True
 
     if 'entry' in project:
         entry = project['entry']
+        valued = True
 
     return (valued, name, regex, entry)
 
@@ -672,7 +675,7 @@ def get_latest_release_by_title(project, debug, feed_url, local_dir, feed_filena
     if feed is not None and len(feed.entries) > 0:
         feed_list = get_releases_filtering_feed(debug, local_dir, filename, feed, entry)
 
-        if valued:
+        if valued and regex != '':
             # Here we match the whole list against the regex and replace the
             # title's entry of the result of that match upon success.
             for entry in feed_list:
