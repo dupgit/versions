@@ -52,7 +52,7 @@ github:
   type: byproject
   projects:
     - name: angular/angular
-      regex: '([\d\.-rRcCbetaBETA]+)'
+      regex: '([\d\.\-rRcCbetaBETA]+)'
       entry: last checked
     - name: InfotelGLPI/manufacturersimports
       regex: '\w+ [\d\.]+ : \w+ ([\d\.]+).*'
