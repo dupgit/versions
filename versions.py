@@ -596,16 +596,17 @@ def get_values_from_project(project):
     name = project
     valued = False
 
-    if 'name' in project:
-        name = project['name']
+    if type(project) is dict:
+        if 'name' in project:
+            name = project['name']
 
-    if 'regex' in project and 'name' in project:
-        regex = project['regex']
-        valued = True
+        if 'regex' in project:
+            regex = project['regex']
+            valued = True
 
-    if 'entry' in project:
-        entry = project['entry']
-        valued = True
+        if 'entry' in project:
+            entry = project['entry']
+            valued = True
 
     return (valued, name, regex, entry)
 

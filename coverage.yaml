@@ -31,6 +31,13 @@ sourceforge:
   projects:
     - advtor
 
+sourceforge.m:
+  url: "https://sourceforge.net/projects/{}/rss?path=/"
+  type: byproject
+  projects:
+    - gprename
+
+
 github:
   url: "https://github.com/{}/releases.atom"
   type: byproject
@@ -56,7 +63,7 @@ github2:
   url: "https://github.com/{}/wrongurl.atom"
   type: byproject
   projects:
-    - dupgit/versions
+    - name: dupgit/versions
 
 github3:
     url: "https://github.com/{}/releases.atom"
