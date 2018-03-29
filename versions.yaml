@@ -60,6 +60,12 @@ github:
     - name: kanboard/kanboard
       regex: 'Version\s([\d\.]+)'
       entry: latest
+    - name: ampache/ampache
+      regex: 'v([\d\.]+)'
+      entry: last checked
+    - name: google/closure-compiler
+      regex: 'v([\d\.]+)'
+      entry: last checked
     - curl/curl
     - akheron/jansson
     - milkytracker/MilkyTracker

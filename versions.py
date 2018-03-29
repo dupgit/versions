@@ -395,6 +395,23 @@ class FileCache:
 
     # End of write_cache_file() function
 
+    def print_if_newest_version(self, project, version, debug):
+        """
+        Prints the project and it's version if it is newer than the
+        one in cache.
+        """
+        try:
+            version_cache = self.cache_dict[project]
+            print_debug(debug, u'\t\tIn cache: {}'.format(version_cache))
+
+            if version != version_cache:
+                print_project_version(project, version)
+
+        except KeyError:
+            print_project_version(project, version)
+
+    # End of print_if_newest_version() function.
+
 
     def update_cache_dict(self, project, version, debug):
         """
@@ -403,14 +420,12 @@ class FileCache:
 
         try:
             version_cache = self.cache_dict[project]
-            print_debug(debug, u'\t\tIn cache: {}'.format(version_cache))
+            print_debug(debug, u'\t\tUpdating cache with in cache: {} / new ? version {}'.format(version_cache, version))
 
             if version != version_cache:
-                print_project_version(project, version)
                 self.cache_dict[project] = version
 
         except KeyError:
-            print_project_version(project, version)
             self.cache_dict[project] = version
 
     # End of update_cache_dict() function
@@ -626,6 +641,19 @@ def format_project_feed_filename(feed_filename, name):
 
     return filename
 
+# End of format_project_feed_filename() function
+
+
+def is_entry_last_checked(entry):
+    """
+    Returns true if entry is equal to last checked and
+    false otherwise
+    """
+
+    return entry == 'last checked'
+
+# End of is_entry_last_checked() function
+
 
 def get_releases_filtering_feed(debug, local_dir, filename, feed, entry):
     """
@@ -635,7 +663,7 @@ def get_releases_filtering_feed(debug, local_dir, filename, feed, entry):
 
     feed_list = []
 
-    if entry == 'last checked':
+    if is_entry_last_checked(entry):
         feed_info = FeedCache(local_dir, filename)
         feed_info.read_cache_feed()
         feed_list = make_list_of_newer_feeds(feed, feed_info, debug)
@@ -663,11 +691,15 @@ def get_latest_release_by_title(project, debug, feed_url, local_dir, feed_filena
     a program on a site of type 'byproject'.
     project must be a string that represents the project (user/repository in
     github for instance).
+    Returns a tuple which contains the name of the project, a list of versions
+    and a boolean that indicates if we checked by last checked time (True) or
+    by release (False).
     """
 
     feed_list = []
 
     (valued, name, regex, entry) = get_values_from_project(project)
+    last_checked = is_entry_last_checked(entry)
     filename = format_project_feed_filename(feed_filename, name)
 
     url = feed_url.format(name)
@@ -687,7 +719,7 @@ def get_latest_release_by_title(project, debug, feed_url, local_dir, feed_filena
 
         print_debug(debug, u'\tProject {}: {}'.format(name, entry.title))
 
-    return (name, feed_list)
+    return (name, feed_list, last_checked)
 
 # End of get_latest_release_by_title() function
 
@@ -711,13 +743,22 @@ def check_versions_feeds_by_projects(project_list, local_dir, debug, feed_url, c
     site_cache = FileCache(local_dir, cache_filename)
 
     for project in project_list:
-        (name, feed_list) = get_latest_release_by_title(project, debug, feed_url, local_dir, feed_filename)
+        (name, feed_list, last_checked) = get_latest_release_by_title(project, debug, feed_url, local_dir, feed_filename)
 
         if len(feed_list) >= 1:
-            # Updating the cache with the latest version. Pass the list ?
+            # Updating the cache with the latest version (the first entry)
             version = feed_list[0].title
+
+            if not last_checked:
+                # printing only for latest release as last checked is
+                # already filtered and to be printed entirely
+                site_cache.print_if_newest_version(name, version, debug)
+
             site_cache.update_cache_dict(name, version, debug)
-            del feed_list[0]
+
+            if not last_checked:
+                # we already printed this.
+                del feed_list[0]
 
         for entry in feed_list:
             print_project_version(name, entry.title)
@@ -894,6 +935,7 @@ def check_and_update_feed(feed_list, project_list, cache, debug, regex, multipro
             (project, version) = cut_title_in_project_version(title, regex)
             print_debug(debug, u'\tChecking {0:16}: {1}'.format(project, version))
             if project.lower() in project_list_low:
+                cache.print_if_newest_version(project, version, debug)
                 cache.update_cache_dict(project, version, debug)
 
     cache.write_cache_file()
