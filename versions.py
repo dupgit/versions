@@ -32,8 +32,8 @@ import feedparser
 import yaml
 
 __author__ = "Olivier Delhomme <olivier.delhomme@free.fr>"
-__date__ = "03.22.2018"
-__version__ = "1.5.0-rc2"
+__date__ = "03.29.2018"
+__version__ = "1.5.0-rc4"
 
 """
 This program checks projects versions through RSS and Atom feeds and
@@ -647,7 +647,13 @@ def format_project_feed_filename(feed_filename, name):
 def is_entry_last_checked(entry):
     """
     Returns true if entry is equal to last checked and
-    false otherwise
+    false otherwise.
+    >>> is_entry_last_checked('last checked')
+    True
+    >>> is_entry_last_checked('')
+    False
+    >>> is_entry_last_checked('latest')
+    False
     """
 
     return entry == 'last checked'
