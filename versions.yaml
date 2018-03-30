@@ -81,6 +81,8 @@ github:
     - name: dupgit/versions
       regex: 'v([\d\.]+)\s*:.*'
     - release-monitoring/anitya
+    - name: google/closure-compiler
+      entry: last checked
 
 savanah:
   url: "http://savannah.gnu.org/news/atom.php?group={}"

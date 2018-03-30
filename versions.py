@@ -22,6 +22,8 @@
 #  Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 #
 import codecs
+import sys
+import locale
 import argparse
 import os
 import re
@@ -1057,6 +1059,9 @@ def main():
     This is the where the program begins
     """
 
+    if sys.version_info[0] == 2:
+        sys.stdout = codecs.getwriter(locale.getpreferredencoding())(sys.stdout)
+
     versions_conf = Conf()  # Configuration options
 
     if versions_conf.options.debug:
@@ -1077,7 +1082,7 @@ def print_debug(debug, message):
     """
 
     if debug:
-        print(message)
+        print(u'{}'.format(message))
 
 # End of print_debug() function
 
