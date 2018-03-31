@@ -32,6 +32,7 @@ import time
 import doctest
 import feedparser
 import yaml
+import operator
 
 __author__ = "Olivier Delhomme <olivier.delhomme@free.fr>"
 __date__ = "03.30.2018"
@@ -663,6 +664,25 @@ def is_entry_last_checked(entry):
 # End of is_entry_last_checked() function
 
 
+def sort_feed_list(feed_list, feed):
+    """
+    Sorts the feed list with the right attribute which depends on the feed.
+    sort is reversed because feed_list is build by inserting ahead when
+    parsing the feed from the most recent to the oldest entry.
+    Returns a sorted list (by date) the first entry is the newest one.
+    """
+
+    if feed.entries[0]:
+        if 'published_parsed' in feed.entries[0]:
+            feed_list = sorted(feed_list, key=operator.attrgetter('published_parsed'), reverse=True)
+        elif 'updated_parsed' in feed.entries[0]:
+            feed_list = sorted(feed_list, key=operator.attrgetter('updated_parsed'), reverse=True)
+
+    return feed_list
+
+# End of sort_feed_list() function
+
+
 def get_releases_filtering_feed(debug, local_dir, filename, feed, entry):
     """
     Filters the feed and returns a list of releases with one
@@ -675,17 +695,14 @@ def get_releases_filtering_feed(debug, local_dir, filename, feed, entry):
         feed_info = FeedCache(local_dir, filename)
         feed_info.read_cache_feed()
         feed_list = make_list_of_newer_feeds(feed, feed_info, debug)
+        feed_list = sort_feed_list(feed_list, feed)
 
         # Updating feed_info with the latest parsed feed entry date
-        if feed.entries[0]:
-            published_date = get_entry_published_date(feed.entries[0])
+        if len(feed_list) >= 1:
+            published_date = get_entry_published_date(feed_list[0])
             feed_info.update_cache_feed(published_date)
-        else:
-            print(u'Warning: empty feed in {}'.format(feed))
 
         feed_info.write_cache_feed()
-
-        feed_list.reverse()
 
     else:
         feed_list.insert(0, feed.entries[0])

@@ -67,6 +67,8 @@ github:
       regex: 'v([\d\.]+)'
       entry: last checked
     - curl/curl
+    - name: dCache/dcache
+      entry: last checked
     - akheron/jansson
     - milkytracker/MilkyTracker
     - terryyin/lizard
