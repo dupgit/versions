@@ -35,8 +35,8 @@ import yaml
 import operator
 
 __author__ = "Olivier Delhomme <olivier.delhomme@free.fr>"
-__date__ = "03.30.2018"
-__version__ = "1.5.0-rc6"
+__date__ = "04.05.2018"
+__version__ = "1.5.0"
 
 """
 This program checks projects versions through RSS and Atom feeds and
