@@ -5,3 +5,5 @@ pylint.rc
 dist
 build
 program_versions.egg-info
+HOWTO-BUILD-AND-UPLOAD.TXT
+versions_github.n.yaml
