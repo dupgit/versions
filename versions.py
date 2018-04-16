@@ -212,6 +212,16 @@ class Conf:
     # End of extract_project_url() function
 
 
+    def extract_project_entry(self, site_name):
+        """
+        Extracts the entry definition (if any) of a site.
+        """
+
+        return self.extract_variable_from_site(site_name, 'entry', '')
+
+    # End of extract_project_entry() function.
+
+
     def is_site_of_type(self, site_name, site_type):
         """
         Returns True if site_name is of type 'site_type'
@@ -290,15 +300,15 @@ class Conf:
 
         for site_name in byproject_site_list:
             print_debug(self.options.debug, u'Checking {} projects'.format(site_name))
-            (project_list, project_url, cache_filename) = self.get_infos_for_site(site_name)
+            (project_list, project_url, cache_filename, project_entry) = self.get_infos_for_site(site_name)
             feed_filename = u'{}.feed'.format(site_name)
-            check_versions_feeds_by_projects(project_list, self.local_dir, self.options.debug, project_url, cache_filename, feed_filename)
+            check_versions_feeds_by_projects(project_list, self.local_dir, self.options.debug, project_url, cache_filename, feed_filename, project_entry)
 
         # Checks projects from 'list' tupe sites such as freshcode.club
         list_site_list = self.extract_site_list('list')
         for site_name in list_site_list:
             print_debug(self.options.debug, u'Checking {} updates'.format(site_name))
-            (project_list, project_url, cache_filename) = self.get_infos_for_site(site_name)
+            (project_list, project_url, cache_filename, project_entry) = self.get_infos_for_site(site_name)
             regex = self.extract_regex_from_site(site_name)
             multiproject = self.extract_multiproject_from_site(site_name)
             feed_filename = u'{}.feed'.format(site_name)
@@ -315,9 +325,10 @@ class Conf:
 
         project_list = self.extract_project_list_from_site(site_name)
         project_url = self.extract_project_url(site_name)
+        project_entry = self.extract_project_entry(site_name)
         cache_filename = u'{}.cache'.format(site_name)
 
-        return (project_list, project_url, cache_filename)
+        return (project_list, project_url, cache_filename, project_entry)
 
     # End of get_infos_for_site() function
 
@@ -710,7 +721,7 @@ def get_releases_filtering_feed(debug, local_dir, filename, feed, entry):
     return feed_list
 
 
-def get_latest_release_by_title(project, debug, feed_url, local_dir, feed_filename):
+def get_latest_release_by_title(project, debug, feed_url, local_dir, feed_filename, project_entry):
     """
     Gets the latest release or the releases between the last checked time of
     a program on a site of type 'byproject'.
@@ -724,7 +735,12 @@ def get_latest_release_by_title(project, debug, feed_url, local_dir, feed_filena
     feed_list = []
 
     (valued, name, regex, entry) = get_values_from_project(project)
-    last_checked = is_entry_last_checked(entry)
+    
+    if is_entry_last_checked(project_entry):
+        last_checked = True
+        entry = project_entry
+    else:
+        last_checked = is_entry_last_checked(entry)
     filename = format_project_feed_filename(feed_filename, name)
 
     url = feed_url.format(name)
@@ -759,7 +775,7 @@ def print_project_version(project, version):
 # End of print_project_version() function
 
 
-def check_versions_feeds_by_projects(project_list, local_dir, debug, feed_url, cache_filename, feed_filename):
+def check_versions_feeds_by_projects(project_list, local_dir, debug, feed_url, cache_filename, feed_filename, project_entry):
     """
     Checks project's versions on feed_url if any are defined in the yaml
     file under the specified tag that got the project_list passed as an argument.
@@ -768,7 +784,8 @@ def check_versions_feeds_by_projects(project_list, local_dir, debug, feed_url, c
     site_cache = FileCache(local_dir, cache_filename)
 
     for project in project_list:
-        (name, feed_list, last_checked) = get_latest_release_by_title(project, debug, feed_url, local_dir, feed_filename)
+        (name, feed_list, last_checked) = get_latest_release_by_title(project, debug, feed_url, local_dir, feed_filename, project_entry)
+
 
         if len(feed_list) >= 1:
             # Updating the cache with the latest version (the first entry)

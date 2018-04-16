@@ -25,7 +25,7 @@ fossies:
     - duplicity
 
 pypi:
-  url: "https://pypi.python.org/pypi?%3Aaction=rss"
+  url: "https://pypi.org/rss/updates.xml"
   type: list
   projects:
     - PyYAML
@@ -50,6 +50,7 @@ sourceforge:
 github:
   url: "https://github.com/{}/releases.atom"
   type: byproject
+  entry: last checked
   projects:
     - name: angular/angular
       regex: '([\d\.\-rRcCbetaBETA]+)'
