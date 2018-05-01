@@ -53,8 +53,7 @@ github:
   entry: last checked
   projects:
     - name: angular/angular
-      regex: '([\d\.\-rRcCbetaBETA]+)'
-      entry: last checked
+      regex: '([\d\.\-rcbetaRCBETA]+)'
     - name: InfotelGLPI/manufacturersimports
       regex: '\w+ [\d\.]+ : \w+ ([\d\.]+).*'
       entry: latest
@@ -62,7 +61,7 @@ github:
       regex: 'Version\s([\d\.]+)'
       entry: latest
     - name: ampache/ampache
-      regex: 'v([\d\.]+)'
+      regex: '^v([\di\.]+$)'
       entry: last checked
     - name: google/closure-compiler
       regex: 'v([\d\.]+)'

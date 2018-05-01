@@ -754,6 +754,7 @@ def get_latest_release_by_title(project, debug, feed_url, local_dir, feed_filena
             # title's entry of the result of that match upon success.
             for entry in feed_list:
                 res = re.match(regex, entry.title)
+                # Here we should make a new list with the matched entries and leave tho other ones
                 if res:
                     entry.title = res.group(1)
                 print_debug(debug, u'\tname: {}\n\tversion: {}\n\tregex: {} : {}'.format(name, entry.title, regex, res))
