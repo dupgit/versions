@@ -890,6 +890,8 @@ def get_entry_published_date(entry):
         published_date = entry.published_parsed
     elif 'updated_parsed' in entry:
         published_date = entry.updated_parsed
+    elif 'pubDate' in entry:    # rss-0.91.dtd (netscape)
+        published_date = entry.pubDate
 
     return published_date
 
