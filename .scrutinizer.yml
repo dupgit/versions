@@ -27,4 +27,4 @@ build:
         analysis:
             tests:
                 override:
-                  - py-scrutinizer-run version.py
+                  - py-scrutinizer-run
