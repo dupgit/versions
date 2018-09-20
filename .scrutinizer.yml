@@ -25,5 +25,4 @@ build:
         analysis:
             tests:
                 override:
-                    -
-                        command: pylint-run
+                  - py-scrutinizer-run
