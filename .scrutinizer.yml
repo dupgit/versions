@@ -7,6 +7,8 @@ checks:
 filter:
     excluded_paths:
         - '*/test/*'
+        - 'setup.py'
+
 build:
     dependencies:
         before:
@@ -25,4 +27,4 @@ build:
         analysis:
             tests:
                 override:
-                  - py-scrutinizer-run
+                  - py-scrutinizer-run version.py
