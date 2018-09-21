@@ -14,3 +14,4 @@ ${COV} run -a ./versions.py -l -f coverage.yaml
 ${COV} run -a ./versions.py -f bad_formatted.yaml
 ${COV} run -a ./versions.py -f versions.yaml
 ${COV} run -a ./versions.py
+${COV} run -a ./versions.py -l
