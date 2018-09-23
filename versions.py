@@ -55,10 +55,6 @@ the latest parsed post of the feed.
 """
 
 
-
-
-
-
 def main():
     """
     This is the where the program begins

@@ -7,7 +7,6 @@ checks:
 filter:
     excluded_paths:
         - '*/test/*'
-        - 'setup.py'
 
 build:
     dependencies:
