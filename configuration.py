@@ -270,53 +270,8 @@ class Conf:
     # End of make_site_cache_list_name() function
 
 
-    def print_cache_or_check_versions(self):
-        """
-        Decide to pretty print projects and their associated version that
-        are already in the cache or to check versions of that projects upon
-        selections made at the command line
-        """
-
-        common.print_debug(self.options.debug, u'Loading yaml config file')
-        self.load_yaml_from_config_file(self.config_filename)
-
-        if self.options.list_cache is True:
-            # Pretty prints all caches.
-            cache_list = self.make_site_cache_list_name()
-            caches.print_versions_from_cache(self.local_dir, cache_list)
-
-        else:
-            # Checks version from online feeds
-            self.check_versions()
-
-    # End of print_list_or_check_versions() function.
 
 
-    def check_versions(self):
-        """
-        Checks versions by parsing online feeds.
-        """
-
-        # Checks projects from by project sites such as github and sourceforge
-        byproject_site_list = self.extract_site_list('byproject')
-
-        for site_name in byproject_site_list:
-            common.print_debug(self.options.debug, u'Checking {} projects'.format(site_name))
-            (project_list, project_url, cache_filename, project_entry) = self.get_infos_for_site(site_name)
-            feed_filename = u'{}.feed'.format(site_name)
-            check_versions_feeds_by_projects(project_list, self.local_dir, self.options.debug, project_url, cache_filename, feed_filename, project_entry)
-
-        # Checks projects from 'list' tupe sites such as freshcode.club
-        list_site_list = self.extract_site_list('list')
-        for site_name in list_site_list:
-            common.print_debug(self.options.debug, u'Checking {} updates'.format(site_name))
-            (project_list, project_url, cache_filename, project_entry) = self.get_infos_for_site(site_name)
-            regex = self.extract_regex_from_site(site_name)
-            multiproject = self.extract_multiproject_from_site(site_name)
-            feed_filename = u'{}.feed'.format(site_name)
-            check_versions_for_list_sites(project_list, project_url, cache_filename, feed_filename, self.local_dir, self.options.debug, regex, multiproject)
-
-    # End of check_versions() function
 
 
     def get_infos_for_site(self, site_name):

@@ -55,6 +55,55 @@ the latest parsed post of the feed.
 """
 
 
+def check_versions(versions_conf):
+    """
+    Checks versions by parsing online feeds.
+    """
+
+    # Checks projects from by project sites such as github and sourceforge
+    byproject_site_list = versions_conf.extract_site_list('byproject')
+
+    for site_name in byproject_site_list:
+        common.print_debug(versions_conf.options.debug, u'Checking {} projects'.format(site_name))
+        (project_list, project_url, cache_filename, project_entry) = versions_conf.get_infos_for_site(site_name)
+        feed_filename = u'{}.feed'.format(site_name)
+        configuration.check_versions_feeds_by_projects(project_list, versions_conf.local_dir, versions_conf.options.debug, project_url, cache_filename, feed_filename, project_entry)
+
+    # Checks projects from 'list' tupe sites such as freshcode.club
+    list_site_list = versions_conf.extract_site_list('list')
+    for site_name in list_site_list:
+        common.print_debug(versions_conf.options.debug, u'Checking {} updates'.format(site_name))
+        (project_list, project_url, cache_filename, project_entry) = versions_conf.get_infos_for_site(site_name)
+        regex = versions_conf.extract_regex_from_site(site_name)
+        multiproject = versions_conf.extract_multiproject_from_site(site_name)
+        feed_filename = u'{}.feed'.format(site_name)
+        configuration.check_versions_for_list_sites(project_list, project_url, cache_filename, feed_filename, versions_conf.local_dir, versions_conf.options.debug, regex, multiproject)
+
+# End of check_versions() function
+
+
+def print_cache_or_check_versions(versions_conf):
+    """
+    Decide to pretty print projects and their associated version that
+    are already in the cache or to check versions of that projects upon
+    selections made at the command line
+    """
+
+    common.print_debug(versions_conf.options.debug, u'Loading yaml config file')
+    versions_conf.load_yaml_from_config_file(versions_conf.config_filename)
+
+    if versions_conf.options.list_cache is True:
+        # Pretty prints all caches.
+        cache_list = versions_conf.make_site_cache_list_name()
+        caches.print_versions_from_cache(versions_conf.local_dir, cache_list)
+
+    else:
+        # Checks version from online feeds
+        check_versions(versions_conf)
+
+# End of print_list_or_check_versions() function.
+
+
 def main():
     """
     This is the where the program begins
@@ -69,7 +118,7 @@ def main():
         doctest.testmod(verbose=True)
 
     if os.path.isfile(versions_conf.config_filename):
-        versions_conf.print_cache_or_check_versions()
+        print_cache_or_check_versions(versions_conf)
 
     else:
         print(u'Error: file {} does not exist'.format(versions_conf.config_filename))
