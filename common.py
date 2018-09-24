@@ -21,20 +21,6 @@
 #  along with this program; if not, write to the Free Software Foundation,
 #  Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 #
-import codecs
-import sys
-import locale
-import argparse
-import os
-import re
-import errno
-import time
-import doctest
-import feedparser
-import yaml
-import operator
-
-
 
 
 def print_project_version(project, version):

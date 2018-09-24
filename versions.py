@@ -24,15 +24,8 @@
 import codecs
 import sys
 import locale
-import argparse
 import os
-import re
-import errno
-import time
 import doctest
-import feedparser
-import yaml
-import operator
 import configuration
 import caches
 import common

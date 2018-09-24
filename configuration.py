@@ -23,8 +23,6 @@
 #
 
 import codecs
-import sys
-import locale
 import argparse
 import os
 import re
@@ -268,10 +266,6 @@ class Conf:
         return cache_list
 
     # End of make_site_cache_list_name() function
-
-
-
-
 
 
     def get_infos_for_site(self, site_name):
@@ -720,8 +714,6 @@ def check_and_update_feed(feed_list, project_list, cache, debug, regex, multipro
 # End of check_and_update_feed() function
 
 
-
-
 def check_versions_for_list_sites(feed_project_list, url, cache_filename, feed_filename, local_dir, debug, regex, multiproject):
     """
     Checks projects of 'list' type sites such as freshcode's web site's RSS
@@ -747,5 +739,3 @@ def check_versions_for_list_sites(feed_project_list, url, cache_filename, feed_f
     feed_info.write_cache_feed()
 
 # End of check_versions_for_list_sites() function
-
-
