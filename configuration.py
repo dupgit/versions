@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf8 -*-
 #
-#  versions.py : checks releases and versions of programs through RSS
-#                or Atom feeds and tells you
+#  configuration.py : configuration related class and fonctions for
+#                     versions.py modules.
 #
 #  (C) Copyright 2016 - 2018 Olivier Delhomme
 #  e-mail : olivier.delhomme@free.fr
