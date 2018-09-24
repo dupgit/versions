@@ -336,11 +336,6 @@ class Conf:
 # End of Conf class
 
 
-
-
-
-
-
 def manage_http_status(feed, url):
     """
     Manages http status code present in feed and prints
@@ -465,13 +460,6 @@ def get_values_from_project(project):
     return (valued, name, regex, entry)
 
 # End of get_values_from_project() function
-
-
-
-
-
-
-
 
 
 def sort_feed_list(feed_list, feed):
