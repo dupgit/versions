@@ -88,6 +88,14 @@ def print_cache_or_check_versions(versions_conf):
 # End of print_list_or_check_versions() function.
 
 
+def testmodule(name):
+    """
+    Runs doctests in the module called 'name'
+    """
+    mod = __import__(name)
+    doctest.testmod(mod, verbose=True)
+
+
 def main():
     """
     This is the where the program begins
@@ -99,7 +107,9 @@ def main():
     versions_conf = configuration.Conf()  # Configuration options
 
     if versions_conf.options.debug:
-        doctest.testmod(verbose=True)
+        module_list = ['__main__', 'common', 'caches', 'configuration', 'byproject', 'bylist']
+        for module_name in module_list:
+            testmodule(module_name)
 
     if os.path.isfile(versions_conf.config_filename):
         print_cache_or_check_versions(versions_conf)
