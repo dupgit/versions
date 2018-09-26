@@ -29,6 +29,9 @@ import doctest
 import configuration
 import caches
 import common
+import byproject
+import bylist
+
 
 """
 This program checks projects versions through RSS and Atom feeds and
@@ -55,23 +58,11 @@ def check_versions(versions_conf):
 
     # Checks projects from by project sites such as github and sourceforge
     byproject_site_list = versions_conf.extract_site_list('byproject')
-
-    for site_name in byproject_site_list:
-        common.print_debug(versions_conf.options.debug, u'Checking {} projects'.format(site_name))
-        (project_list, project_url, cache_filename, project_entry) = versions_conf.get_infos_for_site(site_name)
-        feed_filename = u'{}.feed'.format(site_name)
-        configuration.check_versions_feeds_by_projects(project_list, versions_conf.local_dir, versions_conf.options.debug, project_url, cache_filename, feed_filename, project_entry)
+    byproject.check_versions(versions_conf, byproject_site_list)
 
     # Checks projects from 'list' tupe sites such as freshcode.club
     list_site_list = versions_conf.extract_site_list('list')
-    for site_name in list_site_list:
-        common.print_debug(versions_conf.options.debug, u'Checking {} updates'.format(site_name))
-        (project_list, project_url, cache_filename, project_entry) = versions_conf.get_infos_for_site(site_name)
-        regex = versions_conf.extract_regex_from_site(site_name)
-        multiproject = versions_conf.extract_multiproject_from_site(site_name)
-        feed_filename = u'{}.feed'.format(site_name)
-        configuration.check_versions_for_list_sites(project_list, project_url, cache_filename, feed_filename, versions_conf.local_dir, versions_conf.options.debug, regex, multiproject)
-
+    bylist.check_versions(versions_conf, list_site_list)
 # End of check_versions() function
 
 
