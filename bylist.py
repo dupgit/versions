@@ -21,9 +21,7 @@
 #  along with this program; if not, write to the Free Software Foundation,
 #  Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 #
-import doctest
 import re
-import time
 import caches
 import common
 
@@ -96,53 +94,6 @@ def cut_title_in_project_version(title, regex):
 # End of cut_title_in_project_version() function
 
 
-def get_entry_published_date(entry):
-    """
-    Returns the published date of an entry.
-    Selects the right field to do so
-    """
-
-    if 'published_parsed' in entry:
-        published_date = entry.published_parsed
-    elif 'updated_parsed' in entry:
-        published_date = entry.updated_parsed
-    elif 'pubDate' in entry:    # rss-0.91.dtd (netscape)
-        published_date = entry.pubDate
-
-    return published_date
-
-# End of get_entry_published_date() function
-
-
-def make_list_of_newer_feeds(feed, feed_info, debug):
-    """
-    Compares feed entries and keep those that are newer than the latest
-    check we've done and inserting the newer ones in reverse order in
-    a list to be returned
-    """
-
-    feed_list = []
-
-    # inserting into a list in reverse order to keep the most recent
-    # version in case of multiple release of the same project in the
-    # feeds
-    for a_feed in feed.entries:
-
-        if a_feed:
-            published_date = get_entry_published_date(a_feed)
-
-            common.print_debug(debug, u'\tFeed entry ({0}): Feed title: "{1:16}"'.format(time.strftime('%x %X', published_date), a_feed.title))
-
-            if feed_info.is_newer(published_date):
-                feed_list.insert(0, a_feed)
-        else:
-            print(u'Warning: empty feed in {}'.format(feed))
-
-    return feed_list
-
-# End of make_list_of_newer_feeds() function
-
-
 def lower_list_of_strings(project_list):
     """
     Lowers every string in the list to ease sorting and comparisons
@@ -169,8 +120,6 @@ def split_multiproject_title_into_list(title, multiproject):
     return titles
 
 # End of split_multiproject_title_into_list() function
-
-
 
 
 def check_and_update_feed(feed_list, project_list, cache, debug, regex, multiproject):
@@ -218,7 +167,7 @@ def check_versions_for_list_sites(feed_project_list, url, cache_filename, feed_f
 
     if feed is not None:
         common.print_debug(debug, u'\tFound {} entries'.format(len(feed.entries)))
-        feed_list = make_list_of_newer_feeds(feed, feed_info, debug)
+        feed_list = common.make_list_of_newer_feeds(feed, feed_info, debug)
         common.print_debug(debug, u'\tFound {} new entries (relative to {})'.format(len(feed_list), feed_info.date_minutes))
 
         check_and_update_feed(feed_list, feed_project_list, freshcode_cache, debug, regex, multiproject)
@@ -242,3 +191,5 @@ def check_versions(versions_conf, list_site_list):
         multiproject = versions_conf.extract_multiproject_from_site(site_name)
         feed_filename = u'{}.feed'.format(site_name)
         check_versions_for_list_sites(project_list, project_url, cache_filename, feed_filename, versions_conf.local_dir, versions_conf.options.debug, regex, multiproject)
+
+# End of check_versions() function

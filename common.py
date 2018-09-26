@@ -21,6 +21,55 @@
 #  Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 #
 import feedparser
+import time
+
+
+def get_entry_published_date(entry):
+    """
+    Returns the published date of an entry.
+    Selects the right field to do so
+    """
+
+    if 'published_parsed' in entry:
+        published_date = entry.published_parsed
+    elif 'updated_parsed' in entry:
+        published_date = entry.updated_parsed
+    elif 'pubDate' in entry:    # rss-0.91.dtd (netscape)
+        published_date = entry.pubDate
+
+    return published_date
+
+# End of get_entry_published_date() function
+
+
+def make_list_of_newer_feeds(feed, feed_info, debug):
+    """
+    Compares feed entries and keep those that are newer than the latest
+    check we've done and inserting the newer ones in reverse order in
+    a list to be returned
+    """
+
+    feed_list = []
+
+    # inserting into a list in reverse order to keep the most recent
+    # version in case of multiple release of the same project in the
+    # feeds
+    for a_feed in feed.entries:
+
+        if a_feed:
+            published_date = get_entry_published_date(a_feed)
+
+            print_debug(debug, u'\tFeed entry ({0}): Feed title: "{1:16}"'.format(time.strftime('%x %X', published_date), a_feed.title))
+
+            if feed_info.is_newer(published_date):
+                feed_list.insert(0, a_feed)
+        else:
+            print(u'Warning: empty feed in {}'.format(feed))
+
+    return feed_list
+
+# End of make_list_of_newer_feeds() function
+
 
 def manage_http_status(feed, url):
     """

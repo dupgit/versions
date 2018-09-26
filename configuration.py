@@ -25,12 +25,8 @@
 import codecs
 import argparse
 import os
-import re
 import errno
-import doctest
 import yaml
-import common
-import caches
 
 __author__ = "Olivier Delhomme <olivier.delhomme@free.fr>"
 __date__ = "06.11.2018"

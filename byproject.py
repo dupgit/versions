@@ -22,13 +22,10 @@
 #  Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 #
 import os
-import doctest
-import feedparser
+import operator
 import re
 import caches
 import common
-
-
 
 
 def format_project_feed_filename(feed_filename, name):
@@ -122,12 +119,12 @@ def get_releases_filtering_feed(debug, local_dir, filename, feed, entry):
     if is_entry_last_checked(entry):
         feed_info = caches.FeedCache(local_dir, filename)
         feed_info.read_cache_feed()
-        feed_list = make_list_of_newer_feeds(feed, feed_info, debug)
+        feed_list = common.make_list_of_newer_feeds(feed, feed_info, debug)
         feed_list = sort_feed_list(feed_list, feed)
 
         # Updating feed_info with the latest parsed feed entry date
         if len(feed_list) >= 1:
-            published_date = get_entry_published_date(feed_list[0])
+            published_date = common.get_entry_published_date(feed_list[0])
             feed_info.update_cache_feed(published_date)
 
         feed_info.write_cache_feed()
