@@ -65,6 +65,12 @@ def get_values_from_project(project):
     """
     Gets the values of 'regex' and 'name' keys if found and
     returns a tuple (valued, name, regex, entry)
+    >>> project = {'name': 'version', 'regex': 'v([\d\.]+)\s*:.*', 'entry': 'entry'}
+    >>> get_values_from_project(project)
+    (True, 'version', 'v([\\\\d\\\\.]+)\\\\s*:.*', 'entry')
+    >>> project = {'name': 'version'}
+    >>> get_values_from_project(project)
+    (False, 'version', '', '')
     """
 
     regex = ''
@@ -98,10 +104,9 @@ def sort_feed_list(feed_list, feed):
     """
 
     if feed.entries[0]:
-        if 'published_parsed' in feed.entries[0]:
-            feed_list = sorted(feed_list, key=operator.attrgetter('published_parsed'), reverse=True)
-        elif 'updated_parsed' in feed.entries[0]:
-            feed_list = sorted(feed_list, key=operator.attrgetter('updated_parsed'), reverse=True)
+        (published_date, field_name) = common.get_entry_published_date(feed.entries[0])
+        if field_name != '':
+            feed_list = sorted(feed_list, key=operator.attrgetter(field_name), reverse=True)
 
     return feed_list
 
@@ -124,7 +129,7 @@ def get_releases_filtering_feed(debug, local_dir, filename, feed, entry):
 
         # Updating feed_info with the latest parsed feed entry date
         if len(feed_list) >= 1:
-            published_date = common.get_entry_published_date(feed_list[0])
+            (published_date, field_name) = common.get_entry_published_date(feed_list[0])
             feed_info.update_cache_feed(published_date)
 
         feed_info.write_cache_feed()

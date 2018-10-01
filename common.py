@@ -29,15 +29,20 @@ def get_entry_published_date(entry):
     Returns the published date of an entry.
     Selects the right field to do so
     """
+    published_date = None
+    field_name = ''
 
     if 'published_parsed' in entry:
         published_date = entry.published_parsed
+        field_name = 'published_parsed'
     elif 'updated_parsed' in entry:
         published_date = entry.updated_parsed
+        field_name = 'updated_parsed'
     elif 'pubDate' in entry:    # rss-0.91.dtd (netscape)
         published_date = entry.pubDate
+        field_name = 'pubDate'
 
-    return published_date
+    return (published_date, field_name)
 
 # End of get_entry_published_date() function
 
@@ -57,7 +62,7 @@ def make_list_of_newer_feeds(feed, feed_info, debug):
     for a_feed in feed.entries:
 
         if a_feed:
-            published_date = get_entry_published_date(a_feed)
+            (published_date, field_name) = get_entry_published_date(a_feed)
 
             print_debug(debug, u'\tFeed entry ({0}): Feed title: "{1:16}"'.format(time.strftime('%x %X', published_date), a_feed.title))
 
