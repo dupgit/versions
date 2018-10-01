@@ -127,7 +127,7 @@ def get_feed_entries_from_url(url):
     if 'status' in feed:
         feed = manage_http_status(feed, url)
     else:
-        # An error happened such that the feed does not contain an HTTP response
+        # An error happened such that the feed does not contain an HTTP answer.
         manage_non_http_errors(feed, url)
         feed = None
 

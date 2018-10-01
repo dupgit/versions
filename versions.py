@@ -98,6 +98,7 @@ def testmodule(name):
     doctest.testmod(mod, verbose=True)
     print(u'{}'.format('End.\n'))
 
+# End of testmodule() function.
 
 def main():
     """
