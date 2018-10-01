@@ -78,6 +78,14 @@ def cut_title_in_project_version(title, regex):
     Cuts the title into a tuple (project, version) where possible with a regex
     or if there is no regex or the regex did not match cuts the title with a
     default method
+    >>> cut_title_in_project_version('versions 1.3.2', None)
+    ('versions', '1.3.2')
+    >>> cut_title_in_project_version('no_version_project', None)
+    ('no_version_project', '')
+    >>> cut_title_in_project_version('versions 1.3.2', '([\w]+)badregex\s([\d\.]+)')
+    ('versions', '1.3.2')
+    >>> cut_title_in_project_version('versions 1.3.2', '([\w]+)\s([\d\.i\-rcbetaRCBETA]+)')
+    ('versions', '1.3.2')
     """
     default = False
     project = ''
@@ -99,6 +107,8 @@ def cut_title_in_project_version(title, regex):
 def lower_list_of_strings(project_list):
     """
     Lowers every string in the list to ease sorting and comparisons
+    >>> lower_list_of_strings(['TEST', 'LoweRed'])
+    ['test', 'lowered']
     """
 
     project_list_low = [project.lower() for project in project_list]
@@ -180,6 +190,7 @@ def check_versions_for_list_sites(feed_project_list, url, cache_filename, feed_f
     feed_info.write_cache_feed()
 
 # End of check_versions_for_list_sites() function
+
 
 def check_versions(versions_conf, list_site_list):
     """

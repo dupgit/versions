@@ -92,8 +92,11 @@ def testmodule(name):
     """
     Runs doctests in the module called 'name'
     """
+
+    print(u'{} {} {}'.format('»»»»»»»»»»»»»»»» Testing module:', name, '««««««««««««««««'))
     mod = __import__(name)
     doctest.testmod(mod, verbose=True)
+    print(u'{}'.format('End.\n'))
 
 
 def main():
