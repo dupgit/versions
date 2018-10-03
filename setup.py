@@ -116,7 +116,7 @@ setup(
     # the `py_modules` argument instead as follows, which will expect a file
     # called `my_module.py` to exist:
     #
-    py_modules=["versions"],
+    py_modules=['versions', 'configuration', 'common', 'bylist', 'byproject', 'caches'],
 
     # packages=find_packages(exclude=['contrib', 'docs', 'tests']),  # Required
 
