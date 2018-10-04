@@ -70,8 +70,28 @@ There is two types of sites :
 
 # Installation
 
+Installation of versions is not mandatory and you invoke it directly
+from the command line provided you have installed its requirements.
+
+## Pypi
+
 In pypi the project is named program_versions but is still invoked
-by the command `versions`.
+by the command `versions` :
+
+$ sudo pip install program_versions
+$ versions -v
+
+## From source
+
+$ git clone https://github.com/dupgit/versions.git
+$ cd versions
+$ sudo pip install -r requirements.txt
+$ sudo python setup.py install
+$ versions -v
+
+Tip :
+One may want to test versions without messing its installation and
+may use [miniconda](https://conda.io/miniconda.html) to do so.
 
 
 # Usage
@@ -82,6 +102,9 @@ command in a persistant terminal (tmux, screen…):
 
     watch -n 86400 ./versions.py
 
+Option `-h` or `--help` will give you some help.
+
+Option `-v` or `--version` will tell you the version you have.
 
 Option `-l` or `--list-cache` prints the content of the local cache (ie
 latest known versions).
