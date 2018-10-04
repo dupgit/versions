@@ -70,28 +70,32 @@ There is two types of sites :
 
 # Installation
 
-Installation of versions is not mandatory and you invoke it directly
-from the command line provided you have installed its requirements.
+Installation of versions is not mandatory and you can invoke it 
+directly from the command line provided you have already installed 
+its requirements.
 
 ## Pypi
 
 In pypi the project is named program_versions but is still invoked
 by the command `versions` :
 
+```
 $ sudo pip install program_versions
 $ versions -v
+```
 
 ## From source
 
+```
 $ git clone https://github.com/dupgit/versions.git
 $ cd versions
 $ sudo pip install -r requirements.txt
 $ sudo python setup.py install
 $ versions -v
+```
 
-Tip :
-One may want to test versions without messing its installation and
-may use [miniconda](https://conda.io/miniconda.html) to do so.
+Tip : One may want to test versions without messing its installation and
+      may use [miniconda](https://conda.io/miniconda.html) to do so.
 
 
 # Usage
@@ -100,20 +104,18 @@ may use [miniconda](https://conda.io/miniconda.html) to do so.
 programs since last run. To verify each day one can use the following
 command in a persistant terminal (tmux, screen…):
 
-    watch -n 86400 ./versions.py
+```
+$ watch -n 86400 ./versions.py
+```
 
-Option `-h` or `--help` will give you some help.
-
-Option `-v` or `--version` will tell you the version you have.
-
-Option `-l` or `--list-cache` prints the content of the local cache (ie
-latest known versions).
-
-Option `-f FILENAME` or `--file FILENAME` ease usage of different
-YAML configuration files.
-
-Option `-d` or `--debug` runs doctests and prints information about
-what's going on in the program.
+* Option `-h` or `--help` will give you some help.
+* Option `-v` or `--version` will tell you the version you have.
+* Option `-l` or `--list-cache` prints the content of the local cache 
+  (ie latest known versions).
+* Option `-f FILENAME` or `--file FILENAME` ease usage of different
+  YAML configuration files.
+* Option `-d` or `--debug` runs doctests and prints information about
+  what's going on in the program.
 
 
 # Links of interest
