@@ -50,7 +50,7 @@ class FileCache:
     """
 
     cache_filename = ''
-    cache_dict = {}  # Dictionnary of projects and their associated version
+    cache_dict = {}  # Dictionary of projects and their associated version
 
     def __init__(self, local_dir, filename):
         """
@@ -68,7 +68,7 @@ class FileCache:
     def _return_project_and_version_from_line(self, line):
         """
         Splits the line into a project and a version if possible (the line
-        must contain a whitespace.
+        must contain a whitespace).
         """
 
         line = line.strip()
@@ -86,7 +86,7 @@ class FileCache:
 
     def _read_cache_file(self):
         """
-        Reads the cache file and puts it into a dictionnary of project with
+        Reads the cache file and puts it into a dictionary of project with
         their associated version
         """
 
@@ -104,7 +104,7 @@ class FileCache:
 
     def write_cache_file(self):
         """
-        Owerwrites dictionnary cache to the cache file
+        Owerwrites dictionary cache to the cache file
         """
 
         cache_file = open_and_truncate_file(self.cache_filename)
@@ -136,7 +136,7 @@ class FileCache:
 
     def update_cache_dict(self, project, version, debug):
         """
-        Updates cache dictionnary if needed. We always keep the latest version.
+        Updates cache dictionary if needed. We always keep the latest version.
         """
 
         try:

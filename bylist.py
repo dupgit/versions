@@ -137,7 +137,7 @@ def split_multiproject_title_into_list(title, multiproject):
 def check_and_update_feed(feed_list, project_list, cache, debug, regex, multiproject):
     """
     Checks every feed entry in the list against project list cache and
-    then updates the dictionnary then writes the cache file to the disk.
+    then updates the dictionary then writes the cache file to the disk.
      - feed_list    is a list of feed (from feedparser module)
      - project_list is the list of project as read from the yaml
                     configuration file
@@ -148,7 +148,7 @@ def check_and_update_feed(feed_list, project_list, cache, debug, regex, multipro
     project_list_low = lower_list_of_strings(project_list)
 
     # Checking every feed entry that are newer than the last check
-    # and updates the dictionnary accordingly
+    # and updates the dictionary accordingly
     for entry in feed_list:
 
         titles = split_multiproject_title_into_list(entry.title, multiproject)
