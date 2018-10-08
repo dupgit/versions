@@ -73,12 +73,11 @@ class FileCache:
 
         line = line.strip()
 
+        project = line
+        version = ''
+
         if line.count(' ') > 0:
             (project, version) = line.split(' ', 1)
-
-        elif line != '':
-            project = line
-            version = ''
 
         return (project, version)
 
