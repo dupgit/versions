@@ -31,7 +31,7 @@ import common
 def format_project_feed_filename(feed_filename, name):
     """
     Returns a valid filename formatted based on feed_filename (the site name)
-    and name the name of the project
+    and name (the name of the project).
     """
 
     (root, ext) = os.path.splitext(feed_filename)
@@ -154,7 +154,7 @@ def get_latest_release_by_title(project, debug, feed_url, local_dir, feed_filena
     feed_list = []
 
     (valued, name, regex, entry) = get_values_from_project(project)
-    
+
     if is_entry_last_checked(project_entry):
         last_checked = True
         entry = project_entry
@@ -171,14 +171,14 @@ def get_latest_release_by_title(project, debug, feed_url, local_dir, feed_filena
         if valued and regex != '':
             # Here we match the whole list against the regex and replace the
             # title's entry of the result of that match upon success.
-            for entry in feed_list:
-                res = re.match(regex, entry.title)
+            for feed_entry in feed_list:
+                res = re.match(regex, feed_entry.title)
                 # Here we should make a new list with the matched entries and leave tho other ones
                 if res:
-                    entry.title = res.group(1)
-                common.print_debug(debug, u'\tname: {}\n\tversion: {}\n\tregex: {} : {}'.format(name, entry.title, regex, res))
+                    feed_entry.title = res.group(1)
+                common.print_debug(debug, u'\tname: {}\n\tversion: {}\n\tregex: {} : {}'.format(name, feed_entry.title, regex, res))
 
-        common.print_debug(debug, u'\tProject {}: {}'.format(name, entry.title))
+            common.print_debug(debug, u'\tProject {}: {}'.format(name, feed.entries[0].title))
 
     return (name, feed_list, last_checked)
 
@@ -196,9 +196,8 @@ def check_versions_feeds_by_projects(project_list, local_dir, debug, feed_url, c
     for project in project_list:
         (name, feed_list, last_checked) = get_latest_release_by_title(project, debug, feed_url, local_dir, feed_filename, project_entry)
 
-
         if len(feed_list) >= 1:
-            # Updating the cache with the latest version (the first entry)
+            # Updating the cache with the latest version (the first feed entry)
             version = feed_list[0].title
 
             if not last_checked:
@@ -212,8 +211,8 @@ def check_versions_feeds_by_projects(project_list, local_dir, debug, feed_url, c
                 # we already printed this.
                 del feed_list[0]
 
-        for entry in feed_list:
-            common.print_project_version(name, entry.title)
+        for feed_entry in feed_list:
+            common.print_project_version(name, feed_entry.title)
 
     site_cache.write_cache_file()
 

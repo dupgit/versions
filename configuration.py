@@ -264,7 +264,7 @@ class Conf:
     def get_infos_for_site(self, site_name):
         """
         Returns informations about a site as a tuple
-        (list of projects, url to check, filename of the cache)
+        (list of projects, url to check, filename of the cache, entry checking type)
         """
 
         project_list = self.extract_project_list_from_site(site_name)
