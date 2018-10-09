@@ -173,7 +173,7 @@ def get_latest_release_by_title(project, debug, feed_url, local_dir, feed_filena
             # title's entry of the result of that match upon success.
             for feed_entry in feed_list:
                 res = re.match(regex, feed_entry.title)
-                # Here we should make a new list with the matched entries and leave tho other ones
+                # Here we should make a new list with the matched entries and leave the other ones
                 if res:
                     feed_entry.title = res.group(1)
                 common.print_debug(debug, u'\tname: {}\n\tversion: {}\n\tregex: {} : {}'.format(name, feed_entry.title, regex, res))
@@ -204,13 +204,12 @@ def check_versions_feeds_by_projects(project_list, local_dir, debug, feed_url, c
                 # printing only for latest release as last checked is
                 # already filtered and to be printed entirely
                 site_cache.print_if_newest_version(name, version, debug)
-
-            site_cache.update_cache_dict(name, version, debug)
-
-            if not last_checked:
                 # we already printed this.
                 del feed_list[0]
 
+            site_cache.update_cache_dict(name, version, debug)
+
+        # Printing all entries in the list.
         for feed_entry in feed_list:
             common.print_project_version(name, feed_entry.title)
 
