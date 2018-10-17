@@ -113,7 +113,7 @@ def sort_feed_list(feed_list, feed):
 # End of sort_feed_list() function
 
 
-def get_releases_filtering_feed(debug, local_dir, filename, feed, entry):
+def get_releases_filtering_feed(debug, local_dir, filename, feed, last_checked):
     """
     Filters the feed and returns a list of releases with one
     or more elements
@@ -121,7 +121,7 @@ def get_releases_filtering_feed(debug, local_dir, filename, feed, entry):
 
     feed_list = []
 
-    if is_entry_last_checked(entry):
+    if last_checked:
         feed_info = caches.FeedCache(local_dir, filename)
         feed_info.read_cache_feed()
         feed_list = common.make_list_of_newer_feeds(feed, feed_info, debug)
@@ -139,8 +139,28 @@ def get_releases_filtering_feed(debug, local_dir, filename, feed, entry):
 
     return feed_list
 
+# End of get_releases_filtering_feed() function
 
-def get_latest_release_by_title(project, debug, feed_url, local_dir, feed_filename, project_entry):
+
+def is_one_entry_field_value_egal_to_last_check(site_entry, entry):
+    """
+    Returns True if the value of 'entry' field in the yaml file
+    is last_checked and False otherwise.
+    It checks firstly the 'entry' field for the whole site and if not
+    found it then checks it for the project itself.
+    """
+
+    if is_entry_last_checked(site_entry):
+        last_checked = True
+    else:
+        last_checked = is_entry_last_checked(entry)
+
+    return last_checked
+
+# End of get_relevant_entry_field_value() function
+
+
+def get_latest_release_by_title(project, debug, feed_url, local_dir, feed_filename, site_entry):
     """
     Gets the latest release or the releases between the last checked time of
     a program on a site of type 'byproject'.
@@ -155,18 +175,13 @@ def get_latest_release_by_title(project, debug, feed_url, local_dir, feed_filena
 
     (valued, name, regex, entry) = get_values_from_project(project)
 
-    if is_entry_last_checked(project_entry):
-        last_checked = True
-        entry = project_entry
-    else:
-        last_checked = is_entry_last_checked(entry)
+    last_checked = is_one_entry_field_value_egal_to_last_check(site_entry, entry)
     filename = format_project_feed_filename(feed_filename, name)
-
     url = feed_url.format(name)
     feed = common.get_feed_entries_from_url(url)
 
     if feed is not None and len(feed.entries) > 0:
-        feed_list = get_releases_filtering_feed(debug, local_dir, filename, feed, entry)
+        feed_list = get_releases_filtering_feed(debug, local_dir, filename, feed, last_checked)
 
         if valued and regex != '':
             # Here we match the whole list against the regex and replace the
@@ -185,7 +200,7 @@ def get_latest_release_by_title(project, debug, feed_url, local_dir, feed_filena
 # End of get_latest_release_by_title() function
 
 
-def check_versions_feeds_by_projects(project_list, local_dir, debug, feed_url, cache_filename, feed_filename, project_entry):
+def check_versions_feeds_by_projects(project_list, local_dir, debug, feed_url, cache_filename, feed_filename, site_entry):
     """
     Checks project's versions on feed_url if any are defined in the yaml
     file under the specified tag that got the project_list passed as an argument.
@@ -194,7 +209,7 @@ def check_versions_feeds_by_projects(project_list, local_dir, debug, feed_url, c
     site_cache = caches.FileCache(local_dir, cache_filename)
 
     for project in project_list:
-        (name, feed_list, last_checked) = get_latest_release_by_title(project, debug, feed_url, local_dir, feed_filename, project_entry)
+        (name, feed_list, last_checked) = get_latest_release_by_title(project, debug, feed_url, local_dir, feed_filename, site_entry)
 
         if len(feed_list) >= 1:
             # Updating the cache with the latest version (the first feed entry)
@@ -225,8 +240,8 @@ def check_versions(versions_conf, byproject_site_list):
 
     for site_name in byproject_site_list:
         common.print_debug(versions_conf.options.debug, u'Checking {} projects'.format(site_name))
-        (project_list, project_url, cache_filename, project_entry) = versions_conf.get_infos_for_site(site_name)
+        (project_list, project_url, cache_filename, site_entry) = versions_conf.get_infos_for_site(site_name)
         feed_filename = u'{}.feed'.format(site_name)
-        check_versions_feeds_by_projects(project_list, versions_conf.local_dir, versions_conf.options.debug, project_url, cache_filename, feed_filename, project_entry)
+        check_versions_feeds_by_projects(project_list, versions_conf.local_dir, versions_conf.options.debug, project_url, cache_filename, feed_filename, site_entry)
 
 # End of check_versions() function.
