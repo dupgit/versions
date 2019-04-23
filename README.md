@@ -6,7 +6,7 @@
 # Description
 
 Versions is an open source (GPL v3) software that checks releases and
-versions of your favorite programs through RSS or Atom feeds and tells
+versions of your favourite programs through RSS or Atom feeds and tells
 you which one has been released since last check.
 
 It can check projects from :
