@@ -5,21 +5,21 @@ https://github.com/pypa/sampleproject
 """
 
 # Always prefer setuptools over distutils
-from setuptools import setup
+import setuptools
 # To use a consistent encoding
-from codecs import open
-from os import path
+import codecs
+import os
 
-here = path.abspath(path.dirname(__file__))
+here = os.path.abspath(os.path.dirname(__file__))
 
 # Get the long description from the README file
-with open(path.join(here, 'README.md'), encoding='utf-8') as f:
+with codecs.open(os.path.join(here, 'README.md'), encoding='utf-8') as f:
     long_description = f.read()
 
 # Arguments marked as "Required" below must be included for upload to PyPI.
 # Fields marked as "Optional" may be commented out.
 
-setup(
+setuptools.setup(
     # This is the name of your project. The first time you publish this
     # package, this name will be registered for you. It will determine how
     # users can install this project, e.g.:
@@ -116,9 +116,9 @@ setup(
     # the `py_modules` argument instead as follows, which will expect a file
     # called `my_module.py` to exist:
     #
-    py_modules=['versions', 'configuration', 'common', 'bylist', 'byproject', 'caches'],
+    #py_modules=['versions', 'configuration', 'common', 'bylist', 'byproject', 'caches'],
 
-    # packages=find_packages(exclude=['contrib', 'docs', 'tests']),  # Required
+     packages=setuptools.find_packages(exclude=['tests']),  # Required
 
     # This field lists other packages that your project depends on to run.
     # Any package you put here will be installed by pip when your project is
