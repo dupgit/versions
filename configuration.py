@@ -29,8 +29,8 @@ import errno
 import yaml
 
 __author__ = "Olivier Delhomme <olivier.delhomme@free.fr>"
-__date__ = "06.11.2018"
-__version__ = "1.5.2"
+__date__ = "23.04.2019"
+__version__ = "1.5.3"
 
 
 def make_directories(path):
