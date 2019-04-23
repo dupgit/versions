@@ -30,7 +30,7 @@ import yaml
 
 __author__ = "Olivier Delhomme <olivier.delhomme@free.fr>"
 __date__ = "23.04.2019"
-__version__ = "1.5.4-rc1"
+__version__ = "1.5.4-rc2"
 
 
 def make_directories(path):
