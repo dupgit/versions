@@ -1,0 +1,93 @@
+continuum.io:
+  url: "https://repo.continuum.io/pkgs/rss.xml"
+  type: list
+  regex: '[ad\s]*([\.\w\s-]+)\s([\d\.-]+\w*).*'
+  multiproject: ',|;'
+  projects:
+    - pytorch
+    - holoviews
+    - pyopenssl
+
+freshcode:
+  url: "http://freshcode.club/projects.rss"
+  type: list
+  regex: '([\w\s-]+)\s([\d\.]+).*'
+  projects:
+    - FileZilla
+    - sauvegarde
+    - git
+
+fossies:
+  url: "https://fossies.org/fresh.rss"
+  type: list
+  regex: '([\w\s-]+)\s-\s([\d\.]+).*'
+  projects:
+    - duplicity
+
+pypi:
+  url: "https://pypi.org/rss/updates.xml"
+  type: list
+  projects:
+    - PyYAML
+    - feedparser
+
+freebsd:
+  url: "https://www.freshports.org/backend/rss2.0.php"
+  type: list
+  regex: '([\/\w\s-]+)\s-\s([\d\.]+).*'
+  projects:
+    - www/nginx
+    - games/tty-solitaire
+
+
+sourceforge:
+  url: "https://sourceforge.net/projects/{}/rss?path=/"
+  type: byproject
+  projects:
+    - name: advtor
+      regex: '/\w+-([\d\.]+)/.*'
+  
+github:
+  url: "https://github.com/{}/releases.atom"
+  type: byproject
+  entry: last checked
+  projects:
+    - name: angular/angular
+      regex: '([\d\.\-rcbetaRCBETA]+)'
+    - name: InfotelGLPI/manufacturersimports
+      regex: '\w+ [\d\.]+ : \w+ ([\d\.]+).*'
+      entry: latest
+    - name: kanboard/kanboard
+      regex: 'Version\s([\d\.]+)'
+      entry: latest
+    - name: ampache/ampache
+      regex: '^v([\di\.]+$)'
+      entry: last checked
+    - name: google/closure-compiler
+      regex: 'v([\d\.]+)'
+      entry: last checked
+    - curl/curl
+    - name: dCache/dcache
+      entry: last checked
+    - akheron/jansson
+    - milkytracker/MilkyTracker
+    - terryyin/lizard
+    - vmware/pyvmomi
+    - tmux/tmux
+    - name: tmuxinator/tmuxinator
+      regex: 'v([\d\.]+):.*'
+    - name: gorhill/uBlock
+      regex: '([\d\.\-rRcC]+)'
+    - cachethq/cachet
+    - Gandi/baobab
+    - name: dupgit/versions
+      regex: 'v([\d\.]+)\s*:.*'
+    - release-monitoring/anitya
+    - name: google/closure-compiler
+      entry: last checked
+
+savanah:
+  url: "http://savannah.gnu.org/news/atom.php?group={}"
+  type: byproject
+  projects:
+    - wget
