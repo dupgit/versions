@@ -1,2 +1,2 @@
 include LICENSE
-include versions.yaml
+include versions/versions.yaml
