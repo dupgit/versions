@@ -17,7 +17,7 @@ build:
     tests:
         override:
             -
-                command: 'bash ./coverage.bash coverage'
+                command: 'cd tests && bash ./coverage.bash coverage'
                 coverage:
                     file: '.coverage'
                     format: 'py-cc'
