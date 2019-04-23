@@ -166,7 +166,7 @@ setuptools.setup(
     # executes the function `main` from this package when invoked:
     entry_points={  # Optional
         'console_scripts': [
-            'versions=versions:main',
+            'versions=versions.versions:main',
         ],
     },
 )
