@@ -1,6 +1,6 @@
 #!/bin/bash
-# versions27 is a python 2.7.x environnement
-# versions36 is a python 3.6.x environnement
+# versions27 is a python 2.7.x environment
+# versions36 is a python 3.6.x environment
 #
 
 function test_in_conda_env {
@@ -8,11 +8,11 @@ function test_in_conda_env {
     CONDA_ENV=$1
 
     echo ""
-    echo "################# $CONDA_ENV #################" 
+    echo "################# ${CONDA_ENV} #################" 
 
-    source activate $CONDA_ENV
+    source activate ${CONDA_ENV}
     bash coverage.bash python-coverage
-    source deactivate $CONDA_ENV
+    source deactivate ${CONDA_ENV}
 
 }
 

@@ -102,7 +102,7 @@ Tip : One may want to test versions without messing its installation and
 
 `./version.py` should be enough to bring you the list of updated
 programs since last run. To verify each day one can use the following
-command in a persistant terminal (tmux, screen…):
+command in a persistent terminal (tmux, screen…):
 
 ```
 $ watch -n 86400 ./versions.py

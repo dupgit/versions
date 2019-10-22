@@ -269,7 +269,7 @@ class FeedCache:
 
     def is_newer(self, date):
         """
-        Tells wether "date" is newer than the one in the cache (returns True
+        Tells whether "date" is newer than the one in the cache (returns True
         or not (returns False)
         """
 

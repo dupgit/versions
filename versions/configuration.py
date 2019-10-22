@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf8 -*-
 #
-#  configuration.py : configuration related class and fonctions for
+#  configuration.py : configuration related class and functions for
 #                     versions.py modules.
 #
 #  (C) Copyright 2016 - 2018 Olivier Delhomme
@@ -263,7 +263,7 @@ class Conf:
 
     def get_infos_for_site(self, site_name):
         """
-        Returns informations about a site as a tuple
+        Returns information about a site as a tuple
         (list of projects, url to check, filename of the cache, entry checking type)
         """
 
