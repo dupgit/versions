@@ -19,7 +19,7 @@ build:
             -
                 command: 'cd tests && bash ./coverage.bash coverage'
                 coverage:
-                    file: '.coverage'
+                    file: 'tests/.coverage'
                     format: 'py-cc'
     nodes:
         tests: true
