@@ -1,0 +1,7 @@
+name: versions27
+channels:
+  - defaults
+dependencies:
+  - feedparser>=5.1.3
+  - python=2.7
+  - pyyaml>=3.11
