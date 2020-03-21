@@ -46,7 +46,7 @@ sourceforge:
   projects:
     - name: advtor
       regex: '/\w+-([\d\.]+)/.*'
-  
+
 github:
   url: "https://github.com/{}/releases.atom"
   type: byproject
