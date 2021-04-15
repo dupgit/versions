@@ -64,7 +64,6 @@ class FileCache:
 
     # End of __init__() function
 
-
     def _return_project_and_version_from_line(self, line):
         """
         Splits the line into a project and a version if possible (the line
@@ -83,7 +82,6 @@ class FileCache:
 
     # End of _return_project_and_version_from_line() function
 
-
     def _read_cache_file(self):
         """
         Reads the cache file and puts it into a dictionary of project with
@@ -100,7 +98,6 @@ class FileCache:
             cache_file.close()
 
     # End of _read_cache_file() function
-
 
     def write_cache_file(self):
         """
@@ -133,7 +130,6 @@ class FileCache:
 
     # End of print_if_newest_version() function.
 
-
     def update_cache_dict(self, project, version, debug):
         """
         Updates cache dictionary if needed. We always keep the latest version.
@@ -150,7 +146,6 @@ class FileCache:
             self.cache_dict[project] = version
 
     # End of update_cache_dict() function
-
 
     def print_cache_dict(self, sitename):
         """
@@ -179,7 +174,6 @@ class FeedCache:
     minute = 0
     date_minutes = 0
 
-
     def __init__(self, local_dir, filename):
         """
         Inits the class. 'local_dir' must be a directory where we want to
@@ -190,7 +184,6 @@ class FeedCache:
         self.read_cache_feed()
 
     # End of __init__() function
-
 
     def read_cache_feed(self):
         """
@@ -206,7 +199,6 @@ class FeedCache:
 
     # End of read_cache_feed() function
 
-
     def write_cache_feed(self):
         """
         Overwrites the cache file with values stored in this class
@@ -218,7 +210,6 @@ class FeedCache:
         cache_file.close()
 
     # End of write_cache_feed() function
-
 
     def update_cache_feed(self, date):
         """
@@ -234,7 +225,6 @@ class FeedCache:
         self.date_minutes = self._calculate_minutes_from_date(date)
 
     # End of update_cache_feed() function
-
 
     def _calculate_minutes(self, year, mon, day, hour, mins):
         """
@@ -255,7 +245,6 @@ class FeedCache:
 
     # End of _calculate_minutes() function
 
-
     def _calculate_minutes_from_date(self, date):
         """
         Transforms a date in a number of minutes to ease comparisons
@@ -265,7 +254,6 @@ class FeedCache:
         return self._calculate_minutes(date.tm_year, date.tm_mon, date.tm_mday, date.tm_hour, date.tm_min)
 
     # End of _calculate_minutes() function
-
 
     def is_newer(self, date):
         """

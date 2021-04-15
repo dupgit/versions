@@ -49,6 +49,7 @@ def make_directories(path):
 
 # End of make_directories() function
 
+
 class Conf:
     """
     Class to store configuration of the program and check version.
@@ -78,7 +79,6 @@ class Conf:
 
     # End of init() function
 
-
     def load_yaml_from_config_file(self, filename):
         """
         Loads definitions from the YAML config file filename
@@ -101,7 +101,6 @@ class Conf:
         config_file.close()
 
     # End of load_yaml_from_config_file() function
-
 
     def _get_command_line_arguments(self):
         """
@@ -127,7 +126,6 @@ class Conf:
 
     # End of get_command_line_arguments() function
 
-
     def extract_site_definition(self, site_name):
         """
         extracts whole site definition
@@ -140,7 +138,6 @@ class Conf:
 
     # End of extract_site_definition()
 
-
     def extract_regex_from_site(self, site_name):
         """
         Extracts a regex from a site as defined in the YAML file.
@@ -150,7 +147,6 @@ class Conf:
         return self.extract_variable_from_site(site_name, 'regex', None)
 
     # End of extract_regex_from_site() function
-
 
     def extract_multiproject_from_site(self, site_name):
         """
@@ -162,7 +158,6 @@ class Conf:
         return self.extract_variable_from_site(site_name, 'multiproject', None)
 
     # End of extract…multiproject_from_site() function
-
 
     def extract_variable_from_site(self, site_name, variable, default_return):
         """
@@ -184,7 +179,6 @@ class Conf:
 
     # End of extract_variable_from_site() function
 
-
     def extract_project_list_from_site(self, site_name):
         """
         Extracts a project list from a site as defined in the YAML file.
@@ -193,7 +187,6 @@ class Conf:
         return self.extract_variable_from_site(site_name, 'projects', [])
 
     # End of extract_project_list_from_site() function
-
 
     def extract_project_url(self, site_name):
         """
@@ -204,7 +197,6 @@ class Conf:
 
     # End of extract_project_url() function
 
-
     def extract_project_entry(self, site_name):
         """
         Extracts the entry definition (if any) of a site.
@@ -213,7 +205,6 @@ class Conf:
         return self.extract_variable_from_site(site_name, 'entry', '')
 
     # End of extract_project_entry() function.
-
 
     def is_site_of_type(self, site_name, site_type):
         """
@@ -227,7 +218,6 @@ class Conf:
             return False
 
     # End of is_site_of_type() function
-
 
     def extract_site_list(self, site_type):
         """
@@ -244,7 +234,6 @@ class Conf:
 
     # End of extract_site_list() function
 
-
     def make_site_cache_list_name(self):
         """
         Formats list of cache filenames for all sites.
@@ -259,7 +248,6 @@ class Conf:
         return cache_list
 
     # End of make_site_cache_list_name() function
-
 
     def get_infos_for_site(self, site_name):
         """

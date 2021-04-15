@@ -117,9 +117,9 @@ setuptools.setup(
     # the `py_modules` argument instead as follows, which will expect a file
     # called `my_module.py` to exist:
     #
-    #py_modules=['versions', 'configuration', 'common', 'bylist', 'byproject', 'caches'],
+    # py_modules=['versions', 'configuration', 'common', 'bylist', 'byproject', 'caches'],
 
-     packages=setuptools.find_packages(exclude=['tests']),  # Required
+    packages=setuptools.find_packages(exclude=['tests']),  # Required
 
     # This field lists other packages that your project depends on to run.
     # Any package you put here will be installed by pip when your project is
