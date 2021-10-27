@@ -18,6 +18,8 @@ It can check projects from :
 * www.freshports.org (FreeBSD packages)
 * fossies.org
 * repo.continuum.io
+* sourcehut forge
+* gitlab forge
 
 Projects must be added to a YAML file (named by default
 `~/.config/versions/versions.yaml`). One can use `--file=FILENAME`
@@ -31,7 +33,7 @@ files containing the project list and their associated version (the latest).
 the latest parsed post of the feed.
 
 
-# YAML file structure
+# YAML file structure
 
 ```
 sitename:
@@ -53,8 +55,8 @@ othersitename:
     - projects
 ```
 
-There is two types of sites : 
-    
+There is two types of sites :
+
 * 'list': The site has one feed with all projects in it such as
    freshcode.club or fossies.org
 * 'byproject": The site gives access to one feed per project.
@@ -67,11 +69,13 @@ There is two types of sites :
    entry (default behavior) or all entries from the "last checked"
    time.
 
+A real life example file is provided: [versions/versions.yaml](versions/versions.yaml)
+
 
 # Installation
 
-Installation of versions is not mandatory and you can invoke it 
-directly from the command line provided you have already installed 
+Installation of versions is not mandatory and you can invoke it
+directly from the command line provided you have already installed
 its requirements.
 
 ## Pypi
@@ -110,7 +114,7 @@ $ watch -n 86400 ./versions.py
 
 * Option `-h` or `--help` will give you some help.
 * Option `-v` or `--version` will tell you the version you have.
-* Option `-l` or `--list-cache` prints the content of the local cache 
+* Option `-l` or `--list-cache` prints the content of the local cache
   (ie latest known versions).
 * Option `-f FILENAME` or `--file FILENAME` ease usage of different
   YAML configuration files.

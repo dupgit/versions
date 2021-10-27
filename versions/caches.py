@@ -101,7 +101,7 @@ class FileCache:
 
     def write_cache_file(self):
         """
-        Owerwrites dictionary cache to the cache file
+        Overwrites dictionary cache to the cache file
         """
 
         cache_file = open_and_truncate_file(self.cache_filename)

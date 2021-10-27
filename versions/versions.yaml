@@ -46,9 +46,9 @@ sourceforge:
   projects:
     - name: advtor
       regex: '/\w+-([\d\.]+)/.*'
-  
+
 github:
-  url: "https://github.com/{}/releases.atom"
+  url: "https://github.com/{}/tags.atom"
   type: byproject
   entry: last checked
   projects:
@@ -91,3 +91,15 @@ savanah:
   type: byproject
   projects:
     - wget
+
+sourcehut:
+  url: "https://git.sr.ht/{}/refs/rss.xml"
+  type: byproject
+  projects:
+    - ~sircmpwn/meta.sr.ht
+
+gitlab_openldap:
+  url: "https://git.openldap.org/{}/-/tags?format=atom"
+  type: byproject
+  projects:
+    - openldap/openldap

@@ -12,7 +12,7 @@ freshcode_wrong_url:
     - sauvegarde
 
 non_existing_host.org:
-  url: "https://non_existing_host.org/{}/releases.atom"
+  url: "https://non_existing_host.org/{}/tags.atom"
   type: list
   projects:
     - notaproject
@@ -39,7 +39,7 @@ sourceforge.m:
 
 
 github:
-  url: "https://github.com/{}/releases.atom"
+  url: "https://github.com/{}/tags.atom"
   type: byproject
   projects:
     - name: angular/angular
@@ -66,13 +66,13 @@ github2:
     - name: dupgit/versions
 
 github3:
-    url: "https://github.com/{}/releases.atom"
+    url: "https://github.com/{}/tags.atom"
     type: byproject
-    projets:
+    projets_is_not_projects:
       - dupgit/versions
 
 github4:
-    url: "https://github.com/{}/releases.atom"
+    url: "https://github.com/{}/tags.atom"
     type: notatype
     projects:
       - dupgit/versions

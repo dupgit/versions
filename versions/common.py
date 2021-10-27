@@ -122,7 +122,7 @@ def get_feed_entries_from_url(url):
     RSS or Atom feed.
     >>> get_feed_entries_from_url("http://delhomme.org/notfound.html")
     Error 404 while fetching "http://delhomme.org/notfound.html".
-    >>> feed = get_feed_entries_from_url("http://blog.delhomme.org/index.php?feed/atom")
+    >>> feed = get_feed_entries_from_url("https://github.com/dupgit/versions/tags.atom")
     >>> feed.status
     200
     """

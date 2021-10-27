@@ -48,7 +48,7 @@ sourceforge:
       regex: '/\w+-([\d\.]+)/.*'
 
 github:
-  url: "https://github.com/{}/releases.atom"
+  url: "https://github.com/{}/tags.atom"
   type: byproject
   entry: last checked
   projects:
