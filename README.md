@@ -5,6 +5,9 @@
 
 # Description
 
+A complete rewrite of versions in Rust has been release in
+[crates.io](https://crates.io/crates/rversions/).
+
 Versions is an open source (GPL v3) software that checks releases and
 versions of your favourite programs through RSS or Atom feeds and tells
 you which one has been released since last check.
