@@ -78,7 +78,7 @@ def get_values_from_project(project):
     name = project
     valued = False
 
-    if type(project) is dict:
+    if isinstance(project, dict):
         if 'name' in project:
             name = project['name']
 

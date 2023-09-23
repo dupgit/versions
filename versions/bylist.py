@@ -185,7 +185,8 @@ def check_versions_for_list_sites(feed_project_list, url, cache_filename, feed_f
         check_and_update_feed(feed_list, feed_project_list, freshcode_cache, debug, regex, multiproject)
 
         # Updating feed_info with the latest parsed feed entry date
-        feed_info.update_cache_feed(feed.entries[0].published_parsed)
+        if feed.entries is not None and len(feed.entries) >= 1:
+            feed_info.update_cache_feed(feed.entries[0].published_parsed)
 
     feed_info.write_cache_feed()
 
